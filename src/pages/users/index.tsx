@@ -11,9 +11,9 @@ import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 
 // ** Icons Imports
-import AccountOutline from 'mdi-material-ui/AccountOutline'
-import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
-import InformationOutline from 'mdi-material-ui/InformationOutline'
+import AccountSearchOutline from 'mdi-material-ui/AccountSearchOutline'
+import AccountPlusOutline from 'mdi-material-ui/AccountPlusOutline'
+import AccountWrenchOutline from 'mdi-material-ui/AccountWrenchOutline'
 
 // ** Demo Tabs Imports
 import TabAllUsers from 'src/views/users/TabAllUsers'
@@ -61,7 +61,7 @@ const Users = () => {
             value='allUsers'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <InformationOutline />
+                <AccountWrenchOutline />
                 <TabName>All Users</TabName>
               </Box>
             }
@@ -70,7 +70,7 @@ const Users = () => {
             value='userByID'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <AccountOutline />
+                <AccountSearchOutline />
                 <TabName>User By ID</TabName>
               </Box>
             }
@@ -79,7 +79,7 @@ const Users = () => {
             value='addUser'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <LockOpenOutline />
+                <AccountPlusOutline />
                 <TabName>Add User</TabName>
               </Box>
             }
