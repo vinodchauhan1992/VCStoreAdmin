@@ -1,83 +1,45 @@
 {
-  "name": "materio-mui-react-nextjs-admin-template-free",
-  "description": "Most Powerful & Comprehensive Free MUI React NextJS Admin Dashboard Template built for developers! 🚀",
-  "license": "MIT",
-  "version": "1.0.0",
-  "author": {
-    "name": "ThemeSelection",
-    "url": "https://themeselection.com/"
-  },
-  "bugs": {
-    "url": "https://github.com/themeselection/materio-mui-react-nextjs-admin-template-free/issues"
-  },
-  "private": false,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/themeselection/materio-mui-react-nextjs-admin-template-free.git"
-  },
-  "homepage": "https://themeselection.com/products/materio-free-mui-react-nextjs-admin-template/",
-  "keywords": [
-    "react",
-    "javascript",
-    "admin",
-    "typescript",
-    "dashboard",
-    "material-design",
-    "nextjs",
-    "material-ui",
-    "admin-dashboard",
-    "free",
-    "mui",
-    "admin-template",
-    "admin-panel",
-    "freebies",
-    "nextjs-template",
-    "react-dashboard",
-    "themeselection"
-  ],
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "export": "next export",
-    "lint": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
-  },
+  "name": "datta-able-rv18.0.4",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "http://lite.codedthemes.com/datta-able/react/default/",
   "dependencies": {
-    "@emotion/cache": "^11.6.0",
-    "@emotion/react": "^11.7.0",
-    "@emotion/server": "^11.4.0",
-    "@emotion/styled": "^11.6.0",
-    "@mui/lab": "^5.0.0-alpha.70",
-    "@mui/material": "^5.4.3",
-    "@popperjs/core": "^2.11.2",
-    "apexcharts-clevision": "3.28.5",
-    "clsx": "^1.1.1",
-    "mdi-material-ui": "^7.1.0",
-    "next": "12.0.4",
-    "nprogress": "^0.2.0",
-    "react": "17.0.2",
-    "react-apexcharts": "^1.3.9",
-    "react-datepicker": "^4.5.0",
-    "react-dom": "17.0.2",
-    "react-perfect-scrollbar": "^1.5.8",
-    "react-popper": "^2.2.5"
+    "bootstrap": "^4.3.1",
+    "font-awesome": "^4.7.0",
+    "google-maps-react": "^2.0.2",
+    "jquery": "^3.4.0",
+    "sass": "^1.70.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.4",
+    "react-bootstrap": "^1.0.0-beta.5",
+    "react-dom": "^16.8.4",
+    "react-full-screen": "^0.2.4",
+    "react-loadable": "^5.5.0",
+    "react-nvd3": "^0.5.7",
+    "react-perfect-scrollbar": "^1.4.4",
+    "react-redux": "^6.0.1",
+    "react-reveal": "^1.2.2",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "^3.0.0",
+    "react-window-size": "^1.2.2",
+    "redux": "^4.0.1"
   },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
   "devDependencies": {
-    "@types/node": "16.11.11",
-    "@types/nprogress": "^0.2.0",
-    "@types/react": "17.0.37",
-    "@types/react-datepicker": "^4.3.2",
-    "@typescript-eslint/eslint-plugin": "^5.6.0",
-    "@typescript-eslint/parser": "^5.11.0",
-    "eslint": "^7.32.0",
-    "eslint-config-next": "12.0.4",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-import-resolver-alias": "^1.1.2",
-    "eslint-import-resolver-typescript": "^2.5.0",
-    "eslint-plugin-import": "^2.25.4",
-    "next-transpile-modules": "^9.0.0",
-    "prettier": "2.5.1",
-    "typescript": "4.5.2"
+    "react-to-print": "^2.1.1"
   }
 }
