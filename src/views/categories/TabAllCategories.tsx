@@ -56,7 +56,6 @@ const TabAllCategories = () => {
 
   useEffect(() => {
     callAllCategoriesApi()
-    setIsLoaderVisible(true)
   }, [])
 
   const resetSelectedCategory = () => {

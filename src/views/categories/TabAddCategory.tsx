@@ -13,6 +13,7 @@ import Button, { ButtonProps } from '@mui/material/Button'
 import { CategoryModel } from 'src/models/CategoryModel'
 import { httpPostRequest } from 'src/services/AxiosApi'
 import apiPathsConfig from 'src/configs/apiPathsConfig'
+import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 
 const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -38,6 +39,7 @@ const TabAddCategory = () => {
     description: '',
     image: ''
   })
+  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
 
   const handleTitleChange = (prop: keyof CategoryModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
@@ -64,60 +66,64 @@ const TabAddCategory = () => {
   }
 
   const onAddNewCategoryClick = async () => {
+    setIsLoaderVisible(true)
     const response = await httpPostRequest({ apiUrlPath: apiPathsConfig.addCategoryApiPath, jsonBody: values })
     if (response.isSucceded) {
       resetForm()
     }
+    setIsLoaderVisible(false)
   }
 
   return (
-    <CardContent>
-      <form>
-        <Grid container spacing={7}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label='Category title'
-              placeholder='Category title'
-              value={values.title}
-              onChange={handleTitleChange('title')}
-            />
+    <div>
+      <CardContent>
+        <form>
+          <Grid container spacing={7}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label='Category title'
+                placeholder='Category title'
+                value={values.title}
+                onChange={handleTitleChange('title')}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label='Category image url'
+                placeholder='Category image url'
+                value={values.image}
+                onChange={handleImageUrlChange('image')}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <TextField
+                fullWidth
+                label='description'
+                placeholder='Category description'
+                value={values.description}
+                onChange={handleDescriptionChange('description')}
+                multiline
+                minRows={3}
+                sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label='Category image url'
-              placeholder='Category image url'
-              value={values.image}
-              onChange={handleImageUrlChange('image')}
-            />
+          <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
+            <Box>
+              <ButtonStyled component='label' variant='contained' onClick={onAddNewCategoryClick}>
+                Add new category
+              </ButtonStyled>
+              <ResetButtonStyled color='error' variant='outlined' onClick={onResetClick}>
+                Reset
+              </ResetButtonStyled>
+            </Box>
           </Grid>
-          <Grid item xs={12} sm={12}>
-            <TextField
-              fullWidth
-              label='description'
-              placeholder='Category description'
-              value={values.description}
-              onChange={handleDescriptionChange('description')}
-              multiline
-              minRows={3}
-              sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}
-            />
-          </Grid>
-        </Grid>
-        <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
-          <Box>
-            <ButtonStyled component='label' variant='contained' onClick={onAddNewCategoryClick}>
-              Add new category
-            </ButtonStyled>
-            <ResetButtonStyled color='error' variant='outlined' onClick={onResetClick}>
-              Reset
-            </ResetButtonStyled>
-          </Box>
-        </Grid>
-      </form>
-      {/* {renderDataTable()} */}
-    </CardContent>
+        </form>
+        <CustomisedLoader visible={isLoaderVisible} />
+      </CardContent>
+    </div>
   )
 }
 
