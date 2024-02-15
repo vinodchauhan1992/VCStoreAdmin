@@ -1,126 +1,148 @@
 // ** React Imports
-import { forwardRef, useState } from 'react'
+import { useState, useEffect } from 'react'
 
 // ** MUI Imports
-import Grid from '@mui/material/Grid'
-import Radio from '@mui/material/Radio'
-import Select from '@mui/material/Select'
-import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
-import TextField from '@mui/material/TextField'
-import FormLabel from '@mui/material/FormLabel'
-import InputLabel from '@mui/material/InputLabel'
-import RadioGroup from '@mui/material/RadioGroup'
 import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Table from '@mui/material/Table'
+import TableHead from '@mui/material/TableHead'
+import TableBody from '@mui/material/TableBody'
+import Typography from '@mui/material/Typography'
+import TableContainer from '@mui/material/TableContainer'
+import Box from '@mui/material/Box'
+import Button, { ButtonProps } from '@mui/material/Button'
+import apiPathsConfig from '../../configs/apiPathsConfig'
+import TableRow from '@mui/material/TableRow'
+import Paper from '@mui/material/Paper'
+import { httpDeleteRequest, httpGetRequest } from 'src/services/AxiosApi'
+import { CategoryModel } from 'src/models/CategoryModel'
+import { StyledTableCell } from 'src/@core/components/customised-table/styled-table-cell/StyledTableCell'
+import { StyledTableRow } from 'src/@core/components/customised-table/styled-table-row/StyledTableRow'
+import { styled } from '@mui/material/styles'
+import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 
-// ** Third Party Imports
-import DatePicker from 'react-datepicker'
-
-// ** Styled Components
-import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
-
-const CustomInput = forwardRef((props, ref) => {
-  return <TextField inputRef={ref} label='Birth Date' fullWidth {...props} />
-})
+const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
+  marginRight: theme.spacing(4.5),
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+    marginLeft: 0,
+    textAlign: 'center',
+    marginTop: theme.spacing(4)
+  }
+}))
 
 const TabAllCategories = () => {
   // ** State
-  const [date, setDate] = useState<Date | null | undefined>(null)
+  const [allCategoriesData, setAllCategoriesData] = useState<CategoryModel[]>([])
+  const [isErrored, setIsErrored] = useState<boolean>(false)
+  const [message, setMessage] = useState<string | null>(null)
 
-  return (
-    <CardContent>
-      <form>
-        <Grid container spacing={7}>
-          <Grid item xs={12} sx={{ marginTop: 4.8 }}>
-            <TextField
-              fullWidth
-              multiline
-              label='Bio'
-              minRows={2}
-              placeholder='Bio'
-              defaultValue='The name’s John Deo. I am a tireless seeker of knowledge, occasional purveyor of wisdom and also, coincidentally, a graphic designer. Algolia helps businesses across industries quickly create relevant 😎, scalable 😀, and lightning 😍 fast search and discovery experiences.'
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <DatePickerWrapper>
-              <DatePicker
-                selected={date}
-                showYearDropdown
-                showMonthDropdown
-                id='account-settings-date'
-                placeholderText='MM-DD-YYYY'
-                customInput={<CustomInput />}
-                onChange={(date: Date) => setDate(date)}
-              />
-            </DatePickerWrapper>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField fullWidth type='number' label='Phone' placeholder='(123) 456-7890' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label='Website'
-              placeholder='https://example.com/'
-              defaultValue='https://themeselection.com/'
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Country</InputLabel>
-              <Select label='Country' defaultValue='USA'>
-                <MenuItem value='USA'>USA</MenuItem>
-                <MenuItem value='UK'>UK</MenuItem>
-                <MenuItem value='Australia'>Australia</MenuItem>
-                <MenuItem value='Germany'>Germany</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel id='form-layouts-separator-multiple-select-label'>Languages</InputLabel>
-              <Select
-                multiple
-                defaultValue={['English']}
-                id='account-settings-multiple-select'
-                labelId='account-settings-multiple-select-label'
-                input={<OutlinedInput label='Languages' id='select-multiple-language' />}
-              >
-                <MenuItem value='English'>English</MenuItem>
-                <MenuItem value='French'>French</MenuItem>
-                <MenuItem value='Spanish'>Spanish</MenuItem>
-                <MenuItem value='Portuguese'>Portuguese</MenuItem>
-                <MenuItem value='Italian'>Italian</MenuItem>
-                <MenuItem value='German'>German</MenuItem>
-                <MenuItem value='Arabic'>Arabic</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl>
-              <FormLabel sx={{ fontSize: '0.875rem' }}>Gender</FormLabel>
-              <RadioGroup row defaultValue='male' aria-label='gender' name='account-settings-info-radio'>
-                <FormControlLabel value='male' label='Male' control={<Radio />} />
-                <FormControlLabel value='female' label='Female' control={<Radio />} />
-                <FormControlLabel value='other' label='Other' control={<Radio />} />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }}>
-              Save Changes
-            </Button>
-            <Button type='reset' variant='outlined' color='secondary' onClick={() => setDate(null)}>
-              Reset
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-    </CardContent>
-  )
+  const callAllCategoriesApi = async () => {
+    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllCategoriesApiPath })
+    if (response.isSucceded) {
+      setAllCategoriesData(response?.responseData?.data ?? [])
+      setMessage(response?.responseData?.message ?? null)
+    } else {
+      setIsErrored(true)
+      setMessage(response?.responseData?.message ?? null)
+    }
+  }
+
+  useEffect(() => {
+    callAllCategoriesApi()
+  }, [])
+
+  const onDeleteClick = async (category: CategoryModel) => {
+    const response = await httpDeleteRequest({ apiUrlPath: `${apiPathsConfig.deleteCategoryApiPath}/${category.id}` })
+    if (response.isSucceded) {
+      callAllCategoriesApi()
+    }
+  }
+
+  const renderDataTable = () => {
+    if (allCategoriesData && allCategoriesData.length > 0) {
+      return (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label='table in dashboard'>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>ID</StyledTableCell>
+                <StyledTableCell>Title</StyledTableCell>
+                <StyledTableCell>Dates</StyledTableCell>
+                <StyledTableCell>Manage</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {allCategoriesData.map((category: CategoryModel) => (
+                <StyledTableRow
+                  hover
+                  key={category?.title}
+                  sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
+                >
+                  <StyledTableCell>{category?.id}</StyledTableCell>
+                  <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
+                        {category?.title}
+                      </Typography>
+                      <Typography variant='caption'>{category?.code}</Typography>
+                    </Box>
+                  </StyledTableCell>
+                  <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
+                        {`Added On: ${category?.dateAdded ?? 'N/A'}`}
+                      </Typography>
+                      <Typography variant='caption'>{`Modified On: ${category?.dateModified ?? 'N/A'}`}</Typography>
+                    </Box>
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(category)}>
+                      <Typography color='error' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
+                        Delete
+                      </Typography>
+                    </ButtonStyled>
+                    <ButtonStyled color='info' variant='outlined' onClick={() => onDeleteClick(category)}>
+                      <Typography color='info' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
+                        Edit
+                      </Typography>
+                    </ButtonStyled>
+                    <ButtonStyled color='success' variant='outlined' onClick={() => onDeleteClick(category)}>
+                      <Typography color='success' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
+                        View
+                      </Typography>
+                    </ButtonStyled>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )
+    }
+  }
+
+  const renderEmpty = () => {
+    return (
+      <CustomisedErrorEmpty title='No categories found!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+    )
+  }
+
+  const renderError = () => {
+    return <CustomisedErrorEmpty title='Error!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+  }
+
+  const renderData = () => {
+    if (isErrored) {
+      return renderError()
+    }
+    if (!allCategoriesData || allCategoriesData.length <= 0) {
+      return renderEmpty()
+    }
+
+    return renderDataTable()
+  }
+
+  return <CardContent>{renderData()}</CardContent>
 }
 
 export default TabAllCategories

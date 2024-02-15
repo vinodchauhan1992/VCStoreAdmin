@@ -17,7 +17,7 @@ import InformationOutline from 'mdi-material-ui/InformationOutline'
 
 // ** Demo Tabs Imports
 import TabAllCategories from 'src/views/categories/TabAllCategories'
-import TabCategoryByID from 'src/views/categories/TabCategoryByID'
+import TabCategoryByTitle from 'src/views/categories/TabCategoryByTitle'
 import TabAddCategory from 'src/views/categories/TabAddCategory'
 
 // ** Third Party Styles Imports
@@ -67,11 +67,11 @@ const Categories = () => {
             }
           />
           <Tab
-            value='categoryByID'
+            value='categoryByTitle'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountOutline />
-                <TabName>Category By ID</TabName>
+                <TabName>Category By Title</TabName>
               </Box>
             }
           />
@@ -89,8 +89,8 @@ const Categories = () => {
         <TabPanel sx={{ p: 0 }} value='allCategories'>
           <TabAllCategories />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='categoryByID'>
-          <TabCategoryByID />
+        <TabPanel sx={{ p: 0 }} value='categoryByTitle'>
+          <TabCategoryByTitle />
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='addCategory'>
           <TabAddCategory />
