@@ -11,6 +11,7 @@ import { httpGetRequest } from 'src/services/AxiosApi'
 import apiPathsConfig from 'src/configs/apiPathsConfig'
 import { CategoryModel } from 'src/models/CategoryModel'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
+import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 
 const TabCategoryByID = () => {
   // ** States
@@ -18,8 +19,10 @@ const TabCategoryByID = () => {
   const [selectedCategoryData, setSelectedCategoryData] = useState<CategoryModel | null>(null)
   const [isErrored, setIsErrored] = useState<boolean>(false)
   const [message, setMessage] = useState<string | null>(null)
+  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
 
   const callAllCategoriesApi = async () => {
+    setIsLoaderVisible(true)
     const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllCategoriesApiPath })
     if (response.isSucceded) {
       setAllCategoriesData(response?.responseData?.data ?? [])
@@ -28,6 +31,7 @@ const TabCategoryByID = () => {
       setIsErrored(true)
       setMessage(response?.responseData?.message ?? null)
     }
+    setIsLoaderVisible(false)
   }
 
   useEffect(() => {
@@ -115,35 +119,37 @@ const TabCategoryByID = () => {
   }
 
   return (
-    <CardContent>
-      <form>
-        <Grid container spacing={7}>
-          <Grid item xs={12} sm={selectedCategoryData ? 6 : 12}>
-            <FormControl fullWidth>
-              <InputLabel>Category title</InputLabel>
-              <Select label='Category title'>
-                {allCategoriesData?.map(category => {
-                  return (
-                    <MenuItem
-                      value={category?.title ?? ''}
-                      key={`${category.id}`}
-                      onClick={() => {
-                        setSelectedCategoryData(category)
-                      }}
-                    >
-                      {category.title}
-                    </MenuItem>
-                  )
-                })}
-              </Select>
-            </FormControl>
-          </Grid>
+    <div>
+      <CustomisedLoader visible={isLoaderVisible} />
+      <CardContent>
+        <form>
+          <Grid container spacing={7}>
+            <Grid item xs={12} sm={selectedCategoryData ? 6 : 12}>
+              <FormControl fullWidth>
+                <InputLabel>Category title</InputLabel>
+                <Select label='Category title'>
+                  {allCategoriesData?.map(category => {
+                    return (
+                      <MenuItem
+                        value={category?.title ?? ''}
+                        key={`${category.id}`}
+                        onClick={() => {
+                          setSelectedCategoryData(category)
+                        }}
+                      >
+                        {category.title}
+                      </MenuItem>
+                    )
+                  })}
+                </Select>
+              </FormControl>
+            </Grid>
 
-          {renderData()}
-        </Grid>
-      </form>
-      {/* {renderDataTable()} */}
-    </CardContent>
+            {renderData()}
+          </Grid>
+        </form>
+      </CardContent>
+    </div>
   )
 }
 export default TabCategoryByID
