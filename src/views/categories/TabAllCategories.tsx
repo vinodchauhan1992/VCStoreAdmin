@@ -19,6 +19,8 @@ import { StyledTableCell } from 'src/@core/components/customised-table/styled-ta
 import { StyledTableRow } from 'src/@core/components/customised-table/styled-table-row/StyledTableRow'
 import { styled } from '@mui/material/styles'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
+import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
+import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -35,8 +37,12 @@ const TabAllCategories = () => {
   const [allCategoriesData, setAllCategoriesData] = useState<CategoryModel[]>([])
   const [isErrored, setIsErrored] = useState<boolean>(false)
   const [message, setMessage] = useState<string | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+  const [selectedCategory, setSelectedCategory] = useState<CategoryModel | null>(null)
+  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
 
   const callAllCategoriesApi = async () => {
+    setIsLoaderVisible(true)
     const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllCategoriesApiPath })
     if (response.isSucceded) {
       setAllCategoriesData(response?.responseData?.data ?? [])
@@ -45,17 +51,42 @@ const TabAllCategories = () => {
       setIsErrored(true)
       setMessage(response?.responseData?.message ?? null)
     }
+    setIsLoaderVisible(false)
   }
 
   useEffect(() => {
     callAllCategoriesApi()
+    setIsLoaderVisible(true)
   }, [])
 
-  const onDeleteClick = async (category: CategoryModel) => {
-    const response = await httpDeleteRequest({ apiUrlPath: `${apiPathsConfig.deleteCategoryApiPath}/${category.id}` })
+  const resetSelectedCategory = () => {
+    setSelectedCategory(null)
+    setIsDialogOpen(false)
+  }
+
+  const deleteCategory = async () => {
+    resetSelectedCategory()
+    setIsLoaderVisible(true)
+    const response = await httpDeleteRequest({
+      apiUrlPath: `${apiPathsConfig.deleteCategoryApiPath}/${selectedCategory?.id}`
+    })
     if (response.isSucceded) {
-      callAllCategoriesApi()
+      await callAllCategoriesApi()
     }
+    setIsLoaderVisible(false)
+  }
+
+  const onDeleteClick = async (category: CategoryModel) => {
+    setSelectedCategory(category)
+    setIsDialogOpen(true)
+  }
+
+  const onEditClick = async (category: CategoryModel) => {}
+
+  const onViewClick = async (category: CategoryModel) => {}
+
+  const handleDialogOpen = () => {
+    setIsDialogOpen(!isDialogOpen)
   }
 
   const renderDataTable = () => {
@@ -101,12 +132,12 @@ const TabAllCategories = () => {
                         Delete
                       </Typography>
                     </ButtonStyled>
-                    <ButtonStyled color='info' variant='outlined' onClick={() => onDeleteClick(category)}>
+                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(category)}>
                       <Typography color='info' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         Edit
                       </Typography>
                     </ButtonStyled>
-                    <ButtonStyled color='success' variant='outlined' onClick={() => onDeleteClick(category)}>
+                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(category)}>
                       <Typography color='success' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         View
                       </Typography>
@@ -142,7 +173,43 @@ const TabAllCategories = () => {
     return renderDataTable()
   }
 
-  return <CardContent>{renderData()}</CardContent>
+  const renderAlertDialog = () => {
+    return (
+      <CustomisedAlertDialog
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={handleDialogOpen}
+        dialogTitle='Delete category!'
+        dialogMessage={`Are you sure you want to delete ${selectedCategory?.title} category?`}
+        dialogButtons={[
+          {
+            title: 'Yes',
+            onClick: () => {
+              deleteCategory()
+            },
+            autoFocus: true
+          },
+          {
+            title: 'No',
+            onClick: () => {
+              setIsDialogOpen(false)
+              resetSelectedCategory()
+            },
+            autoFocus: false
+          }
+        ]}
+      />
+    )
+  }
+
+  return (
+    <div>
+      <CustomisedLoader visible={isLoaderVisible} />
+      <CardContent>
+        {renderAlertDialog()}
+        {renderData()}
+      </CardContent>
+    </div>
+  )
 }
 
 export default TabAllCategories
