@@ -10,6 +10,7 @@ interface DialogButtonProps {
   title: string
   autoFocus: boolean
   variant?: 'text' | 'outlined' | 'contained'
+  color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning'
   onClick?: (buttonIndex: number, buttonData: DialogButtonProps, dataIndex: number) => void
 }
 
@@ -32,6 +33,7 @@ const CustomisedAlertDialog = (props: Props) => {
           {dialogButtons?.map((dialogButton: DialogButtonProps, index: number) => {
             return (
               <Button
+                color={dialogButton?.color ?? 'secondary'}
                 variant={dialogButton?.variant ?? 'outlined'}
                 onClick={() => dialogButton?.onClick?.(index, dialogButton, dataIndex)}
                 key={index}

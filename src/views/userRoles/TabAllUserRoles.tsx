@@ -14,13 +14,13 @@ import apiPathsConfig from '../../configs/apiPathsConfig'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import { httpDeleteRequest, httpGetRequest } from 'src/services/AxiosApi'
-import { CategoryModel } from 'src/models/CategoryModel'
 import { StyledTableCell } from 'src/@core/components/customised-table/styled-table-cell/StyledTableCell'
 import { StyledTableRow } from 'src/@core/components/customised-table/styled-table-row/StyledTableRow'
 import { styled } from '@mui/material/styles'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
 import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
+import { UserRoleModel } from 'src/models/UserRoleModel'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -32,20 +32,20 @@ const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   }
 }))
 
-const TabAllCategories = () => {
+const TabAllUserRoles = () => {
   // ** State
-  const [allCategoriesData, setAllCategoriesData] = useState<CategoryModel[]>([])
+  const [allUserRoles, setAllUserRolesData] = useState<UserRoleModel[]>([])
   const [isErrored, setIsErrored] = useState<boolean>(false)
   const [message, setMessage] = useState<string | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
-  const [selectedCategory, setSelectedCategory] = useState<CategoryModel | null>(null)
+  const [selectedUserRole, setSelectedUserRole] = useState<UserRoleModel | null>(null)
   const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
 
-  const callAllCategoriesApi = async () => {
+  const callAllUserRolesApi = async () => {
     setIsLoaderVisible(true)
-    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllCategoriesApiPath })
+    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllUserRolesApiPath })
     if (response.isSucceded) {
-      setAllCategoriesData(response?.responseData?.data ?? [])
+      setAllUserRolesData(response?.responseData?.data ?? [])
       setMessage(response?.responseData?.message ?? null)
     } else {
       setIsErrored(true)
@@ -55,88 +55,87 @@ const TabAllCategories = () => {
   }
 
   useEffect(() => {
-    callAllCategoriesApi()
+    callAllUserRolesApi()
   }, [])
 
-  const resetSelectedCategory = () => {
-    setSelectedCategory(null)
+  const resetSelectedUserRole = () => {
+    setSelectedUserRole(null)
     setIsDialogOpen(false)
   }
 
-  const deleteCategory = async () => {
-    resetSelectedCategory()
+  const deleteUserRole = async () => {
+    resetSelectedUserRole()
     setIsLoaderVisible(true)
     const response = await httpDeleteRequest({
-      apiUrlPath: `${apiPathsConfig.deleteCategoryApiPath}/${selectedCategory?.id}`
+      apiUrlPath: `${apiPathsConfig.deleteUserRoleApiPath}/${selectedUserRole?.id}`
     })
     if (response.isSucceded) {
-      await callAllCategoriesApi()
+      await callAllUserRolesApi()
     }
     setIsLoaderVisible(false)
   }
 
-  const onDeleteClick = async (category: CategoryModel) => {
-    setSelectedCategory(category)
+  const onDeleteClick = async (userRoleData: UserRoleModel) => {
+    setSelectedUserRole(userRoleData)
     setIsDialogOpen(true)
   }
 
-  const onEditClick = async (category: CategoryModel) => {}
+  const onEditClick = async (userRoleData: UserRoleModel) => {}
 
-  const onViewClick = async (category: CategoryModel) => {}
+  const onViewClick = async (userRoleData: UserRoleModel) => {}
 
   const handleDialogOpen = () => {
     setIsDialogOpen(!isDialogOpen)
   }
 
   const renderDataTable = () => {
-    if (allCategoriesData && allCategoriesData.length > 0) {
+    if (allUserRoles && allUserRoles.length > 0) {
       return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label='table in dashboard'>
             <TableHead>
               <TableRow>
                 <StyledTableCell>ID</StyledTableCell>
-                <StyledTableCell>Title</StyledTableCell>
+                <StyledTableCell>Role</StyledTableCell>
                 <StyledTableCell>Dates</StyledTableCell>
                 <StyledTableCell>Manage</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {allCategoriesData.map((category: CategoryModel) => (
+              {allUserRoles.map((userRoleData: UserRoleModel) => (
                 <StyledTableRow
                   hover
-                  key={category?.title}
+                  key={userRoleData?.role}
                   sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
                 >
-                  <StyledTableCell>{category?.id}</StyledTableCell>
+                  <StyledTableCell>{userRoleData?.id}</StyledTableCell>
                   <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {category?.title}
+                        {userRoleData?.role}
                       </Typography>
-                      <Typography variant='caption'>{category?.code}</Typography>
                     </Box>
                   </StyledTableCell>
                   <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`Added On: ${category?.dateAdded ?? 'N/A'}`}
+                        {`Added On: ${userRoleData?.dateAdded ?? 'N/A'}`}
                       </Typography>
-                      <Typography variant='caption'>{`Modified On: ${category?.dateModified ?? 'N/A'}`}</Typography>
+                      <Typography variant='caption'>{`Modified On: ${userRoleData?.dateModified ?? 'N/A'}`}</Typography>
                     </Box>
                   </StyledTableCell>
                   <StyledTableCell>
-                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(category)}>
+                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(userRoleData)}>
                       <Typography color='error' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         Delete
                       </Typography>
                     </ButtonStyled>
-                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(category)}>
+                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(userRoleData)}>
                       <Typography color='info' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         Edit
                       </Typography>
                     </ButtonStyled>
-                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(category)}>
+                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(userRoleData)}>
                       <Typography color='success' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         View
                       </Typography>
@@ -153,7 +152,7 @@ const TabAllCategories = () => {
 
   const renderEmpty = () => {
     return (
-      <CustomisedErrorEmpty title='No categories found!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+      <CustomisedErrorEmpty title='No user roles found!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
     )
   }
 
@@ -165,7 +164,7 @@ const TabAllCategories = () => {
     if (isErrored) {
       return renderError()
     }
-    if (!allCategoriesData || allCategoriesData.length <= 0) {
+    if (!allUserRoles || allUserRoles.length <= 0) {
       return renderEmpty()
     }
 
@@ -177,13 +176,13 @@ const TabAllCategories = () => {
       <CustomisedAlertDialog
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={handleDialogOpen}
-        dialogTitle='Delete category!'
-        dialogMessage={`Are you sure you want to delete ${selectedCategory?.title} category?`}
+        dialogTitle='Delete user role!'
+        dialogMessage={`Are you sure you want to delete ${selectedUserRole?.role} user role?`}
         dialogButtons={[
           {
             title: 'Yes',
             onClick: () => {
-              deleteCategory()
+              deleteUserRole()
             },
             autoFocus: true,
             color: 'error'
@@ -192,7 +191,7 @@ const TabAllCategories = () => {
             title: 'No',
             onClick: () => {
               setIsDialogOpen(false)
-              resetSelectedCategory()
+              resetSelectedUserRole()
             },
             autoFocus: false,
             color: 'success'
@@ -213,4 +212,4 @@ const TabAllCategories = () => {
   )
 }
 
-export default TabAllCategories
+export default TabAllUserRoles
