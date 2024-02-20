@@ -25,6 +25,11 @@ const navigation = (): VerticalNavItemsType => {
       path: '/userRoles'
     },
     {
+      title: 'User Statuses',
+      icon: AccountOutline,
+      path: '/userStatuses'
+    },
+    {
       title: 'Categories',
       icon: FilterMenuOutline,
       path: '/categories'

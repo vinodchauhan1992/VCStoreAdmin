@@ -10,12 +10,12 @@ import CardContent from '@mui/material/CardContent'
 import Button, { ButtonProps } from '@mui/material/Button'
 
 // ** Icons Imports
-import { CategoryModel } from 'src/models/CategoryModel'
 import { httpPostRequest } from 'src/services/AxiosApi'
 import apiPathsConfig from 'src/configs/apiPathsConfig'
 import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
-import Alert from '@mui/material/Alert'
+import { UserStatusModel } from 'src/models/UserStatusModel'
 import { AlertValuesModel } from 'src/models/AlertValuesModel'
+import Alert from '@mui/material/Alert'
 
 const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -34,7 +34,7 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   }
 }))
 
-const TabAddCategory = () => {
+const TabAddUserStatus = () => {
   const defaultAlertValues: AlertValuesModel = {
     severity: 'info',
     message: '',
@@ -42,31 +42,25 @@ const TabAddCategory = () => {
   }
 
   // ** State
-  const [values, setValues] = useState<CategoryModel>({
-    title: '',
-    description: '',
-    image: ''
+  const [values, setValues] = useState<UserStatusModel>({
+    status: '',
+    description: ''
   })
   const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
   const [alertVaues, setAlertValues] = useState<AlertValuesModel>(defaultAlertValues)
 
-  const handleTitleChange = (prop: keyof CategoryModel) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleRoleChange = (prop: keyof UserStatusModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
-  const handleDescriptionChange = (prop: keyof CategoryModel) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
-
-  const handleImageUrlChange = (prop: keyof CategoryModel) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleDescriptionChange = (prop: keyof UserStatusModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
   const resetForm = () => {
     setValues({
-      title: '',
-      description: '',
-      image: ''
+      status: '',
+      description: ''
     })
     setAlertValues(defaultAlertValues)
   }
@@ -75,11 +69,11 @@ const TabAddCategory = () => {
     resetForm()
   }
 
-  const onAddNewCategoryClick = async () => {
-    if (!values?.title || values.title === '') {
+  const onAddNewUserRoleClick = async () => {
+    if (!values?.status || values.status === '') {
       setAlertValues({
         severity: 'error',
-        message: 'Please enter category title.',
+        message: 'Please enter user status.',
         isVisible: true
       })
 
@@ -88,14 +82,14 @@ const TabAddCategory = () => {
     if (!values?.description || values.description === '') {
       setAlertValues({
         severity: 'error',
-        message: 'Please enter category description.',
+        message: 'Please enter description.',
         isVisible: true
       })
 
       return
     }
     setIsLoaderVisible(true)
-    const response = await httpPostRequest({ apiUrlPath: apiPathsConfig.addCategoryApiPath, jsonBody: values })
+    const response = await httpPostRequest({ apiUrlPath: apiPathsConfig.addUserStatusApiPath, jsonBody: values })
     if (response.isSucceded) {
       resetForm()
     }
@@ -124,29 +118,20 @@ const TabAddCategory = () => {
         {renderAlert()}
         <form>
           <Grid container spacing={7}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={12}>
               <TextField
                 fullWidth
-                label='Category title'
-                placeholder='Category title'
-                value={values.title}
-                onChange={handleTitleChange('title')}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label='Category image url'
-                placeholder='Category image url'
-                value={values.image}
-                onChange={handleImageUrlChange('image')}
+                label='User status'
+                placeholder='User status'
+                value={values.status}
+                onChange={handleRoleChange('status')}
               />
             </Grid>
             <Grid item xs={12} sm={12}>
               <TextField
                 fullWidth
-                label='Category description'
-                placeholder='Category description'
+                label='Status description'
+                placeholder='Status description'
                 value={values.description}
                 onChange={handleDescriptionChange('description')}
                 multiline
@@ -157,8 +142,8 @@ const TabAddCategory = () => {
           </Grid>
           <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
             <Box>
-              <ButtonStyled component='label' variant='contained' onClick={onAddNewCategoryClick}>
-                Add new category
+              <ButtonStyled component='label' variant='contained' onClick={onAddNewUserRoleClick}>
+                Add new user status
               </ButtonStyled>
               <ResetButtonStyled color='error' variant='outlined' onClick={onResetClick}>
                 Reset
@@ -172,4 +157,4 @@ const TabAddCategory = () => {
   )
 }
 
-export default TabAddCategory
+export default TabAddUserStatus

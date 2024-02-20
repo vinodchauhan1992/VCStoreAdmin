@@ -16,9 +16,9 @@ import AccountPlusOutline from 'mdi-material-ui/AccountPlusOutline'
 import AccountWrenchOutline from 'mdi-material-ui/AccountWrenchOutline'
 
 // ** Demo Tabs Imports
-import TabAllUserRoles from 'src/views/userRoles/TabAllUserRoles'
-import TabUserRoleByRole from 'src/views/userRoles/TabUserRoleByRole'
-import TabAddUserRole from 'src/views/userRoles/TabAddUserRole'
+import TabAllUserStatuses from 'src/views/userStatuses/TabAllUserStatuses'
+import TabUserStatusByStatus from 'src/views/userStatuses/TabUserStatusByStatus'
+import TabAddUserStatus from 'src/views/userStatuses/TabAddUserStatus'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
@@ -43,7 +43,7 @@ const TabName = styled('span')(({ theme }) => ({
 
 const Users = () => {
   // ** State
-  const [value, setValue] = useState<string>('allUserRoles')
+  const [value, setValue] = useState<string>('allUserStatuses')
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -54,46 +54,46 @@ const Users = () => {
       <TabContext value={value}>
         <TabList
           onChange={handleChange}
-          aria-label='userRoles tabs'
+          aria-label='userStatuses tabs'
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
           <Tab
-            value='allUserRoles'
+            value='allUserStatuses'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountWrenchOutline />
-                <TabName>All User Roles</TabName>
+                <TabName>All User Statuses</TabName>
               </Box>
             }
           />
           <Tab
-            value='userRoleByRole'
+            value='userStatusByStatus'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountSearchOutline />
-                <TabName>User Role By Role Name</TabName>
+                <TabName>User Status By Status Name</TabName>
               </Box>
             }
           />
           <Tab
-            value='addUserRole'
+            value='addUserStatus'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountPlusOutline />
-                <TabName>Add User Role</TabName>
+                <TabName>Add User Status</TabName>
               </Box>
             }
           />
         </TabList>
 
-        <TabPanel sx={{ p: 0 }} value='allUserRoles'>
-          <TabAllUserRoles />
+        <TabPanel sx={{ p: 0 }} value='allUserStatuses'>
+          <TabAllUserStatuses />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='userRoleByRole'>
-          <TabUserRoleByRole />
+        <TabPanel sx={{ p: 0 }} value='userStatusByStatus'>
+          <TabUserStatusByStatus />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='addUserRole'>
-          <TabAddUserRole />
+        <TabPanel sx={{ p: 0 }} value='addUserStatus'>
+          <TabAddUserStatus />
         </TabPanel>
       </TabContext>
     </Card>

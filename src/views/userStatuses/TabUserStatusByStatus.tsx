@@ -9,23 +9,23 @@ import InputLabel from '@mui/material/InputLabel'
 import Grid from '@mui/material/Grid'
 import { httpGetRequest } from 'src/services/AxiosApi'
 import apiPathsConfig from 'src/configs/apiPathsConfig'
-import { CategoryModel } from 'src/models/CategoryModel'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
+import { UserStatusModel } from 'src/models/UserStatusModel'
 
-const TabCategoryByID = () => {
+const TabUserStatusByStatus = () => {
   // ** States
-  const [allCategoriesData, setAllCategoriesData] = useState<CategoryModel[]>([])
-  const [selectedCategoryData, setSelectedCategoryData] = useState<CategoryModel | null>(null)
+  const [allUserStatusesData, setAllUerStatusesData] = useState<UserStatusModel[]>([])
+  const [selectedUserStatusData, setSelectedUserStatusData] = useState<UserStatusModel | null>(null)
   const [isErrored, setIsErrored] = useState<boolean>(false)
   const [message, setMessage] = useState<string | null>(null)
   const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
 
-  const callAllCategoriesApi = async () => {
+  const callAllUserStatusesApi = async () => {
     setIsLoaderVisible(true)
-    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllCategoriesApiPath })
+    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllUserStatusesApiPath })
     if (response.isSucceded) {
-      setAllCategoriesData(response?.responseData?.data ?? [])
+      setAllUerStatusesData(response?.responseData?.data ?? [])
       setMessage(response?.responseData?.message ?? null)
     } else {
       setIsErrored(true)
@@ -35,7 +35,7 @@ const TabCategoryByID = () => {
   }
 
   useEffect(() => {
-    callAllCategoriesApi()
+    callAllUserStatusesApi()
   }, [])
 
   const renderDetailsFields = () => {
@@ -45,54 +45,36 @@ const TabCategoryByID = () => {
           <TextField
             disabled
             fullWidth
-            label='Category id'
-            placeholder='Category id'
-            value={selectedCategoryData?.id ?? ''}
+            label='User Status ID'
+            placeholder='User Status ID'
+            value={selectedUserStatusData?.id ?? ''}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             disabled
             fullWidth
-            label='Category code'
-            placeholder='Category code'
-            value={selectedCategoryData?.code ?? ''}
+            label='Status added on'
+            placeholder='Status added on'
+            value={selectedUserStatusData?.dateAdded ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             disabled
             fullWidth
-            label='Category image url'
-            placeholder='Category image url'
-            value={selectedCategoryData?.image ?? ''}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            disabled
-            fullWidth
-            label='Category added on'
-            placeholder='Category added on'
-            value={selectedCategoryData?.dateAdded ?? 'N/A'}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            disabled
-            fullWidth
-            label='Category updated on'
-            placeholder='Category updated on'
-            value={selectedCategoryData?.dateModified ?? 'N/A'}
+            label='Status updated on'
+            placeholder='Status updated on'
+            value={selectedUserStatusData?.dateModified ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={12} sm={12}>
           <TextField
             disabled
             fullWidth
-            label='Category description'
-            placeholder='Category description'
-            value={selectedCategoryData?.description ?? 'N/A'}
+            label='Status description'
+            placeholder='Status description'
+            value={selectedUserStatusData?.description ?? 'N/A'}
             multiline
             minRows={3}
             sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}
@@ -105,9 +87,9 @@ const TabCategoryByID = () => {
   const renderEmpty = () => {
     return (
       <CustomisedErrorEmpty
-        title='Select category title!'
+        title='Select user status!'
         type='empty'
-        message='Please select a category title from above drop down.'
+        message='Please select a user status from drop down.'
       ></CustomisedErrorEmpty>
     )
   }
@@ -120,7 +102,7 @@ const TabCategoryByID = () => {
     if (isErrored) {
       return renderError()
     }
-    if (!selectedCategoryData) {
+    if (!selectedUserStatusData) {
       return renderEmpty()
     }
 
@@ -133,20 +115,20 @@ const TabCategoryByID = () => {
       <CardContent>
         <form>
           <Grid container spacing={7}>
-            <Grid item xs={12} sm={selectedCategoryData ? 6 : 12}>
+            <Grid item xs={12} sm={selectedUserStatusData ? 6 : 12}>
               <FormControl fullWidth>
-                <InputLabel>Category title</InputLabel>
-                <Select label='Category title'>
-                  {allCategoriesData?.map(category => {
+                <InputLabel>User role</InputLabel>
+                <Select label='User role'>
+                  {allUserStatusesData?.map((userStatus) => {
                     return (
                       <MenuItem
-                        value={category?.title ?? ''}
-                        key={`${category.id}`}
+                        value={userStatus?.status ?? ''}
+                        key={`${userStatus.id}`}
                         onClick={() => {
-                          setSelectedCategoryData(category)
+                          setSelectedUserStatusData(userStatus)
                         }}
                       >
-                        {category.title}
+                        {userStatus.status}
                       </MenuItem>
                     )
                   })}
@@ -161,4 +143,4 @@ const TabCategoryByID = () => {
     </div>
   )
 }
-export default TabCategoryByID
+export default TabUserStatusByStatus

@@ -9,23 +9,23 @@ import InputLabel from '@mui/material/InputLabel'
 import Grid from '@mui/material/Grid'
 import { httpGetRequest } from 'src/services/AxiosApi'
 import apiPathsConfig from 'src/configs/apiPathsConfig'
-import { CategoryModel } from 'src/models/CategoryModel'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
+import { UserRoleModel } from 'src/models/UserRoleModel'
 
-const TabCategoryByID = () => {
+const TabUserRoleByRole = () => {
   // ** States
-  const [allCategoriesData, setAllCategoriesData] = useState<CategoryModel[]>([])
-  const [selectedCategoryData, setSelectedCategoryData] = useState<CategoryModel | null>(null)
+  const [allUserRolesData, setAllUerRolesData] = useState<UserRoleModel[]>([])
+  const [selectedUserRoleData, setSelectedUserRoleData] = useState<UserRoleModel | null>(null)
   const [isErrored, setIsErrored] = useState<boolean>(false)
   const [message, setMessage] = useState<string | null>(null)
   const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
 
-  const callAllCategoriesApi = async () => {
+  const callAllUserRolesApi = async () => {
     setIsLoaderVisible(true)
-    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllCategoriesApiPath })
+    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllUserRolesApiPath })
     if (response.isSucceded) {
-      setAllCategoriesData(response?.responseData?.data ?? [])
+      setAllUerRolesData(response?.responseData?.data ?? [])
       setMessage(response?.responseData?.message ?? null)
     } else {
       setIsErrored(true)
@@ -35,64 +35,40 @@ const TabCategoryByID = () => {
   }
 
   useEffect(() => {
-    callAllCategoriesApi()
+    callAllUserRolesApi()
   }, [])
 
   const renderDetailsFields = () => {
     return (
       <>
         <Grid item xs={12} sm={6}>
+          <TextField disabled fullWidth label='Role ID' placeholder='Role ID' value={selectedUserRoleData?.id ?? ''} />
+        </Grid>
+        <Grid item xs={12} sm={6}>
           <TextField
             disabled
             fullWidth
-            label='Category id'
-            placeholder='Category id'
-            value={selectedCategoryData?.id ?? ''}
+            label='Role added on'
+            placeholder='Role added on'
+            value={selectedUserRoleData?.dateAdded ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             disabled
             fullWidth
-            label='Category code'
-            placeholder='Category code'
-            value={selectedCategoryData?.code ?? ''}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            disabled
-            fullWidth
-            label='Category image url'
-            placeholder='Category image url'
-            value={selectedCategoryData?.image ?? ''}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            disabled
-            fullWidth
-            label='Category added on'
-            placeholder='Category added on'
-            value={selectedCategoryData?.dateAdded ?? 'N/A'}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            disabled
-            fullWidth
-            label='Category updated on'
-            placeholder='Category updated on'
-            value={selectedCategoryData?.dateModified ?? 'N/A'}
+            label='Role updated on'
+            placeholder='Role updated on'
+            value={selectedUserRoleData?.dateModified ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={12} sm={12}>
           <TextField
             disabled
             fullWidth
-            label='Category description'
-            placeholder='Category description'
-            value={selectedCategoryData?.description ?? 'N/A'}
+            label='Role description'
+            placeholder='Role description'
+            value={selectedUserRoleData?.description ?? 'N/A'}
             multiline
             minRows={3}
             sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}
@@ -105,9 +81,9 @@ const TabCategoryByID = () => {
   const renderEmpty = () => {
     return (
       <CustomisedErrorEmpty
-        title='Select category title!'
+        title='Select user role!'
         type='empty'
-        message='Please select a category title from above drop down.'
+        message='Please select a user role from above drop down.'
       ></CustomisedErrorEmpty>
     )
   }
@@ -120,7 +96,7 @@ const TabCategoryByID = () => {
     if (isErrored) {
       return renderError()
     }
-    if (!selectedCategoryData) {
+    if (!selectedUserRoleData) {
       return renderEmpty()
     }
 
@@ -133,20 +109,20 @@ const TabCategoryByID = () => {
       <CardContent>
         <form>
           <Grid container spacing={7}>
-            <Grid item xs={12} sm={selectedCategoryData ? 6 : 12}>
+            <Grid item xs={12} sm={selectedUserRoleData ? 6 : 12}>
               <FormControl fullWidth>
-                <InputLabel>Category title</InputLabel>
-                <Select label='Category title'>
-                  {allCategoriesData?.map(category => {
+                <InputLabel>User role</InputLabel>
+                <Select label='User role'>
+                  {allUserRolesData?.map(userRole => {
                     return (
                       <MenuItem
-                        value={category?.title ?? ''}
-                        key={`${category.id}`}
+                        value={userRole?.role ?? ''}
+                        key={`${userRole.id}`}
                         onClick={() => {
-                          setSelectedCategoryData(category)
+                          setSelectedUserRoleData(userRole)
                         }}
                       >
-                        {category.title}
+                        {userRole.role}
                       </MenuItem>
                     )
                   })}
@@ -161,4 +137,4 @@ const TabCategoryByID = () => {
     </div>
   )
 }
-export default TabCategoryByID
+export default TabUserRoleByRole

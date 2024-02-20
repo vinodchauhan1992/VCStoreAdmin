@@ -14,15 +14,13 @@ import apiPathsConfig from '../../configs/apiPathsConfig'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import { httpDeleteRequest, httpGetRequest } from 'src/services/AxiosApi'
-import { CategoryModel } from 'src/models/CategoryModel'
 import { StyledTableCell } from 'src/@core/components/customised-table/styled-table-cell/StyledTableCell'
 import { StyledTableRow } from 'src/@core/components/customised-table/styled-table-row/StyledTableRow'
 import { styled } from '@mui/material/styles'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
 import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
-import ViewCategory from './viewCategory/ViewCategory'
-import EditCategory from './editCategory/EditCategory'
+import { UserStatusModel } from 'src/models/UserStatusModel'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -34,22 +32,20 @@ const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   }
 }))
 
-const TabAllCategories = () => {
+const TabAllUserStatuses = () => {
   // ** State
-  const [allCategoriesData, setAllCategoriesData] = useState<CategoryModel[]>([])
+  const [allUserStatuses, setAllUserStatusesData] = useState<UserStatusModel[]>([])
   const [isErrored, setIsErrored] = useState<boolean>(false)
   const [message, setMessage] = useState<string | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
-  const [selectedCategory, setSelectedCategory] = useState<CategoryModel | null>(null)
+  const [selectedUserStatus, setSelectedUserStatus] = useState<UserStatusModel | null>(null)
   const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
-  const [openViewCategory, setOpenViewCategory] = useState<boolean>(false)
-  const [openEditCategory, setOpenEditCategory] = useState<boolean>(false)
 
-  const callAllCategoriesApi = async () => {
+  const callAllUserStatusesApi = async () => {
     setIsLoaderVisible(true)
-    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllCategoriesApiPath })
+    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllUserStatusesApiPath })
     if (response.isSucceded) {
-      setAllCategoriesData(response?.responseData?.data ?? [])
+      setAllUserStatusesData(response?.responseData?.data ?? [])
       setMessage(response?.responseData?.message ?? null)
     } else {
       setIsErrored(true)
@@ -59,96 +55,89 @@ const TabAllCategories = () => {
   }
 
   useEffect(() => {
-    callAllCategoriesApi()
+    callAllUserStatusesApi()
   }, [])
 
-  const resetSelectedCategory = () => {
-    setSelectedCategory(null)
+  const resetSelectedUserStatus = () => {
+    setSelectedUserStatus(null)
     setIsDialogOpen(false)
-    setOpenViewCategory(false)
-    setOpenEditCategory(false)
   }
 
-  const deleteCategory = async () => {
-    resetSelectedCategory()
+  const deleteUserStatus = async () => {
+    resetSelectedUserStatus()
     setIsLoaderVisible(true)
     const response = await httpDeleteRequest({
-      apiUrlPath: `${apiPathsConfig.deleteCategoryApiPath}/${selectedCategory?.id}`
+      apiUrlPath: `${apiPathsConfig.deleteUserStatusApiPath}/${selectedUserStatus?.id}`
     })
     if (response.isSucceded) {
-      await callAllCategoriesApi()
+      await callAllUserStatusesApi()
     }
     setIsLoaderVisible(false)
   }
 
-  const onDeleteClick = async (category: CategoryModel) => {
-    setSelectedCategory(category)
+  const onDeleteClick = async (userStatusData: UserStatusModel) => {
+    setSelectedUserStatus(userStatusData)
     setIsDialogOpen(true)
   }
 
-  const onEditClick = async (category: CategoryModel) => {
-    setSelectedCategory(category)
-    setOpenEditCategory(true)
-  }
+  const onEditClick = async (userStatusData: UserStatusModel) => {}
 
-  const onViewClick = async (category: CategoryModel) => {
-    setSelectedCategory(category)
-    setOpenViewCategory(true)
-  }
+  const onViewClick = async (userStatusData: UserStatusModel) => {}
 
   const handleDialogOpen = () => {
     setIsDialogOpen(!isDialogOpen)
   }
 
   const renderDataTable = () => {
-    if (allCategoriesData && allCategoriesData.length > 0) {
+    if (allUserStatuses && allUserStatuses.length > 0) {
       return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label='table in dashboard'>
             <TableHead>
               <TableRow>
                 <StyledTableCell>ID</StyledTableCell>
-                <StyledTableCell>Title</StyledTableCell>
+                <StyledTableCell>Status</StyledTableCell>
                 <StyledTableCell>Dates</StyledTableCell>
                 <StyledTableCell>Manage</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {allCategoriesData.map((category: CategoryModel) => (
+              {allUserStatuses.map((userStatusData: UserStatusModel) => (
                 <StyledTableRow
                   hover
-                  key={category?.title}
+                  key={userStatusData?.status}
                   sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
                 >
-                  <StyledTableCell>{category?.id}</StyledTableCell>
+                  <StyledTableCell>{userStatusData?.id}</StyledTableCell>
                   <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {category?.title}
+                        {userStatusData?.status}
                       </Typography>
-                      <Typography variant='caption'>{category?.code}</Typography>
                     </Box>
                   </StyledTableCell>
                   <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`Added On: ${category?.dateAdded ?? 'N/A'}`}
+                        {`Added On: ${userStatusData?.dateAdded ?? 'N/A'}`}
                       </Typography>
-                      <Typography variant='caption'>{`Modified On: ${category?.dateModified ?? 'N/A'}`}</Typography>
+                      <Typography variant='caption'>{`Modified On: ${
+                        userStatusData?.dateModified ?? 'N/A'
+                      }`}</Typography>
                     </Box>
                   </StyledTableCell>
                   <StyledTableCell>
-                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(category)}>
+                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(userStatusData)}>
                       <Typography color='error' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         Delete
                       </Typography>
                     </ButtonStyled>
-                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(category)}>
+                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(userStatusData)}>
                       <Typography color='info' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         Edit
                       </Typography>
                     </ButtonStyled>
-                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(category)}>
+                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(userStatusData)}>
                       <Typography color='success' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         View
                       </Typography>
@@ -165,7 +154,7 @@ const TabAllCategories = () => {
 
   const renderEmpty = () => {
     return (
-      <CustomisedErrorEmpty title='No categories found!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+      <CustomisedErrorEmpty title='No user statuses found!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
     )
   }
 
@@ -177,7 +166,7 @@ const TabAllCategories = () => {
     if (isErrored) {
       return renderError()
     }
-    if (!allCategoriesData || allCategoriesData.length <= 0) {
+    if (!allUserStatuses || allUserStatuses.length <= 0) {
       return renderEmpty()
     }
 
@@ -189,13 +178,13 @@ const TabAllCategories = () => {
       <CustomisedAlertDialog
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={handleDialogOpen}
-        dialogTitle='Delete category!'
-        dialogMessage={`Are you sure you want to delete ${selectedCategory?.title} category?`}
+        dialogTitle='Delete user status!'
+        dialogMessage={`Are you sure you want to delete ${selectedUserStatus?.status} user status?`}
         dialogButtons={[
           {
             title: 'Yes',
             onClick: () => {
-              deleteCategory()
+              deleteUserStatus()
             },
             autoFocus: true,
             color: 'error'
@@ -204,41 +193,13 @@ const TabAllCategories = () => {
             title: 'No',
             onClick: () => {
               setIsDialogOpen(false)
-              resetSelectedCategory()
+              resetSelectedUserStatus()
             },
             autoFocus: false,
             color: 'success'
           }
         ]}
       />
-    )
-  }
-
-  const renderViewCategoryDialog = () => {
-    return (
-      <ViewCategory
-        selectedCategoryData={selectedCategory}
-        openViewCategory={openViewCategory}
-        setOpenViewCategory={setOpenViewCategory}
-        onCloseModal={() => {
-          resetSelectedCategory()
-        }}
-      ></ViewCategory>
-    )
-  }
-
-  const renderEditCategoryDialog = () => {
-    return (
-      <EditCategory
-        selectedCategoryData={selectedCategory}
-        openEditCategory={openEditCategory}
-        setOpenEditCategory={setOpenEditCategory}
-        setSelectedCategory={setSelectedCategory}
-        onCloseModal={() => {
-          resetSelectedCategory()
-          callAllCategoriesApi()
-        }}
-      ></EditCategory>
     )
   }
 
@@ -249,10 +210,8 @@ const TabAllCategories = () => {
         {renderAlertDialog()}
         {renderData()}
       </CardContent>
-      {renderViewCategoryDialog()}
-      {renderEditCategoryDialog()}
     </div>
   )
 }
 
-export default TabAllCategories
+export default TabAllUserStatuses
