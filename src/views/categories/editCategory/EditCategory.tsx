@@ -15,9 +15,11 @@ import { styled } from '@mui/material/styles'
 import { ButtonProps } from '@mui/material/Button'
 import { AlertValuesModel } from 'src/models/AlertValuesModel'
 import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
-import { httpUpdateRequest } from 'src/services/AxiosApi'
+import { httpMultipartUpdateRequest } from 'src/services/AxiosApi'
 import apiPathsConfig from 'src/configs/apiPathsConfig'
 import Alert from '@mui/material/Alert'
+import Card from '@mui/material/Card'
+import CardMedia from '@mui/material/CardMedia'
 
 interface Props {
   selectedCategoryData?: CategoryModel | null
@@ -68,28 +70,45 @@ const EditCategory = (props: Props) => {
     isVisible: false
   }
 
-  // ** State
-  const [values, setValues] = useState<CategoryModel>({
+  const defaultValues: CategoryModel = {
     title: '',
     description: '',
-    image: '',
+    imageData: null,
     id: '',
     code: '',
     dateAdded: new Date()
-  })
+  }
+
+  // ** State
+  const [values, setValues] = useState<CategoryModel>(defaultValues)
   const [alertVaues, setAlertValues] = useState<AlertValuesModel>(defaultAlertValues)
   const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
+  const [imageFileData, setImageFileData] = useState<string>('/images/avatars/9.jpeg')
+  const [file, setFile] = useState<any>(null)
+
+  const resetFile = () => {
+    setFile(null)
+  }
+
+  const resetImage = () => {
+    if (selectedCategoryData?.imageData?.imageUrl && selectedCategoryData.imageData.imageUrl !== '') {
+      setImageFileData(selectedCategoryData.imageData.imageUrl)
+    } else {
+      setImageFileData('/images/avatars/9.jpeg')
+    }
+  }
 
   const resetForm = () => {
     setValues({
       title: selectedCategoryData?.title ?? '',
       description: selectedCategoryData?.description ?? '',
-      image: selectedCategoryData?.image ?? '',
+      imageData: selectedCategoryData?.imageData ?? null,
       id: selectedCategoryData?.id ?? '',
       code: selectedCategoryData?.code ?? '',
-      dateAdded: selectedCategoryData?.dateAdded ?? new Date(),
-      dateModified: selectedCategoryData?.dateModified ?? new Date()
+      dateAdded: selectedCategoryData?.dateAdded ?? new Date()
     })
+    resetImage()
+    resetFile()
     setAlertValues(defaultAlertValues)
   }
 
@@ -99,6 +118,20 @@ const EditCategory = (props: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategoryData])
+
+  const onChange = (file: ChangeEvent) => {
+    const reader = new FileReader()
+    const { files } = file.target as HTMLInputElement
+
+    if (files && files.length !== 0) {
+      reader.onload = () => {
+        setImageFileData(reader.result as string)
+        setFile(files[0])
+      }
+
+      reader.readAsDataURL(files[0])
+    }
+  }
 
   const onClose = () => {
     if (onCloseModal) {
@@ -116,13 +149,34 @@ const EditCategory = (props: Props) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
-  const handleImageUrlChange = (prop: keyof CategoryModel) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
-
   const renderDetailsFields = () => {
     return (
       <>
+        <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Card sx={{ maxWidth: 120, border: '2px solid ActiveBorder', marginRight: 6.25 }}>
+              <CardMedia component='img' image={imageFileData} alt='Category Image' />
+            </Card>
+            <Box>
+              <ButtonStyled component='label' variant='contained' htmlFor='categories-upload-image'>
+                Upload New category image
+                <input
+                  hidden
+                  type='file'
+                  onChange={onChange}
+                  accept='image/png, image/jpeg'
+                  id='categories-upload-image'
+                />
+              </ButtonStyled>
+              <ResetButtonStyled color='error' variant='outlined' onClick={() => resetImage()}>
+                Reset
+              </ResetButtonStyled>
+              <Typography variant='body2' sx={{ marginTop: 5 }}>
+                Allowed PNG or JPEG. Max size of 800K.
+              </Typography>
+            </Box>
+          </Box>
+        </Grid>
         <Grid item xs={12} sm={6}>
           <TextField disabled fullWidth label='Category id' placeholder='Category id' value={values?.id ?? ''} />
         </Grid>
@@ -135,17 +189,8 @@ const EditCategory = (props: Props) => {
             onChange={handleTitleChange('title')}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={12}>
           <TextField disabled fullWidth label='Category code' placeholder='Category code' value={values?.code ?? ''} />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label='Category image url'
-            placeholder='Category image url'
-            value={values?.image ?? ''}
-            onChange={handleImageUrlChange('image')}
-          />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -190,7 +235,7 @@ const EditCategory = (props: Props) => {
           </Grid>
           <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
             <Box>
-              <ButtonStyled component='label' variant='contained' onClick={onAddNewCategoryClick}>
+              <ButtonStyled component='label' variant='contained' onClick={onEditCategoryClick}>
                 Update category
               </ButtonStyled>
               <ResetButtonStyled color='error' variant='outlined' onClick={onResetClick}>
@@ -209,7 +254,7 @@ const EditCategory = (props: Props) => {
     resetForm()
   }
 
-  const onAddNewCategoryClick = async () => {
+  const onEditCategoryClick = async () => {
     if (!values?.title || values.title === '') {
       setAlertValues({
         severity: 'error',
@@ -228,12 +273,24 @@ const EditCategory = (props: Props) => {
 
       return
     }
+
     setIsLoaderVisible(true)
-    const response = await httpUpdateRequest({
+    const formData = new FormData()
+    formData.append('title', values.title)
+    formData.append('description', values.description)
+    formData.append('imageData', values?.imageData ? JSON.stringify(JSON.stringify(values.imageData)) : '')
+    formData.append('id', values?.id ?? '')
+    formData.append('code', values?.code ?? '')
+    formData.append('dateAdded', `${values?.dateAdded ?? new Date()}`)
+    if (file) {
+      formData.append('file', file)
+    }
+
+    const response = await httpMultipartUpdateRequest({
       apiUrlPath: `${apiPathsConfig.updatedCategoryApiPath}/${values.id}`,
-      jsonBody: values
+      jsonBody: formData
     })
-    if (response.isSucceded) {
+    if (response.isSucceded && response?.responseData?.data && Object.keys(response.responseData.data).length > 0) {
       setSelectedCategory(response.responseData.data)
     }
     setIsLoaderVisible(false)
