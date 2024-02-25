@@ -10,7 +10,6 @@ import { CategoryModel } from 'src/models/CategoryModel'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
 import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
-import ViewCategory from './viewCategory/ViewCategory'
 import EditCategory from './editCategory/EditCategory'
 import CategorySmartCard from './components/category-smart-card/CategorySmartCard'
 import Grid from '@mui/material/Grid'
@@ -217,19 +216,6 @@ const TabAllCategories = () => {
     )
   }
 
-  const renderViewCategoryDialog = () => {
-    return (
-      <ViewCategory
-        selectedCategoryData={selectedCategory}
-        openViewCategory={openViewCategory}
-        setOpenViewCategory={setOpenViewCategory}
-        onCloseModal={() => {
-          resetSelectedCategory()
-        }}
-      ></ViewCategory>
-    )
-  }
-
   const renderEditCategoryDialog = () => {
     return (
       <EditCategory
@@ -252,7 +238,6 @@ const TabAllCategories = () => {
         {renderAlertDialog()}
         {renderWholeMainData()}
       </CardContent>
-      {renderViewCategoryDialog()}
       {renderEditCategoryDialog()}
     </div>
   )
