@@ -20,7 +20,7 @@ const TabCategoryByTitle = () => {
   const [isErrored, setIsErrored] = useState<boolean>(false)
   const [message, setMessage] = useState<string | null>(null)
   const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
-  const [moreDetailsCategoryData, setMoreDetailsCategoryData] = useState<CategoryModel | null>(null)
+  const [openViewCategory, setOpenViewCategory] = useState<boolean>(false)
 
   const callAllCategoriesApi = async () => {
     setIsLoaderVisible(true)
@@ -39,21 +39,20 @@ const TabCategoryByTitle = () => {
     callAllCategoriesApi()
   }, [])
 
-  const setTheMoreDetailsCategoryData = (moreDetailsCategoryData: CategoryModel | null) => {
-    setMoreDetailsCategoryData(moreDetailsCategoryData)
+  const setTheOpenViewCategory = (isOpenViewCategory: boolean) => {
+    setOpenViewCategory(isOpenViewCategory)
   }
 
   const renderDetailsFields = () => {
     return (
       <Grid item xs={12} sm={12}>
         <CategorySmartCard
+          catData={selectedCategoryData}
           selectedCategoryData={selectedCategoryData}
           dataIndex={0}
-          moreDetailsCategoryData={moreDetailsCategoryData}
-          setMoreDetailsCategoryData={(moreDetailsCategoryData?: CategoryModel | null) =>
-            setTheMoreDetailsCategoryData(moreDetailsCategoryData ?? null)
-          }
-          isActionsVisible
+          openViewCategory={openViewCategory}
+          setOpenViewCategory={isOpenViewCategory => setTheOpenViewCategory(isOpenViewCategory)}
+          isActionsVisible={false}
           isButtonsVisible={false}
         />
       </Grid>
