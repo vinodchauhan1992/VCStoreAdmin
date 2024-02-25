@@ -65,7 +65,6 @@ const TabAllCategories = () => {
   const resetSelectedCategory = () => {
     setSelectedCategory(null)
     setIsDialogOpen(false)
-    setOpenViewCategory(false)
     setOpenEditCategory(false)
   }
 
@@ -123,8 +122,10 @@ const TabAllCategories = () => {
     )
   }
 
-  const setTheMoreDetailsCategoryData = (moreDetailsCategoryData: CategoryModel | null) => {
-    setSelectedCategory(moreDetailsCategoryData)
+  const setTheOpenViewCategory = (catData: CategoryModel, isOpenViewCategory: boolean) => {
+    console.log('catData', catData)
+    setSelectedCategory(catData)
+    setOpenViewCategory(isOpenViewCategory)
   }
 
   const renderCards = () => {
@@ -133,14 +134,13 @@ const TabAllCategories = () => {
         return (
           <Grid key={`${index.toString()}`} item xs={12} sm={4}>
             <CategorySmartCard
-              selectedCategoryData={catData}
+              catData={catData}
+              selectedCategoryData={selectedCategory}
               onButton1Click={() => onDeleteClick(catData)}
               onButton2Click={() => onEditClick(catData)}
               dataIndex={index}
-              moreDetailsCategoryData={selectedCategory}
-              setMoreDetailsCategoryData={(moreDetailsCategoryData?: CategoryModel | null) =>
-                setTheMoreDetailsCategoryData(moreDetailsCategoryData ?? null)
-              }
+              openViewCategory={openViewCategory}
+              setOpenViewCategory={isOpenViewCategory => setTheOpenViewCategory(catData, isOpenViewCategory)}
             />
           </Grid>
         )

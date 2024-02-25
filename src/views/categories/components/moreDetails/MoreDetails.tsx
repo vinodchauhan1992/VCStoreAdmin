@@ -18,33 +18,34 @@ const style = {
 }
 
 interface Props {
-  moreDetailsCategoryData?: CategoryModel | null
-  setMoreDetailsCategoryData?: (moreDetailsCategoryData?: CategoryModel | null) => void
+  selectedCategoryData?: CategoryModel | null
+  openViewCategory?: boolean
+  handleOpeningClosingViewCategory?: () => void
 }
 
 const MoreDetails = (props: Props) => {
-  const { moreDetailsCategoryData, setMoreDetailsCategoryData } = props
+  const { selectedCategoryData, openViewCategory, handleOpeningClosingViewCategory } = props
 
   const renderMoreDetails = () => {
     return (
       <>
         <Typography id='modal-modal-title' variant='h6' color='tomato' component='h2'>
-          {`More Details of '${moreDetailsCategoryData?.title}' category:`}
+          {`More Details of '${selectedCategoryData?.title}' category:`}
         </Typography>
         <Typography id='modal-modal-description' sx={{ mt: 2 }} color='text.secondary'>
-          {`Category id: ${moreDetailsCategoryData?.id}`}
+          {`Category id: ${selectedCategoryData?.id}`}
         </Typography>
         <Typography id='modal-modal-description' sx={{ mt: 2 }} color='text.secondary'>
-          {`Category code: ${moreDetailsCategoryData?.code}`}
+          {`Category code: ${selectedCategoryData?.code}`}
         </Typography>
         <Typography id='modal-modal-description' sx={{ mt: 2 }} color='text.secondary'>
-          {`Image full path: ${moreDetailsCategoryData?.imageData?.fullPath}`}
+          {`Image full path: ${selectedCategoryData?.imageData?.fullPath}`}
         </Typography>
         <Typography variant='body2' sx={{ mt: 2 }} color='teal'>
-          {`Date added on: ${moreDetailsCategoryData?.dateAdded}`}
+          {`Date added on: ${selectedCategoryData?.dateAdded}`}
         </Typography>
-        <Typography variant='body2' sx={{ mt: 2 }} color="blueviolet">
-          {`Last updated: ${moreDetailsCategoryData?.dateModified}`}
+        <Typography variant='body2' sx={{ mt: 2 }} color='blueviolet'>
+          {`Last updated: ${selectedCategoryData?.dateModified}`}
         </Typography>
       </>
     )
@@ -53,8 +54,8 @@ const MoreDetails = (props: Props) => {
   return (
     <div>
       <Modal
-        open={moreDetailsCategoryData ? true : false}
-        onClose={setMoreDetailsCategoryData}
+        open={openViewCategory ? true : false}
+        onClose={handleOpeningClosingViewCategory}
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >

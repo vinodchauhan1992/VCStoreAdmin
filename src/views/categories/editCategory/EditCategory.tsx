@@ -105,7 +105,8 @@ const EditCategory = (props: Props) => {
       imageData: selectedCategoryData?.imageData ?? null,
       id: selectedCategoryData?.id ?? '',
       code: selectedCategoryData?.code ?? '',
-      dateAdded: selectedCategoryData?.dateAdded ?? new Date()
+      dateAdded: selectedCategoryData?.dateAdded,
+      dateModified: selectedCategoryData?.dateModified
     })
     resetImage()
     resetFile()
