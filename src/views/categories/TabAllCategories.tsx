@@ -1,38 +1,20 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // ** React Imports
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ChangeEvent } from 'react'
 
 // ** MUI Imports
 import CardContent from '@mui/material/CardContent'
-import Table from '@mui/material/Table'
-import TableHead from '@mui/material/TableHead'
-import TableBody from '@mui/material/TableBody'
-import Typography from '@mui/material/Typography'
-import TableContainer from '@mui/material/TableContainer'
-import Box from '@mui/material/Box'
-import Button, { ButtonProps } from '@mui/material/Button'
 import apiPathsConfig from '../../configs/apiPathsConfig'
-import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
 import { httpDeleteRequest, httpGetRequest } from 'src/services/AxiosApi'
 import { CategoryModel } from 'src/models/CategoryModel'
-import { StyledTableCell } from 'src/@core/components/customised-table/styled-table-cell/StyledTableCell'
-import { StyledTableRow } from 'src/@core/components/customised-table/styled-table-row/StyledTableRow'
-import { styled } from '@mui/material/styles'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
 import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import ViewCategory from './viewCategory/ViewCategory'
 import EditCategory from './editCategory/EditCategory'
-
-const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
-  marginRight: theme.spacing(4.5),
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    marginLeft: 0,
-    textAlign: 'center',
-    marginTop: theme.spacing(4)
-  }
-}))
+import CategorySmartCard from './components/category-smart-card/CategorySmartCard'
+import Grid from '@mui/material/Grid'
+import CustomisedSearchField from 'src/@core/components/customised-search-field/CustomisedSearchField'
 
 const TabAllCategories = () => {
   // ** State
@@ -44,12 +26,15 @@ const TabAllCategories = () => {
   const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
   const [openViewCategory, setOpenViewCategory] = useState<boolean>(false)
   const [openEditCategory, setOpenEditCategory] = useState<boolean>(false)
+  const [searchedText, setSearchedText] = useState<string>('')
+  const [searchedCategories, setSearchedCategories] = useState<CategoryModel[]>([])
 
   const callAllCategoriesApi = async () => {
     setIsLoaderVisible(true)
     const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllCategoriesApiPath })
     if (response.isSucceded) {
       setAllCategoriesData(response?.responseData?.data ?? [])
+      setSearchedCategories(response?.responseData?.data ?? [])
       setMessage(response?.responseData?.message ?? null)
     } else {
       setIsErrored(true)
@@ -61,6 +46,22 @@ const TabAllCategories = () => {
   useEffect(() => {
     callAllCategoriesApi()
   }, [])
+
+  const searchCategories = () => {
+    if (searchedText && searchedText !== '') {
+      const filtered = allCategoriesData.filter(entry =>
+        Object.values(entry).some(val => typeof val === 'string' && val.includes(searchedText))
+      )
+
+      setSearchedCategories(filtered)
+    } else {
+      setSearchedCategories(allCategoriesData)
+    }
+  }
+
+  useEffect(() => {
+    searchCategories()
+  }, [searchedText])
 
   const resetSelectedCategory = () => {
     setSelectedCategory(null)
@@ -91,86 +92,75 @@ const TabAllCategories = () => {
     setOpenEditCategory(true)
   }
 
-  const onViewClick = async (category: CategoryModel) => {
-    setSelectedCategory(category)
-    setOpenViewCategory(true)
-  }
-
   const handleDialogOpen = () => {
     setIsDialogOpen(!isDialogOpen)
   }
 
-  const renderDataTable = () => {
-    if (allCategoriesData && allCategoriesData.length > 0) {
-      return (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700 }} aria-label='table in dashboard'>
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>ID</StyledTableCell>
-                <StyledTableCell>Title</StyledTableCell>
-                <StyledTableCell>Dates</StyledTableCell>
-                <StyledTableCell>Manage</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {allCategoriesData.map((category: CategoryModel) => (
-                <StyledTableRow
-                  hover
-                  key={category?.title}
-                  sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
-                >
-                  <StyledTableCell>{category?.id}</StyledTableCell>
-                  <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {category?.title}
-                      </Typography>
-                      <Typography variant='caption'>{category?.code}</Typography>
-                    </Box>
-                  </StyledTableCell>
-                  <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`Added On: ${category?.dateAdded ?? 'N/A'}`}
-                      </Typography>
-                      <Typography variant='caption'>{`Modified On: ${category?.dateModified ?? 'N/A'}`}</Typography>
-                    </Box>
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(category)}>
-                      <Typography color='error' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        Delete
-                      </Typography>
-                    </ButtonStyled>
-                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(category)}>
-                      <Typography color='info' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        Edit
-                      </Typography>
-                    </ButtonStyled>
-                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(category)}>
-                      <Typography color='success' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        View
-                      </Typography>
-                    </ButtonStyled>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )
-    }
-  }
-
   const renderEmpty = () => {
     return (
-      <CustomisedErrorEmpty title='No categories found!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+      <Grid item xs={12} sm={12}>
+        <CustomisedErrorEmpty title='No categories found!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+      </Grid>
+    )
+  }
+
+  const renderEmptySearch = () => {
+    return (
+      <Grid item xs={12} sm={12}>
+        <CustomisedErrorEmpty
+          title='No search results found!'
+          type='empty'
+          message='Categories not found for the searched item'
+        ></CustomisedErrorEmpty>
+      </Grid>
     )
   }
 
   const renderError = () => {
-    return <CustomisedErrorEmpty title='Error!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+    return (
+      <Grid item xs={12} sm={12}>
+        <CustomisedErrorEmpty title='Error!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+      </Grid>
+    )
+  }
+
+  const setTheMoreDetailsCategoryData = (moreDetailsCategoryData: CategoryModel | null) => {
+    setSelectedCategory(moreDetailsCategoryData)
+  }
+
+  const renderCards = () => {
+    if (searchedCategories && searchedCategories.length > 0) {
+      return searchedCategories.map((catData, index) => {
+        return (
+          <Grid key={`${index.toString()}`} item xs={12} sm={4}>
+            <CategorySmartCard
+              selectedCategoryData={catData}
+              onButton1Click={() => onDeleteClick(catData)}
+              onButton2Click={() => onEditClick(catData)}
+              dataIndex={index}
+              moreDetailsCategoryData={selectedCategory}
+              setMoreDetailsCategoryData={(moreDetailsCategoryData?: CategoryModel | null) =>
+                setTheMoreDetailsCategoryData(moreDetailsCategoryData ?? null)
+              }
+            />
+          </Grid>
+        )
+      })
+    }
+
+    return null
+  }
+
+  const handleSearch = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setSearchedText(event.target.value)
+  }
+
+  const renderSearchField = () => {
+    return (
+      <Grid item xs={12} sm={12}>
+        <CustomisedSearchField placeholderText='Search category' value={searchedText} onChange={handleSearch} />
+      </Grid>
+    )
   }
 
   const renderData = () => {
@@ -181,7 +171,20 @@ const TabAllCategories = () => {
       return renderEmpty()
     }
 
-    return renderDataTable()
+    return (
+      <>
+        {renderSearchField()}
+        {searchedCategories && searchedCategories.length > 0 ? renderCards() : renderEmptySearch()}
+      </>
+    )
+  }
+
+  const renderWholeMainData = () => {
+    return (
+      <Grid container spacing={7}>
+        {renderData()}
+      </Grid>
+    )
   }
 
   const renderAlertDialog = () => {
@@ -247,7 +250,7 @@ const TabAllCategories = () => {
       <CustomisedLoader visible={isLoaderVisible} />
       <CardContent>
         {renderAlertDialog()}
-        {renderData()}
+        {renderWholeMainData()}
       </CardContent>
       {renderViewCategoryDialog()}
       {renderEditCategoryDialog()}

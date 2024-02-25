@@ -30,6 +30,11 @@ const navigation = (): VerticalNavItemsType => {
       path: '/userStatuses'
     },
     {
+      title: 'File Folders',
+      icon: AccountOutline,
+      path: '/fileFolders'
+    },
+    {
       title: 'Categories',
       icon: FilterMenuOutline,
       path: '/categories'

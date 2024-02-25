@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import TextField from '@mui/material/TextField'
 import CardContent from '@mui/material/CardContent'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
@@ -12,14 +11,16 @@ import apiPathsConfig from 'src/configs/apiPathsConfig'
 import { CategoryModel } from 'src/models/CategoryModel'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
+import CategorySmartCard from 'src/views/categories/components/category-smart-card/CategorySmartCard'
 
-const TabCategoryByID = () => {
+const TabCategoryByTitle = () => {
   // ** States
   const [allCategoriesData, setAllCategoriesData] = useState<CategoryModel[]>([])
   const [selectedCategoryData, setSelectedCategoryData] = useState<CategoryModel | null>(null)
   const [isErrored, setIsErrored] = useState<boolean>(false)
   const [message, setMessage] = useState<string | null>(null)
   const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
+  const [moreDetailsCategoryData, setMoreDetailsCategoryData] = useState<CategoryModel | null>(null)
 
   const callAllCategoriesApi = async () => {
     setIsLoaderVisible(true)
@@ -38,67 +39,24 @@ const TabCategoryByID = () => {
     callAllCategoriesApi()
   }, [])
 
+  const setTheMoreDetailsCategoryData = (moreDetailsCategoryData: CategoryModel | null) => {
+    setMoreDetailsCategoryData(moreDetailsCategoryData)
+  }
+
   const renderDetailsFields = () => {
     return (
-      <>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            disabled
-            fullWidth
-            label='Category id'
-            placeholder='Category id'
-            value={selectedCategoryData?.id ?? ''}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            disabled
-            fullWidth
-            label='Category code'
-            placeholder='Category code'
-            value={selectedCategoryData?.code ?? ''}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            disabled
-            fullWidth
-            label='Category image url'
-            placeholder='Category image url'
-            value={selectedCategoryData?.image ?? ''}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            disabled
-            fullWidth
-            label='Category added on'
-            placeholder='Category added on'
-            value={selectedCategoryData?.dateAdded ?? 'N/A'}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            disabled
-            fullWidth
-            label='Category updated on'
-            placeholder='Category updated on'
-            value={selectedCategoryData?.dateModified ?? 'N/A'}
-          />
-        </Grid>
-        <Grid item xs={12} sm={12}>
-          <TextField
-            disabled
-            fullWidth
-            label='Category description'
-            placeholder='Category description'
-            value={selectedCategoryData?.description ?? 'N/A'}
-            multiline
-            minRows={3}
-            sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}
-          />
-        </Grid>
-      </>
+      <Grid item xs={12} sm={12}>
+        <CategorySmartCard
+          selectedCategoryData={selectedCategoryData}
+          dataIndex={0}
+          moreDetailsCategoryData={moreDetailsCategoryData}
+          setMoreDetailsCategoryData={(moreDetailsCategoryData?: CategoryModel | null) =>
+            setTheMoreDetailsCategoryData(moreDetailsCategoryData ?? null)
+          }
+          isActionsVisible
+          isButtonsVisible={false}
+        />
+      </Grid>
     )
   }
 
@@ -133,7 +91,7 @@ const TabCategoryByID = () => {
       <CardContent>
         <form>
           <Grid container spacing={7}>
-            <Grid item xs={12} sm={selectedCategoryData ? 6 : 12}>
+            <Grid item xs={12} sm={12}>
               <FormControl fullWidth>
                 <InputLabel>Category title</InputLabel>
                 <Select label='Category title'>
@@ -153,7 +111,6 @@ const TabCategoryByID = () => {
                 </Select>
               </FormControl>
             </Grid>
-
             {renderData()}
           </Grid>
         </form>
@@ -161,4 +118,4 @@ const TabCategoryByID = () => {
     </div>
   )
 }
-export default TabCategoryByID
+export default TabCategoryByTitle

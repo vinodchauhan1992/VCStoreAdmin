@@ -8,5 +8,8 @@ export default {
   deleteUserRoleApiPath: 'userRoles/deleteUserRole',
   getAllUserStatusesApiPath: 'userStatuses/allUserStatuses',
   addUserStatusApiPath: 'userStatuses/addUserStatus',
-  deleteUserStatusApiPath: 'userStatuses/deleteUserStatus'
+  deleteUserStatusApiPath: 'userStatuses/deleteUserStatus',
+  getAllFileFoldersApiPath: 'fileFolders/allFileFolders',
+  addFileFolderApiPath: 'fileFolders/addFileFolder',
+  deleteFileFolderApiPath: 'fileFolders/deleteFileFolder'
 }
