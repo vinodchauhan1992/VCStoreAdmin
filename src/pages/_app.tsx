@@ -1,4 +1,5 @@
 // ** Next Imports
+import React from 'react'
 import Head from 'next/head'
 import { Router } from 'next/router'
 import type { NextPage } from 'next'
@@ -28,7 +29,12 @@ import { createEmotionCache } from 'src/@core/utils/create-emotion-cache'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 
 // ** Global css styles
-import '../../styles/globals.css'
+// import '../../styles/globals.css'
+import { Provider as StoreProvider } from 'react-redux'
+import { store } from '../reduxConfig/reduxStore/store'
+import { LoginReducer, useAppSelector } from 'src/redux/reducers'
+import BlankLayout from 'src/@core/layouts/BlankLayout'
+import LoginPage from './login'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -55,29 +61,34 @@ if (themeConfig.routingLoader) {
 const App = (props: ExtendedAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
 
-  // Variables
   const getLayout = Component.getLayout ?? (page => <UserLayout>{page}</UserLayout>)
 
-  return (
-    <CacheProvider value={emotionCache}>
-      <Head>
-        <title>{`${themeConfig.templateName} - Material Design React Admin Template`}</title>
-        <meta
-          name='description'
-          content={`${themeConfig.templateName} – Material Design React Admin Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}
-        />
-        <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
-        <meta name='viewport' content='initial-scale=1, width=device-width' />
-      </Head>
+  const getPageToLoad = (settings: any) => {
+    return <ThemeComponent settings={settings}>{getLayout(<Component {...pageProps} />)}</ThemeComponent>
+  }
 
-      <SettingsProvider>
-        <SettingsConsumer>
-          {({ settings }) => {
-            return <ThemeComponent settings={settings}>{getLayout(<Component {...pageProps} />)}</ThemeComponent>
-          }}
-        </SettingsConsumer>
-      </SettingsProvider>
-    </CacheProvider>
+  return (
+    <StoreProvider store={store}>
+      <CacheProvider value={emotionCache}>
+        <Head>
+          <title>{`${themeConfig.templateName} - Material Design React Admin Template`}</title>
+          <meta
+            name='description'
+            content={`${themeConfig.templateName} – Material Design React Admin Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}
+          />
+          <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
+          <meta name='viewport' content='initial-scale=1, width=device-width' />
+        </Head>
+
+        <SettingsProvider>
+          <SettingsConsumer>
+            {({ settings }) => {
+              return getPageToLoad(settings)
+            }}
+          </SettingsConsumer>
+        </SettingsProvider>
+      </CacheProvider>
+    </StoreProvider>
   )
 }
 

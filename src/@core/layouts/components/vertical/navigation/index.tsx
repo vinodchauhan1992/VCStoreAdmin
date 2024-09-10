@@ -20,6 +20,7 @@ import VerticalNavHeader from './VerticalNavHeader'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import { LoginReducer, useAppSelector } from 'src/redux/reducers'
 
 interface Props {
   hidden: boolean
@@ -58,6 +59,8 @@ const Navigation = (props: Props) => {
     beforeVerticalNavMenuContent,
     verticalNavMenuContent: userVerticalNavMenuContent
   } = props
+
+  const isUserLoggedIn = useAppSelector(LoginReducer.selectIsUserLoggedIn)
 
   // ** States
   const [groupActive, setGroupActive] = useState<string[]>([])
@@ -100,6 +103,59 @@ const Navigation = (props: Props) => {
   }
 
   const ScrollWrapper = hidden ? Box : PerfectScrollbar
+
+  const renderNav = () => {
+    if (isUserLoggedIn) {
+      return (
+        <Drawer {...props}>
+          <VerticalNavHeader {...props} />
+          <StyledBoxForShadow
+            ref={shadowRef}
+            sx={{
+              background: `linear-gradient(${theme.palette.background.default} 40%,${hexToRGBA(
+                theme.palette.background.default,
+                0.1
+              )} 95%,${hexToRGBA(theme.palette.background.default, 0.05)})`
+            }}
+          />
+          <Box sx={{ height: '100%', position: 'relative', overflow: 'hidden' }}>
+            {/* @ts-ignore */}
+            <ScrollWrapper
+              {...(hidden
+                ? {
+                    onScroll: (container: any) => scrollMenu(container),
+                    sx: { height: '100%', overflowY: 'auto', overflowX: 'hidden' }
+                  }
+                : {
+                    options: { wheelPropagation: false },
+                    onScrollY: (container: any) => scrollMenu(container),
+                    containerRef: (ref: any) => handleInfiniteScroll(ref)
+                  })}
+            >
+              {beforeVerticalNavMenuContent ? beforeVerticalNavMenuContent(props) : null}
+              <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                {userVerticalNavMenuContent ? (
+                  userVerticalNavMenuContent(props)
+                ) : (
+                  <List className='nav-items' sx={{ transition: 'padding .25s ease', pr: 4.5 }}>
+                    <VerticalNavItems
+                      groupActive={groupActive}
+                      setGroupActive={setGroupActive}
+                      currentActiveGroup={currentActiveGroup}
+                      setCurrentActiveGroup={setCurrentActiveGroup}
+                      {...props}
+                    />
+                  </List>
+                )}
+              </Box>
+            </ScrollWrapper>
+          </Box>
+          {afterVerticalNavMenuContent ? afterVerticalNavMenuContent(props) : null}
+        </Drawer>
+      )
+    }
+    return null
+  }
 
   return (
     <Drawer {...props}>

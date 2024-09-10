@@ -122,7 +122,6 @@ export const httpMultipartUpdateRequest = async ({ apiUrlPath, jsonBody }: { api
     })
     .catch((error: any) => {
       const excep = error
-
       return { responseData: excep.response, isSucceded: false }
     })
 }

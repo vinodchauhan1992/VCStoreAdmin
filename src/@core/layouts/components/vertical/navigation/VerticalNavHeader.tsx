@@ -14,6 +14,7 @@ import { Settings } from 'src/@core/context/settingsContext'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
+import { LoginReducer, useAppSelector } from 'src/redux/reducers'
 
 interface Props {
   hidden: boolean
@@ -54,12 +55,14 @@ const VerticalNavHeader = (props: Props) => {
   // ** Hooks
   const theme = useTheme()
 
+  const isUserLoggedIn = useAppSelector(LoginReducer.selectIsUserLoggedIn)
+
   return (
     <MenuHeaderWrapper className='nav-header' sx={{ pl: 6 }}>
       {userVerticalNavMenuBranding ? (
         userVerticalNavMenuBranding(props)
       ) : (
-        <Link href='/' passHref>
+        <Link href={isUserLoggedIn ? '/' : '/login'} passHref>
           <StyledLink>
             <svg
               width={30}
