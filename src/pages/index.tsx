@@ -21,14 +21,8 @@ import StatisticsCard from 'src/views/dashboard/StatisticsCard'
 import WeeklyOverview from 'src/views/dashboard/WeeklyOverview'
 import DepositWithdraw from 'src/views/dashboard/DepositWithdraw'
 import SalesByCountries from 'src/views/dashboard/SalesByCountries'
-import { LoginReducer, useAppSelector } from 'src/redux/reducers'
-import LoginPage from './login'
-// import LoginPage from './login'
-// import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 const Dashboard = () => {
-  const isUserLoggedIn = useAppSelector(LoginReducer.selectIsUserLoggedIn)
-
   const renderDashboard = () => {
     return (
       <ApexChartWrapper>

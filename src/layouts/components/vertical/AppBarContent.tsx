@@ -33,6 +33,7 @@ const AppBarContent = (props: Props) => {
   // ** Hook
   const hiddenSm = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'))
 
+  // @ts-ignore
   const isUserLoggedIn = useAppSelector(LoginReducer.selectIsUserLoggedIn)
 
   const renderAppBar = () => {

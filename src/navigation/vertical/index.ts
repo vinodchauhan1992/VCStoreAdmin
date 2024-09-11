@@ -10,6 +10,7 @@ import { VerticalNavItemsType } from 'src/@core/layouts/types'
 import { LoginReducer, useAppSelector } from 'src/redux/reducers'
 
 const Navigation = (): VerticalNavItemsType => {
+  // @ts-ignore
   const isUserLoggedIn = useAppSelector(LoginReducer.selectIsUserLoggedIn)
 
   return !isUserLoggedIn

@@ -1,5 +1,5 @@
 // ** React Imports
-import { ChangeEvent, MouseEvent, ReactNode, useState, useEffect } from 'react'
+import { ChangeEvent, MouseEvent, useState, useEffect } from 'react'
 
 // ** Next Imports
 import { useRouter } from 'next/router'
@@ -24,9 +24,6 @@ import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
-
-// ** Layout Import
-import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/auth/FooterIllustration'
@@ -55,6 +52,7 @@ const LoginPage = () => {
   const theme = useTheme()
   const router = useRouter()
   const dispatch = useAppDispatch()
+  // @ts-ignore
   const isUserLoggedIn = useAppSelector(LoginReducer.selectIsUserLoggedIn)
 
   useEffect(() => {

@@ -60,6 +60,7 @@ const Navigation = (props: Props) => {
     verticalNavMenuContent: userVerticalNavMenuContent
   } = props
 
+  // @ts-ignore
   const isUserLoggedIn = useAppSelector(LoginReducer.selectIsUserLoggedIn)
 
   // ** States

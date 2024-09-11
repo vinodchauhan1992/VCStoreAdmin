@@ -32,9 +32,6 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 // import '../../styles/globals.css'
 import { Provider as StoreProvider } from 'react-redux'
 import { store } from '../reduxConfig/reduxStore/store'
-import { LoginReducer, useAppSelector } from 'src/redux/reducers'
-import BlankLayout from 'src/@core/layouts/BlankLayout'
-import LoginPage from './login'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {

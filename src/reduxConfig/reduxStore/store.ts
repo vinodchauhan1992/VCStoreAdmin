@@ -25,6 +25,7 @@ const sagaMiddleware = createSagaMiddleware()
 
 /* configuring store with reducer, middleware, devTools enable and enhancers */
 const store = configureStore({
+  // @ts-ignore
   reducer: persistReducer<ReturnType<typeof rootReducer>>(persistConfig, rootReducer),
   middleware: (getDefaultMiddleware: any) => getDefaultMiddleware({ serializableCheck: false }).concat(sagaMiddleware),
   devTools: isDevEnvironment,

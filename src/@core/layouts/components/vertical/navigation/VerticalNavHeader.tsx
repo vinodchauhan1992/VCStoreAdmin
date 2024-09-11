@@ -55,6 +55,7 @@ const VerticalNavHeader = (props: Props) => {
   // ** Hooks
   const theme = useTheme()
 
+  // @ts-ignore
   const isUserLoggedIn = useAppSelector(LoginReducer.selectIsUserLoggedIn)
 
   return (

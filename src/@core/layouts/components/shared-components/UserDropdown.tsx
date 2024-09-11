@@ -38,6 +38,7 @@ const UserDropdown = () => {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null)
 
   const dispatch = useAppDispatch()
+  // @ts-ignore
   const loggedInUser = useAppSelector(LoginReducer.selectLoggedInUser)
 
   // ** Hooks
