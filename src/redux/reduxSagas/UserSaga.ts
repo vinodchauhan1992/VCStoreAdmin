@@ -1,6 +1,6 @@
 import * as Api from '../../services'
 import { takeLatest, call, put } from 'redux-saga/effects'
-import { saveLoggedInUser } from '../reducers/LoginReducer'
+import { saveAllUsersData } from '../reducers/UserReducer'
 import { UIReducer } from '../reducers'
 
 const { ApiService, ApiCallTypes } = Api
@@ -9,10 +9,10 @@ const { ApiService, ApiCallTypes } = Api
  * register mobile generator function for api calling for user register mobile in app
  * @param {Object} action - contains type and payload
  */
-export function* loginUser(action: any): any {
+export function* fetchAllUsers(action: any): any {
   yield put(UIReducer.showLoader(true))
-  const data = yield call(ApiService.callApiService, ApiCallTypes.AUTH_LOGIN_TYPE, action?.payload)
-  console.log('loginUser', data)
+  const data = yield call(ApiService.callApiService, ApiCallTypes.GET_ALL_USERS_TYPE, null)
+  console.log('allUsers', data)
   if (
     data.isSucceded &&
     data?.responseData &&
@@ -20,9 +20,9 @@ export function* loginUser(action: any): any {
     data.responseData.status === 'success' &&
     data?.responseData?.data
   ) {
-    yield put(saveLoggedInUser(data.responseData.data))
+    yield put(saveAllUsersData(data.responseData.data))
   } else {
-    yield put(saveLoggedInUser(null))
+    yield put(saveAllUsersData([]))
   }
   yield put(UIReducer.showLoader(false))
 }
@@ -30,6 +30,6 @@ export function* loginUser(action: any): any {
 /**
  * Watch login function
  */
-export function* watchLoginUser(): any {
-  yield takeLatest('LOGIN_USER', loginUser)
+export function* watchFetchAllUsers(): any {
+  yield takeLatest('FETCH_ALL_USERS', fetchAllUsers)
 }

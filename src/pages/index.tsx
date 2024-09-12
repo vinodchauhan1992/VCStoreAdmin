@@ -14,101 +14,92 @@ import CardStatisticsVerticalComponent from 'src/@core/components/card-statistic
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
 // ** Demo Components Imports
-import Table from 'src/views/dashboard/Table'
-import Trophy from 'src/views/dashboard/Trophy'
-import TotalEarning from 'src/views/dashboard/TotalEarning'
 import StatisticsCard from 'src/views/dashboard/StatisticsCard'
-import WeeklyOverview from 'src/views/dashboard/WeeklyOverview'
-import DepositWithdraw from 'src/views/dashboard/DepositWithdraw'
-import SalesByCountries from 'src/views/dashboard/SalesByCountries'
+import { UserReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { useEffect, useState } from 'react'
+import {
+  getDashboardUserStatsData,
+  getTotalGrowthOnUsers,
+  getVerticalCardStatisticData
+} from 'src/utils/DashboardUtils'
+import {
+  VerticalCardPatchStatisticDataReturnProps,
+  VerticalCardStatisticDataReturnProps
+} from 'src/models/DashboardUtilsModel'
 
 const Dashboard = () => {
+  const dispatch = useAppDispatch()
+
+  // @ts-ignore
+  const allUsersDataArray = useAppSelector(UserReducer.selectAllUsersData)
+
+  const [userRelatedStatsData, setUserRelatedStatsData] = useState(getDashboardUserStatsData([]))
+  const [totalGrowthOnUsers, setTotalGrowthOnUsers] = useState({ growthPercent: 0, type: 'reduction' })
+  const [cardStatisticsVerticalComponentsData, setCardStatisticsVerticalComponentsData] = useState<
+    VerticalCardStatisticDataReturnProps[] | []
+  >([])
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_ALL_USERS' })
+  }, [])
+
+  useEffect(() => {
+    setUserRelatedStatsData(getDashboardUserStatsData(allUsersDataArray))
+    setTotalGrowthOnUsers(getTotalGrowthOnUsers(allUsersDataArray))
+  }, [allUsersDataArray])
+
+  useEffect(() => {
+    const data = getVerticalCardStatisticData()
+    setCardStatisticsVerticalComponentsData(data)
+  }, [])
+
+  const renderPerStatCardForVerticalComponent = (dataDimension1: VerticalCardStatisticDataReturnProps) => {
+    return dataDimension1?.patchData?.map((dataDimension2: VerticalCardPatchStatisticDataReturnProps) => {
+      return (
+        <Grid item xs={6}>
+          <CardStatisticsVerticalComponent
+            stats={dataDimension2?.stats ?? ''}
+            icon={dataDimension2?.icon ?? ''}
+            color={dataDimension2?.color}
+            trendNumber={dataDimension2?.trendNumber ?? ''}
+            title={dataDimension2?.title ?? ''}
+            subtitle={dataDimension2?.subtitle ?? ''}
+          />
+        </Grid>
+      )
+    })
+  }
+
+  const renderCardStatisticsVerticalComponents = () => {
+    return cardStatisticsVerticalComponentsData?.map((dataDimension1: VerticalCardStatisticDataReturnProps) => {
+      return (
+        <Grid item xs={6} md={6} lg={6}>
+          <Grid container spacing={6}>
+            {renderPerStatCardForVerticalComponent(dataDimension1)}
+          </Grid>
+        </Grid>
+      )
+    })
+  }
+
   const renderDashboard = () => {
     return (
       <ApexChartWrapper>
         <Grid container spacing={6}>
-          <Grid item xs={12} md={4}>
-            <Trophy />
-          </Grid>
-          <Grid item xs={12} md={8}>
-            <StatisticsCard />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <WeeklyOverview />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <TotalEarning />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <Grid container spacing={6}>
-              <Grid item xs={6}>
-                <CardStatisticsVerticalComponent
-                  stats='$25.6k'
-                  icon={<Poll />}
-                  color='success'
-                  trendNumber='+42%'
-                  title='Total Profit'
-                  subtitle='Weekly Profit'
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <CardStatisticsVerticalComponent
-                  stats='$78'
-                  title='Refunds'
-                  trend='negative'
-                  color='secondary'
-                  trendNumber='-15%'
-                  subtitle='Past Month'
-                  icon={<CurrencyUsd />}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <CardStatisticsVerticalComponent
-                  stats='862'
-                  trend='negative'
-                  trendNumber='-18%'
-                  title='New Project'
-                  subtitle='Yearly Project'
-                  icon={<BriefcaseVariantOutline />}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <CardStatisticsVerticalComponent
-                  stats='15'
-                  color='warning'
-                  trend='negative'
-                  trendNumber='-18%'
-                  subtitle='Last Week'
-                  title='Sales Queries'
-                  icon={<HelpCircleOutline />}
-                />
-              </Grid>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              {/* @ts-ignore */}
+              <StatisticsCard statsDataArray={userRelatedStatsData} growthData={totalGrowthOnUsers} />
             </Grid>
+            {/* <Grid item xs={6}>
+              <StatisticsCard />
+            </Grid> */}
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <SalesByCountries />
-          </Grid>
-          <Grid item xs={12} md={12} lg={8}>
-            <DepositWithdraw />
-          </Grid>
-          <Grid item xs={12}>
-            <Table />
-          </Grid>
+          {renderCardStatisticsVerticalComponents()}
         </Grid>
       </ApexChartWrapper>
     )
   }
-
-  // const renderLoginPage = () => {
-  //   return <LoginPage></LoginPage>
-  // }
-
-  // const renderPage = () => {
-  //   if (isUserLoggedIn) {
-  //     return renderDashboard()
-  //   }
-  //   return renderLoginPage()
-  // }
 
   return renderDashboard()
 }

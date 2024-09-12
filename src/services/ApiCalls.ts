@@ -37,6 +37,36 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       contentType = 'application/json'
       break
 
+    case ApiCallTypes.GET_ALL_USERS_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_ALL_USERS_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_ALL_ADMIN_MENUS_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_ALL_ADMIN_MENUS_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_ALL_ADMIN_SUBMENUS_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_ALL_ADMIN_SUBMENUS_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_ALL_ADMIN_MENU_STATUSES_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_ALL_ADMIN_MENU_STATUSES_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_ALL_PRODUCTS_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_ALL_PRODUCTS_API_PATH
+      contentType = 'application/json'
+      break
+
     /* ---------- GET requests ends ---------------------------- */
 
     /* ---------- POST requests starts ---------------------------- */

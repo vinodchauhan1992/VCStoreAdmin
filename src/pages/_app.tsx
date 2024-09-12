@@ -32,6 +32,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 // import '../../styles/globals.css'
 import { Provider as StoreProvider } from 'react-redux'
 import { store } from '../reduxConfig/reduxStore/store'
+import GlobalCustomisedLoader from '../@core/components/global-customised-loader/GlobalCustomisedLoader'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -66,6 +67,7 @@ const App = (props: ExtendedAppProps) => {
 
   return (
     <StoreProvider store={store}>
+      <GlobalCustomisedLoader></GlobalCustomisedLoader>
       <CacheProvider value={emotionCache}>
         <Head>
           <title>{`${themeConfig.templateName} - Material Design React Admin Template`}</title>

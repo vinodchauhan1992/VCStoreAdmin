@@ -9,7 +9,7 @@ import storage from 'redux-persist/lib/storage'
 const persistConfig = {
   key: 'root',
   storage: storage,
-  blacklist: [],
+  blacklist: ['ui'],
   whitelist: ['loggedInUser'] //persisted reducers
 }
 

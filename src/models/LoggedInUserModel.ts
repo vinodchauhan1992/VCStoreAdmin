@@ -20,6 +20,7 @@ export interface LoggedInUserModel {
     userStatusID: string
     userStatus: string
     imageData: ImageDataModel
+    userType: string
     dateOfBirth: Date
     dateAdded: Date
     dateModified: Date

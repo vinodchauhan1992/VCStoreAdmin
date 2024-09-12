@@ -21,42 +21,21 @@ import AccountOutline from 'mdi-material-ui/AccountOutline'
 // ** Types
 import { ThemeColor } from 'src/@core/layouts/types'
 
-interface DataType {
+export interface StatsDataTypeProps {
+  id: number
   stats: string
   title: string
   color: ThemeColor
   icon: ReactElement
 }
 
-const salesData: DataType[] = [
-  {
-    stats: '245k',
-    title: 'Sales',
-    color: 'primary',
-    icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '12.5k',
-    title: 'Customers',
-    color: 'success',
-    icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '1.54k',
-    color: 'warning',
-    title: 'Products',
-    icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '$88k',
-    color: 'info',
-    title: 'Revenue',
-    icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
-  }
-]
+export interface GrowthDataTypeProps {
+  growthPercent: number
+  type: 'reduction' | 'growth'
+}
 
-const renderStats = () => {
-  return salesData.map((item: DataType, index: number) => (
+const renderStats = (dataArray: StatsDataTypeProps[]) => {
+  return dataArray.map((item: StatsDataTypeProps, index: number) => (
     <Grid item xs={12} sm={3} key={index}>
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar
@@ -81,7 +60,27 @@ const renderStats = () => {
   ))
 }
 
-const StatisticsCard = () => {
+export interface StatisticsCardProps {
+  statsDataArray: StatsDataTypeProps[]
+  growthData: GrowthDataTypeProps
+}
+
+const StatisticsCard = (props: StatisticsCardProps) => {
+  const { statsDataArray, growthData } = props
+  console.log('growthData', growthData)
+
+  const getGrowthShowText = () => {
+    let signToShow = ''
+    let newGrowthPercent = growthData?.growthPercent ? growthData.growthPercent : 0
+    if (growthData && growthData?.type === 'growth') {
+      signToShow = '+'
+    } else if (growthData && growthData?.type === 'reduction') {
+      signToShow = '-'
+    }
+
+    return newGrowthPercent > 0 ? ` ${signToShow}${newGrowthPercent}% growth` : ` ${newGrowthPercent}% growth`
+  }
+
   return (
     <Card>
       <CardHeader
@@ -94,9 +93,18 @@ const StatisticsCard = () => {
         subheader={
           <Typography variant='body2'>
             <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-              Total 48.5% growth
+              Total
+            </Box>
+            <Box
+              component='span'
+              sx={{
+                fontWeight: 600,
+                color: growthData && growthData?.type === 'growth' ? 'success.dark' : 'error.dark'
+              }}
+            >
+              {`${getGrowthShowText()}`}
             </Box>{' '}
-            😎 this month
+            this month
           </Typography>
         }
         titleTypographyProps={{
@@ -109,7 +117,7 @@ const StatisticsCard = () => {
       />
       <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important` }}>
         <Grid container spacing={[5, 0]}>
-          {renderStats()}
+          {renderStats(statsDataArray)}
         </Grid>
       </CardContent>
     </Card>
