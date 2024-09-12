@@ -9,6 +9,7 @@ import * as FileFoldersReducer from './FileFoldersReducer'
 import * as AdminMenusReducer from './AdminMenusReducer'
 import * as AdminSubmenusReducer from './AdminSubmenusReducer'
 import * as AdminMenuStatusesReducer from './AdminMenuStatusesReducer'
+import * as ProductsReducer from './ProductsReducer'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { store } from '../../reduxConfig/reduxStore/store'
 
@@ -22,8 +23,8 @@ const rootReducer = combineReducers({
   fileFolders: FileFoldersReducer.fileFoldersSliceReducer,
   adminMenus: AdminMenusReducer.adminMenusSliceReducer,
   adminSubmenus: AdminSubmenusReducer.adminSubmenusSliceReducer,
-  adminMenuStatuses: AdminMenuStatusesReducer.adminMenuStatusesSliceReducer
-  // products: ,
+  adminMenuStatuses: AdminMenuStatusesReducer.adminMenuStatusesSliceReducer,
+  products: ProductsReducer.productsSliceReducer
 })
 
 export {
@@ -37,7 +38,8 @@ export {
   FileFoldersReducer,
   AdminMenusReducer,
   AdminSubmenusReducer,
-  AdminMenuStatusesReducer
+  AdminMenuStatusesReducer,
+  ProductsReducer
 }
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
