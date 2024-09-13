@@ -18,3 +18,10 @@ export interface AddDataCommonReducerModel<T = null> {
   isCompleted: boolean
   data?: T | null
 }
+
+export interface UpdateDataCommonReducerModel<T = null> {
+  message?: string | null
+  succeeded: boolean
+  isCompleted: boolean
+  data?: T | null
+}

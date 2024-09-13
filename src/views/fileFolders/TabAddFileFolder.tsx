@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ElementType, ChangeEvent } from 'react'
+import { useState, ElementType, ChangeEvent, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -10,12 +10,10 @@ import CardContent from '@mui/material/CardContent'
 import Button, { ButtonProps } from '@mui/material/Button'
 
 // ** Icons Imports
-import { httpPostRequest } from 'src/services/AxiosApi'
-import apiPathsConfig from 'src/configs/apiPathsConfig'
-import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import { FileFoldersModel } from 'src/models/FileFoldersModel'
 import { AlertValuesModel } from 'src/models/AlertValuesModel'
 import Alert from '@mui/material/Alert'
+import { FileFoldersReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 
 const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -35,6 +33,11 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
 }))
 
 const TabAddFileFolder = () => {
+  const dispatch = useAppDispatch()
+
+  // @ts-ignore
+  const addedFileFolderResponse = useAppSelector(FileFoldersReducer.selectAddedFileFolderResponse)
+
   const defaultAlertValues: AlertValuesModel = {
     severity: 'info',
     message: '',
@@ -46,7 +49,6 @@ const TabAddFileFolder = () => {
     folderName: '',
     description: ''
   })
-  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
   const [alertVaues, setAlertValues] = useState<AlertValuesModel>(defaultAlertValues)
 
   const handleFolderNameChange = (prop: keyof FileFoldersModel) => (event: ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +78,6 @@ const TabAddFileFolder = () => {
         message: 'Please enter folder name.',
         isVisible: true
       })
-
       return
     }
     if (!values?.description || values.description === '') {
@@ -85,16 +86,21 @@ const TabAddFileFolder = () => {
         message: 'Please enter description.',
         isVisible: true
       })
-
       return
     }
-    setIsLoaderVisible(true)
-    const response = await httpPostRequest({ apiUrlPath: apiPathsConfig.addFileFolderApiPath, jsonBody: values })
-    if (response.isSucceded) {
-      resetForm()
-    }
-    setIsLoaderVisible(false)
+    dispatch({ type: 'ADD_FILE_FOLDER', payload: values })
   }
+
+  useEffect(() => {
+    if (addedFileFolderResponse?.isCompleted) {
+      if (addedFileFolderResponse?.succeeded) {
+        resetForm()
+        dispatch(FileFoldersReducer.resetAddedFileFolderResponse())
+      } else {
+        dispatch(FileFoldersReducer.resetAddedFileFolderResponse())
+      }
+    }
+  }, [addedFileFolderResponse])
 
   const renderAlert = () => {
     if (alertVaues?.isVisible) {
@@ -151,7 +157,6 @@ const TabAddFileFolder = () => {
             </Box>
           </Grid>
         </form>
-        <CustomisedLoader visible={isLoaderVisible} />
       </CardContent>
     </div>
   )

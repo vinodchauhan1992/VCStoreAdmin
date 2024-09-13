@@ -4,8 +4,6 @@ import { useState, useEffect, ChangeEvent } from 'react'
 
 // ** MUI Imports
 import CardContent from '@mui/material/CardContent'
-import apiPathsConfig from '../../configs/apiPathsConfig'
-import { httpDeleteRequest, httpGetRequest } from 'src/services/AxiosApi'
 import { CategoryModel } from 'src/models/CategoryModel'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
@@ -14,47 +12,44 @@ import EditCategory from './editCategory/EditCategory'
 import CategorySmartCard from './components/category-smart-card/CategorySmartCard'
 import Grid from '@mui/material/Grid'
 import CustomisedSearchField from 'src/@core/components/customised-search-field/CustomisedSearchField'
+import { CategoriesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 
 const TabAllCategories = () => {
+  const dispatch = useAppDispatch()
+
+  // @ts-ignore
+  const allCategoriesDataResult = useAppSelector(CategoriesReducer.selectAllCategoriesDataResult)
+  // @ts-ignore
+  const deletedCategoryResponse = useAppSelector(CategoriesReducer.selectDeletedCategoryResponse)
+
   // ** State
-  const [allCategoriesData, setAllCategoriesData] = useState<CategoryModel[]>([])
-  const [isErrored, setIsErrored] = useState<boolean>(false)
-  const [message, setMessage] = useState<string | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
   const [selectedCategory, setSelectedCategory] = useState<CategoryModel | null>(null)
-  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
   const [openViewCategory, setOpenViewCategory] = useState<boolean>(false)
   const [openEditCategory, setOpenEditCategory] = useState<boolean>(false)
   const [searchedText, setSearchedText] = useState<string>('')
   const [searchedCategories, setSearchedCategories] = useState<CategoryModel[]>([])
 
   const callAllCategoriesApi = async () => {
-    setIsLoaderVisible(true)
-    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllCategoriesApiPath })
-    if (response.isSucceded) {
-      setAllCategoriesData(response?.responseData?.data ?? [])
-      setSearchedCategories(response?.responseData?.data ?? [])
-      setMessage(response?.responseData?.message ?? null)
-    } else {
-      setIsErrored(true)
-      setMessage(response?.responseData?.message ?? null)
-    }
-    setIsLoaderVisible(false)
+    dispatch({ type: 'FETCH_ALL_CATEGORIES' })
   }
 
   useEffect(() => {
     callAllCategoriesApi()
   }, [])
 
+  useEffect(() => {
+    setSearchedCategories(allCategoriesDataResult?.dataArray ?? [])
+  }, [allCategoriesDataResult?.dataArray])
+
   const searchCategories = () => {
     if (searchedText && searchedText !== '') {
-      const filtered = allCategoriesData.filter(entry =>
+      const filtered = allCategoriesDataResult?.dataArray?.filter(entry =>
         Object.values(entry).some(val => typeof val === 'string' && val.includes(searchedText))
       )
-
       setSearchedCategories(filtered)
     } else {
-      setSearchedCategories(allCategoriesData)
+      setSearchedCategories(allCategoriesDataResult?.dataArray ?? [])
     }
   }
 
@@ -69,16 +64,20 @@ const TabAllCategories = () => {
   }
 
   const deleteCategory = async () => {
-    resetSelectedCategory()
-    setIsLoaderVisible(true)
-    const response = await httpDeleteRequest({
-      apiUrlPath: `${apiPathsConfig.deleteCategoryApiPath}/${selectedCategory?.id}`
-    })
-    if (response.isSucceded) {
-      await callAllCategoriesApi()
-    }
-    setIsLoaderVisible(false)
+    dispatch({ type: 'DELETE_CATEGORY', payload: { categoryId: selectedCategory?.id } })
   }
+
+  useEffect(() => {
+    if (deletedCategoryResponse?.isCompleted) {
+      resetSelectedCategory()
+      if (deletedCategoryResponse?.succeeded) {
+        dispatch(CategoriesReducer.resetDeletedCategoryResponse())
+        callAllCategoriesApi()
+      } else {
+        dispatch(CategoriesReducer.resetDeletedCategoryResponse())
+      }
+    }
+  }, [deletedCategoryResponse])
 
   const onDeleteClick = async (category: CategoryModel) => {
     setSelectedCategory(category)
@@ -97,7 +96,11 @@ const TabAllCategories = () => {
   const renderEmpty = () => {
     return (
       <Grid item xs={12} sm={12}>
-        <CustomisedErrorEmpty title='No categories found!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+        <CustomisedErrorEmpty
+          title='No categories found!'
+          type='empty'
+          message={allCategoriesDataResult?.message ?? ''}
+        ></CustomisedErrorEmpty>
       </Grid>
     )
   }
@@ -117,7 +120,11 @@ const TabAllCategories = () => {
   const renderError = () => {
     return (
       <Grid item xs={12} sm={12}>
-        <CustomisedErrorEmpty title='Error!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+        <CustomisedErrorEmpty
+          title='Error!'
+          type='empty'
+          message={allCategoriesDataResult?.message ?? ''}
+        ></CustomisedErrorEmpty>
       </Grid>
     )
   }
@@ -163,10 +170,10 @@ const TabAllCategories = () => {
   }
 
   const renderData = () => {
-    if (isErrored) {
+    if (allCategoriesDataResult?.isCompleted && !allCategoriesDataResult?.succeeded) {
       return renderError()
     }
-    if (!allCategoriesData || allCategoriesData.length <= 0) {
+    if (!allCategoriesDataResult?.dataArray || allCategoriesDataResult.dataArray.length <= 0) {
       return renderEmpty()
     }
 
@@ -233,7 +240,6 @@ const TabAllCategories = () => {
 
   return (
     <div>
-      <CustomisedLoader visible={isLoaderVisible} />
       <CardContent>
         {renderAlertDialog()}
         {renderWholeMainData()}

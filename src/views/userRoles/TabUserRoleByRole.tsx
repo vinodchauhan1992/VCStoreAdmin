@@ -7,10 +7,7 @@ import CardContent from '@mui/material/CardContent'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Grid from '@mui/material/Grid'
-import { httpGetRequest } from 'src/services/AxiosApi'
-import apiPathsConfig from 'src/configs/apiPathsConfig'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
-import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import { UserRoleModel } from 'src/models/UserRoleModel'
 import { UserRolesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 
@@ -79,7 +76,13 @@ const TabUserRoleByRole = () => {
   }
 
   const renderError = () => {
-    return <CustomisedErrorEmpty title='Error!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+    return (
+      <CustomisedErrorEmpty
+        title='Error!'
+        type='empty'
+        message={allUserRolesDataResult?.message ?? ''}
+      ></CustomisedErrorEmpty>
+    )
   }
 
   const renderData = () => {

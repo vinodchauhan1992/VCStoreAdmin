@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ElementType, ChangeEvent } from 'react'
+import { useState, ElementType, ChangeEvent, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -12,13 +12,13 @@ import Typography from '@mui/material/Typography'
 
 // ** Icons Imports
 import { AddCategoryRequestModel } from 'src/models/CategoryModel'
-import { httpMultipartPostRequest } from 'src/services/AxiosApi'
-import apiPathsConfig from 'src/configs/apiPathsConfig'
-import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import Alert from '@mui/material/Alert'
 import { AlertValuesModel } from 'src/models/AlertValuesModel'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
+import { CategoriesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+
+const defaultImage = '/images/avatars/9.jpeg'
 
 const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -38,6 +38,8 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
 }))
 
 const TabAddCategory = () => {
+  const dispatch = useAppDispatch()
+
   const defaultAlertValues: AlertValuesModel = {
     severity: 'info',
     message: '',
@@ -50,11 +52,13 @@ const TabAddCategory = () => {
     file: null
   }
 
+  // @ts-ignore
+  const addedCategoryResponse = useAppSelector(CategoriesReducer.selectAddedCategoryResponse)
+
   // ** State
   const [values, setValues] = useState<AddCategoryRequestModel>(defaultValues)
-  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
   const [alertVaues, setAlertValues] = useState<AlertValuesModel>(defaultAlertValues)
-  const [imageFileData, setImageFileData] = useState<string>('/images/avatars/9.jpeg')
+  const [imageFileData, setImageFileData] = useState<string>(defaultImage)
 
   const onChange = (file: ChangeEvent) => {
     const reader = new FileReader()
@@ -82,7 +86,7 @@ const TabAddCategory = () => {
   const resetForm = () => {
     setValues(defaultValues)
     setAlertValues(defaultAlertValues)
-    setImageFileData('/images/avatars/9.jpeg')
+    setImageFileData(defaultImage)
   }
 
   const onResetClick = () => {
@@ -96,7 +100,6 @@ const TabAddCategory = () => {
         message: 'Please enter category title.',
         isVisible: true
       })
-
       return
     }
     if (!values?.description || values.description === '') {
@@ -105,23 +108,34 @@ const TabAddCategory = () => {
         message: 'Please enter category description.',
         isVisible: true
       })
-
+      return
+    }
+    if (!imageFileData || imageFileData === '' || imageFileData === defaultImage) {
+      setAlertValues({
+        severity: 'error',
+        message: 'Please select an image.',
+        isVisible: true
+      })
       return
     }
     const formData = new FormData()
     formData.append('title', values.title)
     formData.append('description', values.description)
     formData.append('file', values.file)
-    setIsLoaderVisible(true)
-    const response = await httpMultipartPostRequest({
-      apiUrlPath: apiPathsConfig.addCategoryApiPath,
-      jsonBody: formData
-    })
-    if (response.isSucceded) {
-      resetForm()
-    }
-    setIsLoaderVisible(false)
+
+    dispatch({ type: 'ADD_CATEGORY', payload: formData })
   }
+
+  useEffect(() => {
+    if (addedCategoryResponse?.isCompleted) {
+      if (addedCategoryResponse?.succeeded) {
+        resetForm()
+        dispatch(CategoriesReducer.resetAddedCategoryResponse())
+      } else {
+        dispatch(CategoriesReducer.resetAddedCategoryResponse())
+      }
+    }
+  }, [addedCategoryResponse])
 
   const renderAlert = () => {
     if (alertVaues?.isVisible) {
@@ -161,11 +175,7 @@ const TabAddCategory = () => {
                       id='categories-upload-image'
                     />
                   </ButtonStyled>
-                  <ResetButtonStyled
-                    color='error'
-                    variant='outlined'
-                    onClick={() => setImageFileData('/images/avatars/9.jpeg')}
-                  >
+                  <ResetButtonStyled color='error' variant='outlined' onClick={() => setImageFileData(defaultImage)}>
                     Reset
                   </ResetButtonStyled>
                   <Typography variant='body2' sx={{ marginTop: 5 }}>
@@ -207,7 +217,6 @@ const TabAddCategory = () => {
             </Box>
           </Grid>
         </form>
-        <CustomisedLoader visible={isLoaderVisible} />
       </CardContent>
     </div>
   )

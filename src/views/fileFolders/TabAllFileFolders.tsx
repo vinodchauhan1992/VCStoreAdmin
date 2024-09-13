@@ -10,17 +10,15 @@ import Typography from '@mui/material/Typography'
 import TableContainer from '@mui/material/TableContainer'
 import Box from '@mui/material/Box'
 import Button, { ButtonProps } from '@mui/material/Button'
-import apiPathsConfig from '../../configs/apiPathsConfig'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { httpDeleteRequest, httpGetRequest } from 'src/services/AxiosApi'
 import { StyledTableCell } from 'src/@core/components/customised-table/styled-table-cell/StyledTableCell'
 import { StyledTableRow } from 'src/@core/components/customised-table/styled-table-row/StyledTableRow'
 import { styled } from '@mui/material/styles'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
-import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import { FileFoldersModel } from 'src/models/FileFoldersModel'
+import { FileFoldersReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -33,25 +31,19 @@ const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
 }))
 
 const TabAllFileFolders = () => {
+  const dispatch = useAppDispatch()
+
+  // @ts-ignore
+  const allFileFoldersDataResult = useAppSelector(FileFoldersReducer.selectAllFileFoldersDataResult)
+  // @ts-ignore
+  const deletedFileFolderResponse = useAppSelector(FileFoldersReducer.selectDeletedFileFolderResponse)
+
   // ** State
-  const [allFileFolders, setAllFileFoldersData] = useState<FileFoldersModel[]>([])
-  const [isErrored, setIsErrored] = useState<boolean>(false)
-  const [message, setMessage] = useState<string | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
   const [selectedFileFolder, setSelectedFileFolder] = useState<FileFoldersModel | null>(null)
-  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
 
   const callAllFileFoldersApi = async () => {
-    setIsLoaderVisible(true)
-    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllFileFoldersApiPath })
-    if (response.isSucceded) {
-      setAllFileFoldersData(response?.responseData?.data ?? [])
-      setMessage(response?.responseData?.message ?? null)
-    } else {
-      setIsErrored(true)
-      setMessage(response?.responseData?.message ?? null)
-    }
-    setIsLoaderVisible(false)
+    dispatch({ type: 'FETCH_ALL_FILE_FOLDERS' })
   }
 
   useEffect(() => {
@@ -64,16 +56,20 @@ const TabAllFileFolders = () => {
   }
 
   const deleteFileFolder = async () => {
-    resetSelectedFileFolder()
-    setIsLoaderVisible(true)
-    const response = await httpDeleteRequest({
-      apiUrlPath: `${apiPathsConfig.deleteFileFolderApiPath}/${selectedFileFolder?.id}`
-    })
-    if (response.isSucceded) {
-      await callAllFileFoldersApi()
-    }
-    setIsLoaderVisible(false)
+    dispatch({ type: 'DELETE_FILE_FOLDER', payload: { fileFolderId: selectedFileFolder?.id } })
   }
+
+  useEffect(() => {
+    if (deletedFileFolderResponse?.isCompleted) {
+      resetSelectedFileFolder()
+      if (deletedFileFolderResponse?.succeeded) {
+        dispatch(FileFoldersReducer.resetDeletedFileFolderResponse())
+        callAllFileFoldersApi()
+      } else {
+        dispatch(FileFoldersReducer.resetDeletedFileFolderResponse())
+      }
+    }
+  }, [deletedFileFolderResponse])
 
   const onDeleteClick = async (fileFolderData: FileFoldersModel) => {
     setSelectedFileFolder(fileFolderData)
@@ -89,7 +85,7 @@ const TabAllFileFolders = () => {
   }
 
   const renderDataTable = () => {
-    if (allFileFolders && allFileFolders.length > 0) {
+    if (allFileFoldersDataResult?.dataArray && allFileFoldersDataResult.dataArray.length > 0) {
       return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label='table in dashboard'>
@@ -102,7 +98,7 @@ const TabAllFileFolders = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {allFileFolders.map((fileFolderData: FileFoldersModel) => (
+              {allFileFoldersDataResult.dataArray.map((fileFolderData: FileFoldersModel) => (
                 <StyledTableRow
                   hover
                   key={fileFolderData?.folderName}
@@ -154,19 +150,29 @@ const TabAllFileFolders = () => {
 
   const renderEmpty = () => {
     return (
-      <CustomisedErrorEmpty title='No user statuses found!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+      <CustomisedErrorEmpty
+        title='No user statuses found!'
+        type='empty'
+        message={allFileFoldersDataResult?.message ?? ''}
+      ></CustomisedErrorEmpty>
     )
   }
 
   const renderError = () => {
-    return <CustomisedErrorEmpty title='Error!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+    return (
+      <CustomisedErrorEmpty
+        title='Error!'
+        type='empty'
+        message={allFileFoldersDataResult?.message ?? ''}
+      ></CustomisedErrorEmpty>
+    )
   }
 
   const renderData = () => {
-    if (isErrored) {
+    if (allFileFoldersDataResult?.isCompleted && !allFileFoldersDataResult?.succeeded) {
       return renderError()
     }
-    if (!allFileFolders || allFileFolders.length <= 0) {
+    if (!allFileFoldersDataResult?.dataArray || allFileFoldersDataResult.dataArray.length <= 0) {
       return renderEmpty()
     }
 
@@ -205,7 +211,6 @@ const TabAllFileFolders = () => {
 
   return (
     <div>
-      <CustomisedLoader visible={isLoaderVisible} />
       <CardContent>
         {renderAlertDialog()}
         {renderData()}

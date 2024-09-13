@@ -8,6 +8,11 @@ export default {
   ADD_USER_ROLE_TYPE: 'addUserRole',
   ADD_USER_STATUS_TYPE: 'addUserStatus',
   ADD_FILE_FOLDER_TYPE: 'addFileFolder',
+  ADD_ADMIN_MENU_TYPE: 'addAdminMenu',
+  ADD_ADMIN_MENU_STATUS_TYPE: 'addAdminMenuStatus',
+  ADD_ADMIN_SUBMENU_TYPE: 'addAdminSubmenu',
+  ADD_PRODUCT_TYPE: 'addProduct',
+  ADD_USER_TYPE: 'addNewUser',
   /*-------------------- ADD API'S TYPES END --------------------*/
 
   /*-------------------- UPDATE API'S TYPES START --------------------*/
@@ -19,6 +24,11 @@ export default {
   DELETE_USER_ROLE_TYPE: 'deleteUserRole',
   DELETE_USER_STATUS_TYPE: 'deleteUserStatus',
   DELETE_FILE_FOLDER_TYPE: 'deleteFileFolder',
+  DELETE_ADMIN_MENU_TYPE: 'deleteAdminMenu',
+  DELETE_ADMIN_MENU_STATUS_TYPE: 'deleteAdminMenuStatuses',
+  DELETE_ADMIN_SUBMENU_TYPE: 'deleteAdminSubmenu',
+  DELETE_PRODUCT_TYPE: 'deleteProduct',
+  DELETE_USER_TYPE: 'deleteUser',
   /*-------------------- DELETE API'S TYPES END --------------------*/
 
   /*-------------------- GET API'S TYPES START --------------------*/
@@ -30,6 +40,6 @@ export default {
   GET_ALL_ADMIN_MENUS_TYPE: 'getAllAdminMenus',
   GET_ALL_ADMIN_SUBMENUS_TYPE: 'getAllAdminSubmenus',
   GET_ALL_ADMIN_MENU_STATUSES_TYPE: 'getAllAdminMenuStatuses',
-  GET_ALL_PRODUCTS_TYPE: 'getAllProducts',
+  GET_ALL_PRODUCTS_TYPE: 'getAllProducts'
   /*-------------------- GET API'S TYPES END --------------------*/
 }

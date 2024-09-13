@@ -66,7 +66,6 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       requestUrl = ApiContainerUrls.GET_ALL_PRODUCTS_API_PATH
       contentType = 'application/json'
       break
-
     /* ---------- GET requests ends ---------------------------- */
 
     /* ---------- POST requests starts ---------------------------- */
@@ -100,6 +99,36 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       contentType = 'application/json'
       break
 
+    case ApiCallTypes.ADD_ADMIN_MENU_TYPE:
+      requestType = 'POST'
+      requestUrl = ApiContainerUrls.ADD_ADMIN_MENU_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.ADD_ADMIN_MENU_STATUS_TYPE:
+      requestType = 'POST'
+      requestUrl = ApiContainerUrls.ADD_ADMIN_MENU_STATUS_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.ADD_ADMIN_SUBMENU_TYPE:
+      requestType = 'POST'
+      requestUrl = ApiContainerUrls.ADD_ADMIN_SUBMENU_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.ADD_PRODUCT_TYPE:
+      requestType = 'POST'
+      requestUrl = ApiContainerUrls.ADD_PRODUCT_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.ADD_USER_TYPE:
+      requestType = 'POST'
+      requestUrl = ApiContainerUrls.ADD_USER_API_PATH
+      contentType = 'application/json'
+      break
+
     /* ---------- POST requests ends ---------------------------- */
 
     /* ---------- DELETE requests starts ---------------------------- */
@@ -124,6 +153,36 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
     case ApiCallTypes.DELETE_FILE_FOLDER_TYPE:
       requestType = 'DELETE'
       requestUrl = ApiContainerUrls.DELETE_FILE_FOLDER_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.DELETE_ADMIN_MENU_TYPE:
+      requestType = 'DELETE'
+      requestUrl = ApiContainerUrls.DELETE_ADMIN_MENU_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.DELETE_ADMIN_MENU_STATUS_TYPE:
+      requestType = 'DELETE'
+      requestUrl = ApiContainerUrls.DELETE_ADMIN_MENU_STATUS_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.DELETE_ADMIN_SUBMENU_TYPE:
+      requestType = 'DELETE'
+      requestUrl = ApiContainerUrls.DELETE_ADMIN_SUBMENU_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.DELETE_PRODUCT_TYPE:
+      requestType = 'DELETE'
+      requestUrl = ApiContainerUrls.DELETE_PRODUCT_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.DELETE_USER_TYPE:
+      requestType = 'DELETE'
+      requestUrl = ApiContainerUrls.DELETE_USER_API_PATH
       contentType = 'application/json'
       break
 

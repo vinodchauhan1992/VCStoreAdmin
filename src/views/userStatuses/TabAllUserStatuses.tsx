@@ -10,17 +10,15 @@ import Typography from '@mui/material/Typography'
 import TableContainer from '@mui/material/TableContainer'
 import Box from '@mui/material/Box'
 import Button, { ButtonProps } from '@mui/material/Button'
-import apiPathsConfig from '../../configs/apiPathsConfig'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { httpDeleteRequest, httpGetRequest } from 'src/services/AxiosApi'
 import { StyledTableCell } from 'src/@core/components/customised-table/styled-table-cell/StyledTableCell'
 import { StyledTableRow } from 'src/@core/components/customised-table/styled-table-row/StyledTableRow'
 import { styled } from '@mui/material/styles'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
-import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import { UserStatusModel } from 'src/models/UserStatusModel'
+import { UserStatusesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -33,29 +31,19 @@ const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
 }))
 
 const TabAllUserStatuses = () => {
+  const dispatch = useAppDispatch()
+
   // ** State
-  const [allUserStatuses, setAllUserStatusesData] = useState<UserStatusModel[]>([])
-  const [isErrored, setIsErrored] = useState<boolean>(false)
-  const [message, setMessage] = useState<string | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
   const [selectedUserStatus, setSelectedUserStatus] = useState<UserStatusModel | null>(null)
-  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
 
-  const callAllUserStatusesApi = async () => {
-    setIsLoaderVisible(true)
-    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllUserStatusesApiPath })
-    if (response.isSucceded) {
-      setAllUserStatusesData(response?.responseData?.data ?? [])
-      setMessage(response?.responseData?.message ?? null)
-    } else {
-      setIsErrored(true)
-      setMessage(response?.responseData?.message ?? null)
-    }
-    setIsLoaderVisible(false)
-  }
+  // @ts-ignore
+  const allUserStatusesDataResult = useAppSelector(UserStatusesReducer.selectAllUserStatusesDataResult)
+  // @ts-ignore
+  const deletedUserStatusResponse = useAppSelector(UserStatusesReducer.selectDeletedUserStatusResponse)
 
   useEffect(() => {
-    callAllUserStatusesApi()
+    dispatch({ type: 'FETCH_ALL_USER_STATUSES' })
   }, [])
 
   const resetSelectedUserStatus = () => {
@@ -63,16 +51,18 @@ const TabAllUserStatuses = () => {
     setIsDialogOpen(false)
   }
 
-  const deleteUserStatus = async () => {
-    resetSelectedUserStatus()
-    setIsLoaderVisible(true)
-    const response = await httpDeleteRequest({
-      apiUrlPath: `${apiPathsConfig.deleteUserStatusApiPath}/${selectedUserStatus?.id}`
-    })
-    if (response.isSucceded) {
-      await callAllUserStatusesApi()
+  useEffect(() => {
+    if (deletedUserStatusResponse?.isCompleted) {
+      resetSelectedUserStatus()
+      if (deletedUserStatusResponse?.succeeded) {
+        dispatch({ type: 'FETCH_ALL_USER_STATUSES' })
+        dispatch(UserStatusesReducer.resetDeletedUserStatusResponse())
+      }
     }
-    setIsLoaderVisible(false)
+  }, [deletedUserStatusResponse])
+
+  const deleteUserStatus = async () => {
+    dispatch({ type: 'DELETE_USER_STATUS', payload: { userStatusId: selectedUserStatus?.id } })
   }
 
   const onDeleteClick = async (userStatusData: UserStatusModel) => {
@@ -80,16 +70,20 @@ const TabAllUserStatuses = () => {
     setIsDialogOpen(true)
   }
 
-  const onEditClick = async (userStatusData: UserStatusModel) => {}
+  const onEditClick = async (userStatusData: UserStatusModel) => {
+    setSelectedUserStatus(userStatusData)
+  }
 
-  const onViewClick = async (userStatusData: UserStatusModel) => {}
+  const onViewClick = async (userStatusData: UserStatusModel) => {
+    setSelectedUserStatus(userStatusData)
+  }
 
   const handleDialogOpen = () => {
     setIsDialogOpen(!isDialogOpen)
   }
 
   const renderDataTable = () => {
-    if (allUserStatuses && allUserStatuses.length > 0) {
+    if (allUserStatusesDataResult?.dataArray && allUserStatusesDataResult.dataArray.length > 0) {
       return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label='table in dashboard'>
@@ -102,7 +96,7 @@ const TabAllUserStatuses = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {allUserStatuses.map((userStatusData: UserStatusModel) => (
+              {allUserStatusesDataResult.dataArray.map((userStatusData: UserStatusModel) => (
                 <StyledTableRow
                   hover
                   key={userStatusData?.status}
@@ -154,19 +148,29 @@ const TabAllUserStatuses = () => {
 
   const renderEmpty = () => {
     return (
-      <CustomisedErrorEmpty title='No user statuses found!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+      <CustomisedErrorEmpty
+        title='No user statuses found!'
+        type='empty'
+        message={allUserStatusesDataResult?.message ?? ''}
+      ></CustomisedErrorEmpty>
     )
   }
 
   const renderError = () => {
-    return <CustomisedErrorEmpty title='Error!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+    return (
+      <CustomisedErrorEmpty
+        title='Error!'
+        type='empty'
+        message={allUserStatusesDataResult?.message ?? ''}
+      ></CustomisedErrorEmpty>
+    )
   }
 
   const renderData = () => {
-    if (isErrored) {
+    if (allUserStatusesDataResult?.isCompleted && !allUserStatusesDataResult?.succeeded) {
       return renderError()
     }
-    if (!allUserStatuses || allUserStatuses.length <= 0) {
+    if (!allUserStatusesDataResult?.dataArray || allUserStatusesDataResult.dataArray.length <= 0) {
       return renderEmpty()
     }
 
@@ -205,7 +209,6 @@ const TabAllUserStatuses = () => {
 
   return (
     <div>
-      <CustomisedLoader visible={isLoaderVisible} />
       <CardContent>
         {renderAlertDialog()}
         {renderData()}

@@ -6,37 +6,23 @@ import CardContent from '@mui/material/CardContent'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Grid from '@mui/material/Grid'
-import { httpGetRequest } from 'src/services/AxiosApi'
-import apiPathsConfig from 'src/configs/apiPathsConfig'
 import { CategoryModel } from 'src/models/CategoryModel'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
-import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import CategorySmartCard from 'src/views/categories/components/category-smart-card/CategorySmartCard'
+import { CategoriesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 
 const TabCategoryByTitle = () => {
+  const dispatch = useAppDispatch()
+
+  // @ts-ignore
+  const allCategoriesDataResult = useAppSelector(CategoriesReducer.selectAllCategoriesDataResult)
+
   // ** States
-  const [allCategoriesData, setAllCategoriesData] = useState<CategoryModel[]>([])
   const [selectedCategoryData, setSelectedCategoryData] = useState<CategoryModel | null>(null)
-  const [isErrored, setIsErrored] = useState<boolean>(false)
-  const [message, setMessage] = useState<string | null>(null)
-  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
   const [openViewCategory, setOpenViewCategory] = useState<boolean>(false)
 
-  const callAllCategoriesApi = async () => {
-    setIsLoaderVisible(true)
-    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllCategoriesApiPath })
-    if (response.isSucceded) {
-      setAllCategoriesData(response?.responseData?.data ?? [])
-      setMessage(response?.responseData?.message ?? null)
-    } else {
-      setIsErrored(true)
-      setMessage(response?.responseData?.message ?? null)
-    }
-    setIsLoaderVisible(false)
-  }
-
   useEffect(() => {
-    callAllCategoriesApi()
+    dispatch({ type: 'FETCH_ALL_CATEGORIES' })
   }, [])
 
   const setTheOpenViewCategory = (isOpenViewCategory: boolean) => {
@@ -70,11 +56,17 @@ const TabCategoryByTitle = () => {
   }
 
   const renderError = () => {
-    return <CustomisedErrorEmpty title='Error!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+    return (
+      <CustomisedErrorEmpty
+        title='Error!'
+        type='empty'
+        message={allCategoriesDataResult?.message ?? ''}
+      ></CustomisedErrorEmpty>
+    )
   }
 
   const renderData = () => {
-    if (isErrored) {
+    if (allCategoriesDataResult?.isCompleted && !allCategoriesDataResult?.succeeded) {
       return renderError()
     }
     if (!selectedCategoryData) {
@@ -86,7 +78,6 @@ const TabCategoryByTitle = () => {
 
   return (
     <div>
-      <CustomisedLoader visible={isLoaderVisible} />
       <CardContent>
         <form>
           <Grid container spacing={7}>
@@ -94,7 +85,7 @@ const TabCategoryByTitle = () => {
               <FormControl fullWidth>
                 <InputLabel>Category title</InputLabel>
                 <Select label='Category title'>
-                  {allCategoriesData?.map(category => {
+                  {allCategoriesDataResult?.dataArray?.map(category => {
                     return (
                       <MenuItem
                         value={category?.title ?? ''}

@@ -7,35 +7,21 @@ import CardContent from '@mui/material/CardContent'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Grid from '@mui/material/Grid'
-import { httpGetRequest } from 'src/services/AxiosApi'
-import apiPathsConfig from 'src/configs/apiPathsConfig'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
-import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import { UserStatusModel } from 'src/models/UserStatusModel'
+import { UserStatusesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 
 const TabUserStatusByStatus = () => {
-  // ** States
-  const [allUserStatusesData, setAllUerStatusesData] = useState<UserStatusModel[]>([])
-  const [selectedUserStatusData, setSelectedUserStatusData] = useState<UserStatusModel | null>(null)
-  const [isErrored, setIsErrored] = useState<boolean>(false)
-  const [message, setMessage] = useState<string | null>(null)
-  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
+  const dispatch = useAppDispatch()
 
-  const callAllUserStatusesApi = async () => {
-    setIsLoaderVisible(true)
-    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllUserStatusesApiPath })
-    if (response.isSucceded) {
-      setAllUerStatusesData(response?.responseData?.data ?? [])
-      setMessage(response?.responseData?.message ?? null)
-    } else {
-      setIsErrored(true)
-      setMessage(response?.responseData?.message ?? null)
-    }
-    setIsLoaderVisible(false)
-  }
+  // ** States
+  const [selectedUserStatusData, setSelectedUserStatusData] = useState<UserStatusModel | null>(null)
+
+  // @ts-ignore
+  const allUserStatusesDataResult = useAppSelector(UserStatusesReducer.selectAllUserStatusesDataResult)
 
   useEffect(() => {
-    callAllUserStatusesApi()
+    dispatch({ type: 'FETCH_ALL_USER_STATUSES' })
   }, [])
 
   const renderDetailsFields = () => {
@@ -89,17 +75,23 @@ const TabUserStatusByStatus = () => {
       <CustomisedErrorEmpty
         title='Select user status!'
         type='empty'
-        message='Please select a user status from drop down.'
+        message={'Please select a user status from drop down.'}
       ></CustomisedErrorEmpty>
     )
   }
 
   const renderError = () => {
-    return <CustomisedErrorEmpty title='Error!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+    return (
+      <CustomisedErrorEmpty
+        title='Error!'
+        type='empty'
+        message={allUserStatusesDataResult?.message ?? ''}
+      ></CustomisedErrorEmpty>
+    )
   }
 
   const renderData = () => {
-    if (isErrored) {
+    if (allUserStatusesDataResult?.isCompleted && !allUserStatusesDataResult?.succeeded) {
       return renderError()
     }
     if (!selectedUserStatusData) {
@@ -111,15 +103,14 @@ const TabUserStatusByStatus = () => {
 
   return (
     <div>
-      <CustomisedLoader visible={isLoaderVisible} />
       <CardContent>
         <form>
           <Grid container spacing={7}>
             <Grid item xs={12} sm={selectedUserStatusData ? 6 : 12}>
               <FormControl fullWidth>
-                <InputLabel>User role</InputLabel>
+                <InputLabel>User status</InputLabel>
                 <Select label='User role'>
-                  {allUserStatusesData?.map((userStatus) => {
+                  {allUserStatusesDataResult?.dataArray?.map(userStatus => {
                     return (
                       <MenuItem
                         value={userStatus?.status ?? ''}

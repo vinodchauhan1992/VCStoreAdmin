@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ElementType, ChangeEvent } from 'react'
+import { useState, ElementType, ChangeEvent, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -10,12 +10,10 @@ import CardContent from '@mui/material/CardContent'
 import Button, { ButtonProps } from '@mui/material/Button'
 
 // ** Icons Imports
-import { httpPostRequest } from 'src/services/AxiosApi'
-import apiPathsConfig from 'src/configs/apiPathsConfig'
-import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import { UserStatusModel } from 'src/models/UserStatusModel'
 import { AlertValuesModel } from 'src/models/AlertValuesModel'
 import Alert from '@mui/material/Alert'
+import { UserStatusesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 
 const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -35,6 +33,8 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
 }))
 
 const TabAddUserStatus = () => {
+  const dispatch = useAppDispatch()
+
   const defaultAlertValues: AlertValuesModel = {
     severity: 'info',
     message: '',
@@ -46,8 +46,10 @@ const TabAddUserStatus = () => {
     status: '',
     description: ''
   })
-  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
   const [alertVaues, setAlertValues] = useState<AlertValuesModel>(defaultAlertValues)
+
+  // @ts-ignore
+  const addedUserStatusResponse = useAppSelector(UserStatusesReducer.selectAddedUserStatusResponse)
 
   const handleRoleChange = (prop: keyof UserStatusModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
@@ -88,13 +90,24 @@ const TabAddUserStatus = () => {
 
       return
     }
-    setIsLoaderVisible(true)
-    const response = await httpPostRequest({ apiUrlPath: apiPathsConfig.addUserStatusApiPath, jsonBody: values })
-    if (response.isSucceded) {
-      resetForm()
-    }
-    setIsLoaderVisible(false)
+    dispatch({ type: 'ADD_USER_STATUS', payload: values })
   }
+
+  useEffect(() => {
+    if (addedUserStatusResponse?.isCompleted) {
+      if (addedUserStatusResponse?.succeeded) {
+        resetForm()
+        dispatch(UserStatusesReducer.resetAddedUserStatusResponse())
+      } else {
+        setAlertValues({
+          severity: 'error',
+          message: addedUserStatusResponse?.message ?? '',
+          isVisible: true
+        })
+        dispatch(UserStatusesReducer.resetAddedUserStatusResponse())
+      }
+    }
+  }, [addedUserStatusResponse])
 
   const renderAlert = () => {
     if (alertVaues?.isVisible) {
@@ -151,7 +164,6 @@ const TabAddUserStatus = () => {
             </Box>
           </Grid>
         </form>
-        <CustomisedLoader visible={isLoaderVisible} />
       </CardContent>
     </div>
   )

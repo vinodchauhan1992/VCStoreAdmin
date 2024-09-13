@@ -10,9 +10,6 @@ import CardContent from '@mui/material/CardContent'
 import Button, { ButtonProps } from '@mui/material/Button'
 
 // ** Icons Imports
-import { httpPostRequest } from 'src/services/AxiosApi'
-import apiPathsConfig from 'src/configs/apiPathsConfig'
-import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import { UserRoleModel } from 'src/models/UserRoleModel'
 import { AlertValuesModel } from 'src/models/AlertValuesModel'
 import Alert from '@mui/material/Alert'

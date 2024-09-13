@@ -2,7 +2,12 @@ import { AdminMenuStatusesModel } from './AdminMenuStatusesModel'
 import { AdminMenusModel } from './AdminMenusModel'
 import { AdminSubmenusModel } from './AdminSubmenusModel'
 import { CategoryModel } from './CategoryModel'
-import { AddDataCommonReducerModel, CommonReducerDataArrayModel, DeleteDataCommonReducerModel } from './CommonModel'
+import {
+  AddDataCommonReducerModel,
+  CommonReducerDataArrayModel,
+  DeleteDataCommonReducerModel,
+  UpdateDataCommonReducerModel
+} from './CommonModel'
 import { FileFoldersModel } from './FileFoldersModel'
 import { LoggedInUserModel } from './LoggedInUserModel'
 import { ProductsModel } from './ProductsModel'
@@ -21,10 +26,15 @@ export interface UIStateModel {
 
 export interface UserStateModel {
   usersData?: CommonReducerDataArrayModel<UserModel[]>
+  deletedUserResponse?: DeleteDataCommonReducerModel<null>
+  addUserResponse?: AddDataCommonReducerModel<UserModel>
 }
 
 export interface CategoriesStateModel {
   categoriesData?: CommonReducerDataArrayModel<CategoryModel[]>
+  deletedCategoryResponse?: DeleteDataCommonReducerModel<null>
+  addCategoryResponse?: AddDataCommonReducerModel<CategoryModel>
+  updateCategoryResponse?: UpdateDataCommonReducerModel<CategoryModel>
 }
 
 export interface UserRolesStateModel {
@@ -35,26 +45,38 @@ export interface UserRolesStateModel {
 
 export interface UserStatusesStateModel {
   userStatusesData?: CommonReducerDataArrayModel<UserStatusModel[]>
+  deletedUserStatusResponse?: DeleteDataCommonReducerModel<null>
+  addUserStatusResponse?: AddDataCommonReducerModel<UserStatusModel>
 }
 
 export interface FileFoldersStateModel {
   fileFoldersData?: CommonReducerDataArrayModel<FileFoldersModel[]>
+  deletedFileFolderResponse?: DeleteDataCommonReducerModel<null>
+  addFileFolderResponse?: AddDataCommonReducerModel<FileFoldersModel>
 }
 
 export interface AdminMenusStateModel {
   adminMenusData?: CommonReducerDataArrayModel<AdminMenusModel[]>
+  deletedAdminMenuResponse?: DeleteDataCommonReducerModel<null>
+  addAdminMenuResponse?: AddDataCommonReducerModel<AdminMenusModel>
 }
 
 export interface AdminSubmenusStateModel {
   adminSubmenusData?: CommonReducerDataArrayModel<AdminSubmenusModel[]>
+  deletedAdminSubmenuResponse?: DeleteDataCommonReducerModel<null>
+  addAdminSubmenuResponse?: AddDataCommonReducerModel<AdminSubmenusModel>
 }
 
 export interface AdminMenuStatusesStateModel {
   adminMenuStatusesData?: CommonReducerDataArrayModel<AdminMenuStatusesModel[]>
+  deletedAdminMenuStatusResponse?: DeleteDataCommonReducerModel<null>
+  addAdminMenuStatusResponse?: AddDataCommonReducerModel<AdminMenuStatusesModel>
 }
 
 export interface ProductsStateModel {
   productsData?: CommonReducerDataArrayModel<ProductsModel[]>
+  deletedProductResponse?: DeleteDataCommonReducerModel<null>
+  addProductResponse?: AddDataCommonReducerModel<ProductsModel>
 }
 
 export interface ReduxStateModel {

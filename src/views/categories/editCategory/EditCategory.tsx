@@ -15,11 +15,12 @@ import { styled } from '@mui/material/styles'
 import { ButtonProps } from '@mui/material/Button'
 import { AlertValuesModel } from 'src/models/AlertValuesModel'
 import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
-import { httpMultipartUpdateRequest } from 'src/services/AxiosApi'
-import apiPathsConfig from 'src/configs/apiPathsConfig'
 import Alert from '@mui/material/Alert'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
+import { CategoriesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+
+const defaultImage = '/images/avatars/9.jpeg'
 
 interface Props {
   selectedCategoryData?: CategoryModel | null
@@ -56,6 +57,11 @@ const Transition = forwardRef(function Transition(
 })
 
 const EditCategory = (props: Props) => {
+  const dispatch = useAppDispatch()
+
+  // @ts-ignore
+  const updatedCategoryResponse = useAppSelector(CategoriesReducer.selectUpdatedCategoryResponse)
+
   const {
     selectedCategoryData,
     openEditCategory = false,
@@ -83,7 +89,7 @@ const EditCategory = (props: Props) => {
   const [values, setValues] = useState<CategoryModel>(defaultValues)
   const [alertVaues, setAlertValues] = useState<AlertValuesModel>(defaultAlertValues)
   const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
-  const [imageFileData, setImageFileData] = useState<string>('/images/avatars/9.jpeg')
+  const [imageFileData, setImageFileData] = useState<string>(defaultImage)
   const [file, setFile] = useState<any>(null)
 
   const resetFile = () => {
@@ -94,7 +100,7 @@ const EditCategory = (props: Props) => {
     if (selectedCategoryData?.imageData?.imageUrl && selectedCategoryData.imageData.imageUrl !== '') {
       setImageFileData(selectedCategoryData.imageData.imageUrl)
     } else {
-      setImageFileData('/images/avatars/9.jpeg')
+      setImageFileData(defaultImage)
     }
   }
 
@@ -262,7 +268,6 @@ const EditCategory = (props: Props) => {
         message: 'Please enter category title.',
         isVisible: true
       })
-
       return
     }
     if (!values?.description || values.description === '') {
@@ -271,11 +276,17 @@ const EditCategory = (props: Props) => {
         message: 'Please enter category description.',
         isVisible: true
       })
-
+      return
+    }
+    if (!imageFileData || imageFileData === '' || imageFileData === defaultImage) {
+      setAlertValues({
+        severity: 'error',
+        message: 'Please select an image.',
+        isVisible: true
+      })
       return
     }
 
-    setIsLoaderVisible(true)
     const formData = new FormData()
     formData.append('title', values.title)
     formData.append('description', values.description)
@@ -287,15 +298,19 @@ const EditCategory = (props: Props) => {
       formData.append('file', file)
     }
 
-    const response = await httpMultipartUpdateRequest({
-      apiUrlPath: `${apiPathsConfig.updatedCategoryApiPath}/${values.id}`,
-      jsonBody: formData
-    })
-    if (response.isSucceded && response?.responseData?.data && Object.keys(response.responseData.data).length > 0) {
-      setSelectedCategory(response.responseData.data)
-    }
-    setIsLoaderVisible(false)
+    dispatch({ type: 'UPDATE_CATEGORY', payload: { formData: formData, categoryId: values.id } })
   }
+
+  useEffect(() => {
+    if (updatedCategoryResponse?.isCompleted) {
+      if (updatedCategoryResponse?.succeeded) {
+        setSelectedCategory(updatedCategoryResponse?.data ?? {})
+        dispatch(CategoriesReducer.resetUpdatedCategoryResponse())
+      } else {
+        dispatch(CategoriesReducer.resetUpdatedCategoryResponse())
+      }
+    }
+  }, [updatedCategoryResponse])
 
   const renderAlert = () => {
     if (alertVaues?.isVisible) {

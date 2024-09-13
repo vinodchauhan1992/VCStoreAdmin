@@ -1,5 +1,9 @@
 import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit'
-import { CommonReducerDataArrayModel } from 'src/models/CommonModel'
+import {
+  AddDataCommonReducerModel,
+  CommonReducerDataArrayModel,
+  DeleteDataCommonReducerModel
+} from 'src/models/CommonModel'
 import { ProductsModel } from 'src/models/ProductsModel'
 import { ProductsStateModel, ReduxStateModel } from 'src/models/ReduxStateModel'
 
@@ -13,6 +17,18 @@ const initialState: ProductsStateModel = {
     succeeded: false,
     isCompleted: false,
     dataArray: []
+  },
+  deletedProductResponse: {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
+  },
+  addProductResponse: {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
   }
 }
 
@@ -21,6 +37,30 @@ const saveAllProductsDataInfo = (
   action: PayloadAction<CommonReducerDataArrayModel<ProductsModel[]>>
 ): any => {
   state.productsData = action?.payload ?? []
+}
+
+const saveDeletedProductResponseInfo = (
+  state: ProductsStateModel,
+  action: PayloadAction<DeleteDataCommonReducerModel<null>>
+): any => {
+  state.deletedProductResponse = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
+  }
+}
+
+const saveAddProductResponseInfo = (
+  state: ProductsStateModel,
+  action: PayloadAction<AddDataCommonReducerModel<ProductsModel>>
+): any => {
+  state.addProductResponse = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
+  }
 }
 
 const resetAllProductsDataResultInfo = (state: ProductsStateModel): any => {
@@ -32,6 +72,24 @@ const resetAllProductsDataResultInfo = (state: ProductsStateModel): any => {
   }
 }
 
+const resetDeletedProductResponseInfo = (state: ProductsStateModel): any => {
+  state.deletedProductResponse = {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
+  }
+}
+
+const resetAddedProductResponseInfo = (state: ProductsStateModel): any => {
+  state.addProductResponse = {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
+  }
+}
+
 const productsSlice: any = createSlice({
   name: 'products',
   initialState: initialState,
@@ -40,11 +98,25 @@ const productsSlice: any = createSlice({
       return { ...state }
     })
   },
-  reducers: { saveAllProductsData: saveAllProductsDataInfo, resetAllProductsDataResult: resetAllProductsDataResultInfo }
+  reducers: {
+    saveAllProductsData: saveAllProductsDataInfo,
+    saveDeletedProductResponse: saveDeletedProductResponseInfo,
+    saveAddProductResponse: saveAddProductResponseInfo,
+    resetAllProductsDataResult: resetAllProductsDataResultInfo,
+    resetDeletedProductResponse: resetDeletedProductResponseInfo,
+    resetAddedProductResponse: resetAddedProductResponseInfo
+  }
 })
 
 // ACTIONS
-const { saveAllProductsData, resetAllProductsDataResult } = productsSlice.actions
+const {
+  saveAllProductsData,
+  saveDeletedProductResponse,
+  saveAddProductResponse,
+  resetAllProductsDataResult,
+  resetDeletedProductResponse,
+  resetAddedProductResponse
+} = productsSlice.actions
 
 // SELECTOR
 const selectAllProductsDataResult = (state: ReduxStateModel) => {
@@ -56,12 +128,36 @@ const selectAllProductsDataResult = (state: ReduxStateModel) => {
   }
 }
 
+const selectDeletedProductResponse = (state: ReduxStateModel) => {
+  return {
+    message: state?.products?.deletedProductResponse?.message ?? null,
+    succeeded: state?.products?.deletedProductResponse?.succeeded ?? false,
+    isCompleted: state?.products?.deletedProductResponse?.isCompleted ?? false,
+    data: state?.products?.deletedProductResponse?.data ?? null
+  }
+}
+
+const selectAddedProductResponse = (state: ReduxStateModel) => {
+  return {
+    message: state?.products?.addProductResponse?.message ?? null,
+    succeeded: state?.products?.addProductResponse?.succeeded ?? false,
+    isCompleted: state?.products?.addProductResponse?.isCompleted ?? false,
+    data: state?.products?.addProductResponse?.data ?? null
+  }
+}
+
 const productsSliceReducer = productsSlice.reducer
 
 export {
   productsSliceReducer,
   saveAllProductsData,
+  saveDeletedProductResponse,
+  saveAddProductResponse,
   resetAllProductsDataResult,
+  resetDeletedProductResponse,
+  resetAddedProductResponse,
   selectAllProductsDataResult,
+  selectDeletedProductResponse,
+  selectAddedProductResponse,
   signOutAction
 }

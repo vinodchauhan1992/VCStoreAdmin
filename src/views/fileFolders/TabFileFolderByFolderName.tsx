@@ -7,31 +7,21 @@ import CardContent from '@mui/material/CardContent'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Grid from '@mui/material/Grid'
-import { httpGetRequest } from 'src/services/AxiosApi'
-import apiPathsConfig from 'src/configs/apiPathsConfig'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
-import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import { FileFoldersModel } from 'src/models/FileFoldersModel'
+import { FileFoldersReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 
 const TabFileFolderByFolderName = () => {
+  const dispatch = useAppDispatch()
+
+  // @ts-ignore
+  const allFileFoldersDataResult = useAppSelector(FileFoldersReducer.selectAllFileFoldersDataResult)
+
   // ** States
-  const [allFileFoldersData, setAllFileFoldersData] = useState<FileFoldersModel[]>([])
   const [selectedFileFolderData, setSelectedFileFolderData] = useState<FileFoldersModel | null>(null)
-  const [isErrored, setIsErrored] = useState<boolean>(false)
-  const [message, setMessage] = useState<string | null>(null)
-  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
 
   const callAllFileFoldersApi = async () => {
-    setIsLoaderVisible(true)
-    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllFileFoldersApiPath })
-    if (response.isSucceded) {
-      setAllFileFoldersData(response?.responseData?.data ?? [])
-      setMessage(response?.responseData?.message ?? null)
-    } else {
-      setIsErrored(true)
-      setMessage(response?.responseData?.message ?? null)
-    }
-    setIsLoaderVisible(false)
+    dispatch({ type: 'FETCH_ALL_FILE_FOLDERS' })
   }
 
   useEffect(() => {
@@ -95,11 +85,17 @@ const TabFileFolderByFolderName = () => {
   }
 
   const renderError = () => {
-    return <CustomisedErrorEmpty title='Error!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+    return (
+      <CustomisedErrorEmpty
+        title='Error!'
+        type='empty'
+        message={allFileFoldersDataResult?.message ?? ''}
+      ></CustomisedErrorEmpty>
+    )
   }
 
   const renderData = () => {
-    if (isErrored) {
+    if (allFileFoldersDataResult?.isCompleted && !allFileFoldersDataResult?.succeeded) {
       return renderError()
     }
     if (!selectedFileFolderData) {
@@ -111,7 +107,6 @@ const TabFileFolderByFolderName = () => {
 
   return (
     <div>
-      <CustomisedLoader visible={isLoaderVisible} />
       <CardContent>
         <form>
           <Grid container spacing={7}>
@@ -119,7 +114,7 @@ const TabFileFolderByFolderName = () => {
               <FormControl fullWidth>
                 <InputLabel>User role</InputLabel>
                 <Select label='User role'>
-                  {allFileFoldersData?.map(fileFolder => {
+                  {allFileFoldersDataResult?.dataArray?.map(fileFolder => {
                     return (
                       <MenuItem
                         value={fileFolder?.folderName ?? ''}
