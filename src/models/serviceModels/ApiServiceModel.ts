@@ -13,4 +13,5 @@ export interface HTTPRequestModel {
   /* as a object for post request having body otherwise null */
   jsonBody?: unknown | null
   contentType: 'multipart/form-data' | 'application/json'
+  specialHeaderObject: any
 }

@@ -58,6 +58,9 @@ const selectLoggedInUserId = (state: ReduxStateModel) => {
 const selectLoggedInUserJwtToken = (state: ReduxStateModel) => {
   return state?.loggedInUser?.loggedInUserData?.jwtToken ?? null
 }
+const selectLoggedInUserRole = (state: ReduxStateModel) => {
+  return state?.loggedInUser?.loggedInUserData?.user?.userRole ?? null
+}
 
 const loggedInUserSliceReducer = loggedInUserSlice.reducer
 
@@ -68,6 +71,7 @@ export {
   selectLoggedInUserId,
   selectIsUserLoggedIn,
   selectLoggedInUserJwtToken,
+  selectLoggedInUserRole,
   signOutAction,
   wipeoutLoggedInUser
 }

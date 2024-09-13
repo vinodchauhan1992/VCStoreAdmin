@@ -16,7 +16,6 @@ const TabUserRoleByRole = () => {
 
   // ** States
   const [selectedUserRoleData, setSelectedUserRoleData] = useState<UserRoleModel | null>(null)
-  const [message, setMessage] = useState<string | null>(null)
 
   // @ts-ignore
   const allUserRolesDataResult = useAppSelector(UserRolesReducer.selectAllUserRolesDataResult)

@@ -47,7 +47,8 @@ export function* deleteAdminMenu(action: any): any {
     ApiService.callApiService,
     ApiCallTypes.DELETE_ADMIN_MENU_TYPE,
     null,
-    `/${action?.payload?.adminMenuId}`
+    `/${action?.payload?.adminMenuId}`,
+    { panel_type: action?.payload?.panelType }
   )
   if (
     data.isSucceded &&

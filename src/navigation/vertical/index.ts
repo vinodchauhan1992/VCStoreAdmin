@@ -33,6 +33,11 @@ const Navigation = (): VerticalNavItemsType => {
           path: '/'
         },
         {
+          title: 'Admin Menus',
+          icon: AccountOutline,
+          path: '/adminMenus'
+        },
+        {
           title: 'Users',
           icon: AccountOutline,
           path: '/users'

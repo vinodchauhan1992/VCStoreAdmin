@@ -17,8 +17,8 @@ import { StyledTableRow } from 'src/@core/components/customised-table/styled-tab
 import { styled } from '@mui/material/styles'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
-import { UserRoleModel } from 'src/models/UserRoleModel'
-import { UserRolesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { AdminMenusReducer, LoginReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { AdminMenusModel } from 'src/models/AdminMenusModel'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -30,58 +30,66 @@ const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   }
 }))
 
-const TabAllUserRoles = () => {
+const TabAllAdminMenus = () => {
   // ** State
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
-  const [selectedUserRole, setSelectedUserRole] = useState<UserRoleModel | null>(null)
+  const [selectedAdminMenu, setSelectedAdminMenu] = useState<AdminMenusModel | null>(null)
 
   const dispatch = useAppDispatch()
 
   // @ts-ignore
-  const allUserRolesDataResult = useAppSelector(UserRolesReducer.selectAllUserRolesDataResult)
+  const allAdminMenusDataResult = useAppSelector(AdminMenusReducer.selectAllAdminMenusDataResult)
   // @ts-ignore
-  const deletedUserRoleResponse = useAppSelector(UserRolesReducer.selectDeletedUserRoleResponse)
+  const deletedAdminMenuResponse = useAppSelector(AdminMenusReducer.selectDeletedAdminMenuResponse)
+  // @ts-ignore
+  const loggedInUserRole = useAppSelector(LoginReducer.selectLoggedInUserRole)
 
-  const callAllUserRolesApi = () => {
-    dispatch({ type: 'FETCH_ALL_USER_ROLES' })
+  const callAllMenusApi = () => {
+    dispatch({ type: 'FETCH_ALL_ADMIN_MENUS' })
   }
 
   useEffect(() => {
-    callAllUserRolesApi()
+    callAllMenusApi()
   }, [])
 
-  const resetSelectedUserRole = () => {
-    setSelectedUserRole(null)
+  const resetSelectedAdminMenu = () => {
+    setSelectedAdminMenu(null)
     setIsDialogOpen(false)
   }
 
   useEffect(() => {
-    if (deletedUserRoleResponse?.isCompleted) {
-      resetSelectedUserRole()
-      if (deletedUserRoleResponse?.succeeded) {
-        dispatch(UserRolesReducer.resetDeletedUserRoleResponse())
-        callAllUserRolesApi()
+    if (deletedAdminMenuResponse?.isCompleted) {
+      resetSelectedAdminMenu()
+      if (deletedAdminMenuResponse?.succeeded) {
+        dispatch(AdminMenusReducer.resetDeletedAdminMenuResponse())
+        callAllMenusApi()
       } else {
-        dispatch(UserRolesReducer.resetDeletedUserRoleResponse())
+        dispatch(AdminMenusReducer.resetDeletedAdminMenuResponse())
       }
     }
-  }, [deletedUserRoleResponse])
+  }, [deletedAdminMenuResponse])
 
-  const deleteUserRole = async () => {
-    dispatch({ type: 'DELETE_USER_ROLE', payload: { userRoleId: selectedUserRole?.id } })
+  const deleteAdminMenu = async () => {
+    dispatch({
+      type: 'DELETE_ADMIN_MENU',
+      payload: {
+        adminMenuId: selectedAdminMenu?.id,
+        panelType: loggedInUserRole && loggedInUserRole?.toLowerCase() === 'administrator' ? 'admin_panel' : 'others'
+      }
+    })
   }
 
-  const onDeleteClick = async (userRoleData: UserRoleModel) => {
-    setSelectedUserRole(userRoleData)
+  const onDeleteClick = async (adminMenuData: AdminMenusModel) => {
+    setSelectedAdminMenu(adminMenuData)
     setIsDialogOpen(true)
   }
 
-  const onEditClick = async (userRoleData: UserRoleModel) => {
-    setSelectedUserRole(userRoleData)
+  const onEditClick = async (adminMenuData: AdminMenusModel) => {
+    setSelectedAdminMenu(adminMenuData)
   }
 
-  const onViewClick = async (userRoleData: UserRoleModel) => {
-    setSelectedUserRole(userRoleData)
+  const onViewClick = async (adminMenuData: AdminMenusModel) => {
+    setSelectedAdminMenu(adminMenuData)
   }
 
   const handleDialogOpen = () => {
@@ -89,53 +97,71 @@ const TabAllUserRoles = () => {
   }
 
   const renderDataTable = () => {
-    if (allUserRolesDataResult?.dataArray && allUserRolesDataResult.dataArray.length > 0) {
+    if (allAdminMenusDataResult?.dataArray && allAdminMenusDataResult.dataArray.length > 0) {
       return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label='table in dashboard'>
             <TableHead>
               <TableRow>
                 <StyledTableCell>ID</StyledTableCell>
-                <StyledTableCell>Role</StyledTableCell>
+                <StyledTableCell>Details</StyledTableCell>
                 <StyledTableCell>Dates</StyledTableCell>
                 <StyledTableCell>Manage</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {allUserRolesDataResult.dataArray.map((userRoleData: UserRoleModel) => (
+              {allAdminMenusDataResult.dataArray.map((adminMenuData: AdminMenusModel) => (
                 <StyledTableRow
                   hover
-                  key={userRoleData?.role}
+                  key={adminMenuData?.id}
                   sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
                 >
-                  <StyledTableCell>{userRoleData?.id}</StyledTableCell>
+                  <StyledTableCell>{adminMenuData?.id}</StyledTableCell>
                   <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {userRoleData?.role}
+                        {`Title: ${adminMenuData?.menuTitle ?? 'N/A'}`}
                       </Typography>
+                      <Typography
+                        variant='caption'
+                        color={
+                          adminMenuData?.adminMenuStatus && adminMenuData.adminMenuStatus.toLowerCase() === 'active'
+                            ? 'success.dark'
+                            : 'error.dark'
+                        }
+                      >{`Status: ${adminMenuData?.adminMenuStatus ?? 'N/A'}`}</Typography>
+                      <Typography
+                        variant='caption'
+                        color={adminMenuData?.isDeleteable ? 'success.dark' : 'error.dark'}
+                      >{`Can be deleted: ${adminMenuData?.isDeleteable ? 'Yes' : 'No'}`}</Typography>
+                      <Typography
+                        variant='caption'
+                        color={adminMenuData?.isAdminDeleteable ? 'success.dark' : 'error.dark'}
+                      >{`Can be deleted by admin: ${adminMenuData?.isAdminDeleteable ? 'Yes' : 'No'}`}</Typography>
                     </Box>
                   </StyledTableCell>
                   <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`Added On: ${userRoleData?.dateAdded ?? 'N/A'}`}
+                        {`Added On: ${adminMenuData?.dateAdded ?? 'N/A'}`}
                       </Typography>
-                      <Typography variant='caption'>{`Modified On: ${userRoleData?.dateModified ?? 'N/A'}`}</Typography>
+                      <Typography variant='caption'>{`Modified On: ${
+                        adminMenuData?.dateModified ?? 'N/A'
+                      }`}</Typography>
                     </Box>
                   </StyledTableCell>
                   <StyledTableCell>
-                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(userRoleData)}>
+                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(adminMenuData)}>
                       <Typography color='error' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         Delete
                       </Typography>
                     </ButtonStyled>
-                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(userRoleData)}>
+                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(adminMenuData)}>
                       <Typography color='info' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         Edit
                       </Typography>
                     </ButtonStyled>
-                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(userRoleData)}>
+                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(adminMenuData)}>
                       <Typography color='success' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         View
                       </Typography>
@@ -153,9 +179,9 @@ const TabAllUserRoles = () => {
   const renderEmpty = () => {
     return (
       <CustomisedErrorEmpty
-        title='No user roles found!'
+        title='No admin menus found!'
         type='empty'
-        message={allUserRolesDataResult?.message ?? ''}
+        message={allAdminMenusDataResult?.message ?? ''}
       ></CustomisedErrorEmpty>
     )
   }
@@ -165,16 +191,16 @@ const TabAllUserRoles = () => {
       <CustomisedErrorEmpty
         title='Error!'
         type='empty'
-        message={allUserRolesDataResult?.message ?? ''}
+        message={allAdminMenusDataResult?.message ?? ''}
       ></CustomisedErrorEmpty>
     )
   }
 
   const renderData = () => {
-    if (allUserRolesDataResult?.isCompleted && !allUserRolesDataResult?.succeeded) {
+    if (allAdminMenusDataResult?.isCompleted && !allAdminMenusDataResult?.succeeded) {
       return renderError()
     }
-    if (!allUserRolesDataResult?.dataArray || allUserRolesDataResult.dataArray.length <= 0) {
+    if (!allAdminMenusDataResult?.dataArray || allAdminMenusDataResult.dataArray.length <= 0) {
       return renderEmpty()
     }
 
@@ -186,13 +212,13 @@ const TabAllUserRoles = () => {
       <CustomisedAlertDialog
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={handleDialogOpen}
-        dialogTitle='Delete user role!'
-        dialogMessage={`Are you sure you want to delete ${selectedUserRole?.role} user role?`}
+        dialogTitle='Delete admin menu!'
+        dialogMessage={`Are you sure you want to delete ${selectedAdminMenu?.menuTitle} menu?`}
         dialogButtons={[
           {
             title: 'Yes',
             onClick: () => {
-              deleteUserRole()
+              deleteAdminMenu()
             },
             autoFocus: true,
             color: 'error'
@@ -201,7 +227,7 @@ const TabAllUserRoles = () => {
             title: 'No',
             onClick: () => {
               setIsDialogOpen(false)
-              resetSelectedUserRole()
+              resetSelectedAdminMenu()
             },
             autoFocus: false,
             color: 'success'
@@ -221,4 +247,4 @@ const TabAllUserRoles = () => {
   )
 }
 
-export default TabAllUserRoles
+export default TabAllAdminMenus
