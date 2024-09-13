@@ -1,5 +1,6 @@
 import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit'
 import { AdminMenusModel } from 'src/models/AdminMenusModel'
+import { CommonReducerDataArrayModel } from 'src/models/CommonModel'
 import { AdminMenusStateModel, ReduxStateModel } from 'src/models/ReduxStateModel'
 
 /* Signout Action */
@@ -7,11 +8,28 @@ const signOutAction = createAction('signout')
 
 /* Initial State */
 const initialState: AdminMenusStateModel = {
-  adminMenusData: []
+  adminMenusData: {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
-const saveAllAdminMenusDataInfo = (state: AdminMenusStateModel, action: PayloadAction<AdminMenusModel[]>): any => {
+const saveAllAdminMenusDataInfo = (
+  state: AdminMenusStateModel,
+  action: PayloadAction<CommonReducerDataArrayModel<AdminMenusModel[]>>
+): any => {
   state.adminMenusData = action?.payload ?? []
+}
+
+const resetAllAdminMenusDataResultInfo = (state: AdminMenusStateModel): any => {
+  state.adminMenusData = {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: state?.adminMenusData?.dataArray ?? []
+  }
 }
 
 const adminMenusSlice: any = createSlice({
@@ -22,17 +40,36 @@ const adminMenusSlice: any = createSlice({
       return { ...state }
     })
   },
-  reducers: { saveAllAdminMenusData: saveAllAdminMenusDataInfo }
+  reducers: {
+    saveAllAdminMenusData: saveAllAdminMenusDataInfo,
+    resetAllAdminMenusDataResult: resetAllAdminMenusDataResultInfo
+  }
 })
 
 // ACTIONS
-const { saveAllAdminMenusData } = adminMenusSlice.actions
+const { saveAllAdminMenusData, resetAllAdminMenusDataResult } = adminMenusSlice.actions
 
 // SELECTOR
 const selectAllAdminMenusData = (state: ReduxStateModel) => {
-  return state?.adminMenus?.adminMenusData ?? []
+  return state?.adminMenus?.adminMenusData?.dataArray ?? []
+}
+
+const selectAllAdminMenusDataResult = (state: ReduxStateModel) => {
+  return {
+    message: state?.adminMenus?.adminMenusData?.message ?? null,
+    succeeded: state?.adminMenus?.adminMenusData?.succeeded ?? false,
+    isCompleted: state?.adminMenus?.adminMenusData?.isCompleted ?? false,
+    dataArray: state?.adminMenus?.adminMenusData?.dataArray ?? [],
+  }
 }
 
 const adminMenusSliceReducer = adminMenusSlice.reducer
 
-export { adminMenusSliceReducer, saveAllAdminMenusData, selectAllAdminMenusData, signOutAction }
+export {
+  adminMenusSliceReducer,
+  saveAllAdminMenusData,
+  resetAllAdminMenusDataResult,
+  selectAllAdminMenusData,
+  selectAllAdminMenusDataResult,
+  signOutAction
+}

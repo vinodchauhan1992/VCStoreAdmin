@@ -1,4 +1,5 @@
 import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit'
+import { CommonReducerDataArrayModel } from 'src/models/CommonModel'
 import { ProductsModel } from 'src/models/ProductsModel'
 import { ProductsStateModel, ReduxStateModel } from 'src/models/ReduxStateModel'
 
@@ -7,11 +8,28 @@ const signOutAction = createAction('signout')
 
 /* Initial State */
 const initialState: ProductsStateModel = {
-  productsData: []
+  productsData: {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
-const saveAllProductsDataInfo = (state: ProductsStateModel, action: PayloadAction<ProductsModel[]>): any => {
+const saveAllProductsDataInfo = (
+  state: ProductsStateModel,
+  action: PayloadAction<CommonReducerDataArrayModel<ProductsModel[]>>
+): any => {
   state.productsData = action?.payload ?? []
+}
+
+const resetAllProductsDataResultInfo = (state: ProductsStateModel): any => {
+  state.productsData = {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: state?.productsData?.dataArray ?? []
+  }
 }
 
 const productsSlice: any = createSlice({
@@ -22,17 +40,33 @@ const productsSlice: any = createSlice({
       return { ...state }
     })
   },
-  reducers: { saveAllProductsData: saveAllProductsDataInfo }
+  reducers: { saveAllProductsData: saveAllProductsDataInfo, resetAllProductsDataResult: resetAllProductsDataResultInfo }
 })
 
 // ACTIONS
-const { saveAllProductsData } = productsSlice.actions
+const { saveAllProductsData, resetAllProductsDataResult } = productsSlice.actions
 
 // SELECTOR
 const selectAllProductsData = (state: ReduxStateModel) => {
-  return state?.products?.productsData ?? []
+  return state?.products?.productsData?.dataArray ?? []
+}
+
+const selectAllProductsDataResult = (state: ReduxStateModel) => {
+  return {
+    message: state?.products?.productsData?.message ?? null,
+    succeeded: state?.products?.productsData?.succeeded ?? false,
+    isCompleted: state?.products?.productsData?.isCompleted ?? false,
+    dataArray: state?.products?.productsData?.dataArray ?? [],
+  }
 }
 
 const productsSliceReducer = productsSlice.reducer
 
-export { productsSliceReducer, saveAllProductsData, selectAllProductsData, signOutAction }
+export {
+  productsSliceReducer,
+  saveAllProductsData,
+  resetAllProductsDataResult,
+  selectAllProductsData,
+  selectAllProductsDataResult,
+  signOutAction
+}

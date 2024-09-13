@@ -19,8 +19,8 @@ import { StyledTableRow } from 'src/@core/components/customised-table/styled-tab
 import { styled } from '@mui/material/styles'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
-import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import { UserRoleModel } from 'src/models/UserRoleModel'
+import { UserRolesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -41,21 +41,13 @@ const TabAllUserRoles = () => {
   const [selectedUserRole, setSelectedUserRole] = useState<UserRoleModel | null>(null)
   const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
 
-  const callAllUserRolesApi = async () => {
-    setIsLoaderVisible(true)
-    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllUserRolesApiPath })
-    if (response.isSucceded) {
-      setAllUserRolesData(response?.responseData?.data ?? [])
-      setMessage(response?.responseData?.message ?? null)
-    } else {
-      setIsErrored(true)
-      setMessage(response?.responseData?.message ?? null)
-    }
-    setIsLoaderVisible(false)
-  }
+  const dispatch = useAppDispatch()
+
+  // @ts-ignore
+  const allUserRolesDataResult = useAppSelector(UserRolesReducer.selectAllUserRolesDataResult)
 
   useEffect(() => {
-    callAllUserRolesApi()
+    dispatch({ type: 'FETCH_ALL_USER_ROLES' })
   }, [])
 
   const resetSelectedUserRole = () => {
@@ -70,7 +62,7 @@ const TabAllUserRoles = () => {
       apiUrlPath: `${apiPathsConfig.deleteUserRoleApiPath}/${selectedUserRole?.id}`
     })
     if (response.isSucceded) {
-      await callAllUserRolesApi()
+      dispatch({ type: 'FETCH_ALL_USER_ROLES' })
     }
     setIsLoaderVisible(false)
   }
@@ -89,7 +81,7 @@ const TabAllUserRoles = () => {
   }
 
   const renderDataTable = () => {
-    if (allUserRoles && allUserRoles.length > 0) {
+    if (allUserRolesDataResult?.dataArray && allUserRolesDataResult.dataArray.length > 0) {
       return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label='table in dashboard'>
@@ -102,7 +94,7 @@ const TabAllUserRoles = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {allUserRoles.map((userRoleData: UserRoleModel) => (
+              {allUserRolesDataResult.dataArray.map((userRoleData: UserRoleModel) => (
                 <StyledTableRow
                   hover
                   key={userRoleData?.role}
@@ -164,7 +156,7 @@ const TabAllUserRoles = () => {
     if (isErrored) {
       return renderError()
     }
-    if (!allUserRoles || allUserRoles.length <= 0) {
+    if (!allUserRolesDataResult?.dataArray || allUserRolesDataResult.dataArray.length <= 0) {
       return renderEmpty()
     }
 
@@ -203,7 +195,6 @@ const TabAllUserRoles = () => {
 
   return (
     <div>
-      <CustomisedLoader visible={isLoaderVisible} />
       <CardContent>
         {renderAlertDialog()}
         {renderData()}

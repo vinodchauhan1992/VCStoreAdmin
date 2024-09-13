@@ -1,14 +1,14 @@
 import * as Api from '../../services'
 import { takeLatest, call, put } from 'redux-saga/effects'
-import { saveAllUsersData } from '../reducers/UserReducer'
+import { saveAllUserRolesData } from '../reducers/UserRolesReducer'
 import { UIReducer } from '../reducers'
 
 const { ApiService, ApiCallTypes } = Api
 
-export function* fetchAllUsers(): any {
+export function* fetchAllUserRoles(): any {
   yield put(UIReducer.showLoader(true))
-  const data = yield call(ApiService.callApiService, ApiCallTypes.GET_ALL_USERS_TYPE, null)
-  console.log('allUsers', data)
+  const data = yield call(ApiService.callApiService, ApiCallTypes.GET_ALL_USER_ROLES_TYPE, null)
+  console.log('data', data)
   if (
     data.isSucceded &&
     data?.responseData &&
@@ -17,7 +17,7 @@ export function* fetchAllUsers(): any {
     data?.responseData?.data
   ) {
     yield put(
-      saveAllUsersData({
+      saveAllUserRolesData({
         message: null,
         succeeded: true,
         isCompleted: true,
@@ -26,7 +26,7 @@ export function* fetchAllUsers(): any {
     )
   } else {
     yield put(
-      saveAllUsersData({
+      saveAllUserRolesData({
         message: data.responseData.message,
         succeeded: false,
         isCompleted: true,
@@ -37,9 +37,6 @@ export function* fetchAllUsers(): any {
   yield put(UIReducer.showLoader(false))
 }
 
-/**
- * Watch login function
- */
-export function* watchFetchAllUsers(): any {
-  yield takeLatest('FETCH_ALL_USERS', fetchAllUsers)
+export function* watchFetchAllUserRoles(): any {
+  yield takeLatest('FETCH_ALL_USER_ROLES', fetchAllUserRoles)
 }

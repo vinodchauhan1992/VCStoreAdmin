@@ -1,11 +1,17 @@
-import TrendingUp from 'mdi-material-ui/TrendingUp'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-import CellphoneLink from 'mdi-material-ui/CellphoneLink'
-import AccountOutline from 'mdi-material-ui/AccountOutline'
+import FaceAgent from 'mdi-material-ui/FaceAgent'
+import AccountGroup from 'mdi-material-ui/AccountGroup'
+import Security from 'mdi-material-ui/Security'
+import AccountMultiple from 'mdi-material-ui/AccountMultiple'
 import { UserModel } from 'src/models/UserModel'
-import Poll from 'mdi-material-ui/Poll'
-import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline'
-import BriefcaseVariantOutline from 'mdi-material-ui/BriefcaseVariantOutline'
+import { VerticalCardStatisticParamsDataProps } from 'src/models/DashboardUtilsModel'
+import ListStatus from 'mdi-material-ui/ListStatus'
+import LightningBoltCircle from 'mdi-material-ui/LightningBoltCircle'
+import FolderInformation from 'mdi-material-ui/FolderInformation'
+import CheckNetwork from 'mdi-material-ui/CheckNetwork'
+import MenuOpen from 'mdi-material-ui/MenuOpen'
+import Menu from 'mdi-material-ui/Menu'
+import ShapeCirclePlus from 'mdi-material-ui/ShapeCirclePlus'
+import ChartPpf from 'mdi-material-ui/ChartPpf'
 
 export interface UserDatesProps {
   month: number | null
@@ -104,117 +110,117 @@ export const getDashboardUserStatsData = (allUsersDataArray: UserModel[]) => {
       stats: `${employeesCount}`,
       title: 'Employees',
       color: 'primary',
-      icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
+      icon: <FaceAgent sx={{ fontSize: '1.75rem' }} />
     },
     {
       id: 2,
       stats: `${customersCount}`,
       title: 'Customers',
       color: 'success',
-      icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
+      icon: <AccountMultiple sx={{ fontSize: '1.75rem' }} />
     },
     {
       id: 3,
       stats: `${adminsCount}`,
       color: 'warning',
       title: 'Admins',
-      icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
+      icon: <Security sx={{ fontSize: '1.75rem' }} />
     },
     {
       id: 4,
       stats: allUsersDataArray ? `${allUsersDataArray.length}` : '0',
       color: 'info',
       title: 'Total Users',
-      icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
+      icon: <AccountGroup sx={{ fontSize: '1.75rem' }} />
     }
   ]
 }
 
-export const getVerticalCardPatch1StatisticData = () => {
+export const getVerticalCardPatch1StatisticData = (props: VerticalCardStatisticParamsDataProps) => {
   return [
     {
-      stats: '$25.6k',
-      icon: <Poll />,
+      stats: `${props?.allUserRolesDataArray ? props.allUserRolesDataArray.length : 0}`,
+      icon: <LightningBoltCircle />,
       color: 'success',
       trendNumber: '+42%',
       title: 'User Roles',
       subtitle: 'User Roles'
     },
     {
-      stats: '$78',
+      stats: `${props?.allUserStatusesDataArray ? props.allUserStatusesDataArray.length : 0}`,
       title: 'User Statuses',
       trend: 'negative',
       color: 'secondary',
       trendNumber: '-15%',
       subtitle: 'User Statuses',
-      icon: <CurrencyUsd />
+      icon: <ListStatus />
     },
     {
-      stats: '862',
+      stats: `${props?.allFileFoldersDataArray ? props.allFileFoldersDataArray.length : 0}`,
       trend: 'negative',
       trendNumber: '-18%',
       title: 'Total Folders',
       subtitle: 'Total Folders',
-      icon: <BriefcaseVariantOutline />
+      icon: <FolderInformation />
     },
     {
-      stats: '15',
+      stats: `${props?.allAdminMenuStatusesDataArray ? props.allAdminMenuStatusesDataArray.length : 0}`,
       color: 'warning',
       trend: 'negative',
       trendNumber: '-18%',
       subtitle: 'Admin Menu Statuses',
       title: 'Admin Menu Statuses',
-      icon: <HelpCircleOutline />
+      icon: <CheckNetwork />
     }
   ]
 }
 
-export const getVerticalCardPatch2StatisticData = () => {
+export const getVerticalCardPatch2StatisticData = (props: VerticalCardStatisticParamsDataProps) => {
   return [
     {
-      stats: '$25.6k',
-      icon: <Poll />,
+      stats: `${props?.allAdminMenusDataArray ? props.allAdminMenusDataArray.length : 0}`,
+      icon: <Menu />,
       color: 'success',
       trendNumber: '+42%',
       title: 'Admin Menus',
       subtitle: 'Admin Menus'
     },
     {
-      stats: '$78',
+      stats: `${props?.allAdminSubmenusDataArray ? props.allAdminSubmenusDataArray.length : 0}`,
       title: 'Admin Submenus',
       trend: 'negative',
       color: 'secondary',
       trendNumber: '-15%',
       subtitle: 'Admin Submenus',
-      icon: <CurrencyUsd />
+      icon: <MenuOpen />
     },
     {
-      stats: '862',
+      stats: `${props?.allCategoriesDataArray ? props.allCategoriesDataArray.length : 0}`,
       trend: 'negative',
       trendNumber: '-18%',
       title: 'Total Categories',
       subtitle: 'Total Categories',
-      icon: <BriefcaseVariantOutline />
+      icon: <ShapeCirclePlus />
     },
     {
-      stats: '15',
+      stats: `${props?.allProductsDataArray ? props.allProductsDataArray.length : 0}`,
       color: 'warning',
       trend: 'negative',
       trendNumber: '-18%',
       subtitle: 'Total Products',
       title: 'Total Products',
-      icon: <HelpCircleOutline />
+      icon: <ChartPpf />
     }
   ]
 }
 
-export const getVerticalCardStatisticData = () => {
+export const getVerticalCardStatisticData = (props: VerticalCardStatisticParamsDataProps) => {
   const statsData = [
     {
-      patchData: getVerticalCardPatch1StatisticData()
+      patchData: getVerticalCardPatch1StatisticData(props)
     },
     {
-      patchData: getVerticalCardPatch2StatisticData()
+      patchData: getVerticalCardPatch2StatisticData(props)
     }
   ]
 

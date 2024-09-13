@@ -23,8 +23,6 @@ export default {
 
   /*-------------------- GET API'S START --------------------*/
   GET_ALL_USERS_API_PATH: 'users/allUsers',
-
-  
   GET_ALL_CATEGORIES_API_PATH: 'categories/getAllCategories',
   GET_ALL_USER_ROLES_API_PATH: 'userRoles/allUserRoles',
   GET_ALL_USER_STATUSES_API_PATH: 'userStatuses/allUserStatuses',

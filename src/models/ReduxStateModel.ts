@@ -2,6 +2,7 @@ import { AdminMenuStatusesModel } from './AdminMenuStatusesModel'
 import { AdminMenusModel } from './AdminMenusModel'
 import { AdminSubmenusModel } from './AdminSubmenusModel'
 import { CategoryModel } from './CategoryModel'
+import { CommonReducerDataArrayModel } from './CommonModel'
 import { FileFoldersModel } from './FileFoldersModel'
 import { LoggedInUserModel } from './LoggedInUserModel'
 import { ProductsModel } from './ProductsModel'
@@ -19,39 +20,39 @@ export interface UIStateModel {
 }
 
 export interface UserStateModel {
-  usersData?: UserModel[] | []
+  usersData?: CommonReducerDataArrayModel<UserModel[]>
 }
 
 export interface CategoriesStateModel {
-  categoriesData?: CategoryModel[] | []
+  categoriesData?: CommonReducerDataArrayModel<CategoryModel[]>
 }
 
 export interface UserRolesStateModel {
-  userRolesData?: UserRoleModel[] | []
+  userRolesData?: CommonReducerDataArrayModel<UserRoleModel[]>
 }
 
 export interface UserStatusesStateModel {
-  userStatusesData?: UserStatusModel[] | []
+  userStatusesData?: CommonReducerDataArrayModel<UserStatusModel[]>
 }
 
 export interface FileFoldersStateModel {
-  fileFoldersData?: FileFoldersModel[] | []
+  fileFoldersData?: CommonReducerDataArrayModel<FileFoldersModel[]>
 }
 
 export interface AdminMenusStateModel {
-  adminMenusData?: AdminMenusModel[] | []
+  adminMenusData?: CommonReducerDataArrayModel<AdminMenusModel[]>
 }
 
 export interface AdminSubmenusStateModel {
-  adminSubmenusData?: AdminSubmenusModel[] | []
+  adminSubmenusData?: CommonReducerDataArrayModel<AdminSubmenusModel[]>
 }
 
 export interface AdminMenuStatusesStateModel {
-  adminMenuStatusesData?: AdminMenuStatusesModel[] | []
+  adminMenuStatusesData?: CommonReducerDataArrayModel<AdminMenuStatusesModel[]>
 }
 
 export interface ProductsStateModel {
-  productsData?: ProductsModel[] | []
+  productsData?: CommonReducerDataArrayModel<ProductsModel[]>
 }
 
 export interface ReduxStateModel {
@@ -60,7 +61,6 @@ export interface ReduxStateModel {
   user: UserStateModel | null
   categories: CategoriesStateModel | null
   userRoles: UserRolesStateModel | null
-  
   userStatuses: UserStatusesStateModel | null
   fileFolders: FileFoldersStateModel | null
   adminMenus: AdminMenusStateModel | null

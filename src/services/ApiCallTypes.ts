@@ -23,14 +23,13 @@ export default {
 
   /*-------------------- GET API'S TYPES START --------------------*/
   GET_ALL_USERS_TYPE: 'getAllUsers',
-
-  
   GET_ALL_CATEGORIES_TYPE: 'getAllCategories',
   GET_ALL_USER_ROLES_TYPE: 'allUserRoles',
   GET_ALL_USER_STATUSES_TYPE: 'allUserStatuses',
   GET_ALL_FILE_FOLDERS_TYPE: 'allFileFolders',
   GET_ALL_ADMIN_MENUS_TYPE: 'getAllAdminMenus',
   GET_ALL_ADMIN_SUBMENUS_TYPE: 'getAllAdminSubmenus',
+  
   GET_ALL_ADMIN_MENU_STATUSES_TYPE: 'getAllAdminMenuStatuses',
   GET_ALL_PRODUCTS_TYPE: 'getAllProducts',
   /*-------------------- GET API'S TYPES END --------------------*/

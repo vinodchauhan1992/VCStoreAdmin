@@ -1,4 +1,5 @@
 import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit'
+import { CommonReducerDataArrayModel } from 'src/models/CommonModel'
 import { FileFoldersModel } from 'src/models/FileFoldersModel'
 import { FileFoldersStateModel, ReduxStateModel } from 'src/models/ReduxStateModel'
 
@@ -7,11 +8,28 @@ const signOutAction = createAction('signout')
 
 /* Initial State */
 const initialState: FileFoldersStateModel = {
-  fileFoldersData: []
+  fileFoldersData: {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
-const saveAllFileFoldersDataInfo = (state: FileFoldersStateModel, action: PayloadAction<FileFoldersModel[]>): any => {
+const saveAllFileFoldersDataInfo = (
+  state: FileFoldersStateModel,
+  action: PayloadAction<CommonReducerDataArrayModel<FileFoldersModel[]>>
+): any => {
   state.fileFoldersData = action?.payload ?? []
+}
+
+const resetAllFileFoldersDataResultInfo = (state: FileFoldersStateModel): any => {
+  state.fileFoldersData = {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: state?.fileFoldersData?.dataArray ?? []
+  }
 }
 
 const fileFoldersSlice: any = createSlice({
@@ -22,17 +40,36 @@ const fileFoldersSlice: any = createSlice({
       return { ...state }
     })
   },
-  reducers: { saveAllFileFoldersData: saveAllFileFoldersDataInfo }
+  reducers: {
+    saveAllFileFoldersData: saveAllFileFoldersDataInfo,
+    resetAllFileFoldersDataResult: resetAllFileFoldersDataResultInfo
+  }
 })
 
 // ACTIONS
-const { saveAllFileFoldersData } = fileFoldersSlice.actions
+const { saveAllFileFoldersData, resetAllFileFoldersDataResult } = fileFoldersSlice.actions
 
 // SELECTOR
 const selectAllFileFoldersData = (state: ReduxStateModel) => {
-  return state?.fileFolders?.fileFoldersData ?? []
+  return state?.fileFolders?.fileFoldersData?.dataArray ?? []
+}
+
+const selectAllFileFoldersDataResult = (state: ReduxStateModel) => {
+  return {
+    message: state?.fileFolders?.fileFoldersData?.message ?? null,
+    succeeded: state?.fileFolders?.fileFoldersData?.succeeded ?? false,
+    isCompleted: state?.fileFolders?.fileFoldersData?.isCompleted ?? false,
+    dataArray: state?.fileFolders?.fileFoldersData?.dataArray ?? [],
+  }
 }
 
 const fileFoldersSliceReducer = fileFoldersSlice.reducer
 
-export { fileFoldersSliceReducer, saveAllFileFoldersData, selectAllFileFoldersData, signOutAction }
+export {
+  fileFoldersSliceReducer,
+  saveAllFileFoldersData,
+  resetAllFileFoldersDataResult,
+  selectAllFileFoldersData,
+  selectAllFileFoldersDataResult,
+  signOutAction
+}

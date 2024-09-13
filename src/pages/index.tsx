@@ -1,12 +1,6 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 
-// ** Icons Imports
-import Poll from 'mdi-material-ui/Poll'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline'
-import BriefcaseVariantOutline from 'mdi-material-ui/BriefcaseVariantOutline'
-
 // ** Custom Components Imports
 import CardStatisticsVerticalComponent from 'src/@core/components/card-statistics/card-stats-vertical'
 
@@ -15,7 +9,19 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
 // ** Demo Components Imports
 import StatisticsCard from 'src/views/dashboard/StatisticsCard'
-import { UserReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import {
+  AdminMenuStatusesReducer,
+  AdminMenusReducer,
+  AdminSubmenusReducer,
+  CategoriesReducer,
+  FileFoldersReducer,
+  ProductsReducer,
+  UserReducer,
+  UserRolesReducer,
+  UserStatusesReducer,
+  useAppDispatch,
+  useAppSelector
+} from 'src/redux/reducers'
 import { useEffect, useState } from 'react'
 import {
   getDashboardUserStatsData,
@@ -31,7 +37,23 @@ const Dashboard = () => {
   const dispatch = useAppDispatch()
 
   // @ts-ignore
-  const allUsersDataArray = useAppSelector(UserReducer.selectAllUsersData)
+  const allUsersDataResult = useAppSelector(UserReducer.selectAllUsersDataResult)
+  // @ts-ignore
+  const allCategoriesDataResult = useAppSelector(CategoriesReducer.selectAllCategoriesDataResult)
+  // @ts-ignore
+  const allUserRolesDataResult = useAppSelector(UserRolesReducer.selectAllUserRolesDataResult)
+  // @ts-ignore
+  const allUserStatusesDataResult = useAppSelector(UserStatusesReducer.selectAllUserStatusesDataResult)
+  // @ts-ignore
+  const allFileFoldersDataResult = useAppSelector(FileFoldersReducer.selectAllFileFoldersDataResult)
+  // @ts-ignore
+  const allAdminMenusDataResult = useAppSelector(AdminMenusReducer.selectAllAdminMenusDataResult)
+  // @ts-ignore
+  const allAdminSubmenusDataResult = useAppSelector(AdminSubmenusReducer.selectAllAdminSubmenusDataResult)
+  // @ts-ignore
+  const allAdminMenuStatusesDataResult = useAppSelector(AdminMenuStatusesReducer.selectAllAdminMenuStatusesDataResult)
+  // @ts-ignore
+  const allProductsDataResult = useAppSelector(ProductsReducer.selectAllProductsDataResult)
 
   const [userRelatedStatsData, setUserRelatedStatsData] = useState(getDashboardUserStatsData([]))
   const [totalGrowthOnUsers, setTotalGrowthOnUsers] = useState({ growthPercent: 0, type: 'reduction' })
@@ -44,42 +66,93 @@ const Dashboard = () => {
   }, [])
 
   useEffect(() => {
-    setUserRelatedStatsData(getDashboardUserStatsData(allUsersDataArray))
-    setTotalGrowthOnUsers(getTotalGrowthOnUsers(allUsersDataArray))
-  }, [allUsersDataArray])
+    setUserRelatedStatsData(getDashboardUserStatsData(allUsersDataResult?.dataArray))
+    setTotalGrowthOnUsers(getTotalGrowthOnUsers(allUsersDataResult?.dataArray))
+    dispatch({ type: 'FETCH_ALL_CATEGORIES' })
+  }, [allUsersDataResult?.dataArray])
 
   useEffect(() => {
-    const data = getVerticalCardStatisticData()
+    dispatch({ type: 'FETCH_ALL_USER_ROLES' })
+  }, [allCategoriesDataResult?.dataArray])
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_ALL_USER_STATUSES' })
+  }, [allUserRolesDataResult?.dataArray])
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_ALL_FILE_FOLDERS' })
+  }, [allUserStatusesDataResult?.dataArray])
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_ALL_ADMIN_MENUS' })
+  }, [allFileFoldersDataResult?.dataArray])
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_ALL_ADMIN_SUBMENUS' })
+  }, [allAdminMenusDataResult?.dataArray])
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_ALL_ADMIN_MENU_STATUSES' })
+  }, [allAdminSubmenusDataResult?.dataArray])
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_ALL_PRODUCTS' })
+  }, [allAdminMenuStatusesDataResult?.dataArray])
+
+  useEffect(() => {
+    const data = getVerticalCardStatisticData({
+      allCategoriesDataArray: allCategoriesDataResult?.dataArray,
+      allUserRolesDataArray: allUserRolesDataResult?.dataArray,
+      allUserStatusesDataArray: allUserStatusesDataResult?.dataArray,
+      allFileFoldersDataArray: allFileFoldersDataResult?.dataArray,
+      allAdminMenusDataArray: allAdminMenusDataResult?.dataArray,
+      allAdminSubmenusDataArray: allAdminSubmenusDataResult?.dataArray,
+      allAdminMenuStatusesDataArray: allAdminMenuStatusesDataResult?.dataArray,
+      allProductsDataArray: allProductsDataResult?.dataArray
+    })
     setCardStatisticsVerticalComponentsData(data)
-  }, [])
+  }, [
+    allCategoriesDataResult?.dataArray,
+    allUserRolesDataResult?.dataArray,
+    allUserStatusesDataResult?.dataArray,
+    allFileFoldersDataResult?.dataArray,
+    allAdminMenusDataResult?.dataArray,
+    allAdminSubmenusDataResult?.dataArray,
+    allAdminMenuStatusesDataResult?.dataArray,
+    allProductsDataResult?.dataArray
+  ])
 
   const renderPerStatCardForVerticalComponent = (dataDimension1: VerticalCardStatisticDataReturnProps) => {
-    return dataDimension1?.patchData?.map((dataDimension2: VerticalCardPatchStatisticDataReturnProps) => {
-      return (
-        <Grid item xs={6}>
-          <CardStatisticsVerticalComponent
-            stats={dataDimension2?.stats ?? ''}
-            icon={dataDimension2?.icon ?? ''}
-            color={dataDimension2?.color}
-            trendNumber={dataDimension2?.trendNumber ?? ''}
-            title={dataDimension2?.title ?? ''}
-            subtitle={dataDimension2?.subtitle ?? ''}
-          />
-        </Grid>
-      )
-    })
+    return dataDimension1?.patchData?.map(
+      (dataDimension2: VerticalCardPatchStatisticDataReturnProps, index: number) => {
+        return (
+          <Grid key={`${index.toString()}`} item xs={6}>
+            <CardStatisticsVerticalComponent
+              stats={dataDimension2?.stats ?? ''}
+              icon={dataDimension2?.icon ?? ''}
+              color={dataDimension2?.color}
+              trendNumber={dataDimension2?.trendNumber ?? ''}
+              title={dataDimension2?.title ?? ''}
+              subtitle={dataDimension2?.subtitle ?? ''}
+            />
+          </Grid>
+        )
+      }
+    )
   }
 
   const renderCardStatisticsVerticalComponents = () => {
-    return cardStatisticsVerticalComponentsData?.map((dataDimension1: VerticalCardStatisticDataReturnProps) => {
-      return (
-        <Grid item xs={6} md={6} lg={6}>
-          <Grid container spacing={6}>
-            {renderPerStatCardForVerticalComponent(dataDimension1)}
+    return cardStatisticsVerticalComponentsData?.map(
+      (dataDimension1: VerticalCardStatisticDataReturnProps, index: number) => {
+        return (
+          <Grid key={`${index.toString()}`} item xs={6} md={6} lg={6}>
+            <Grid container spacing={6}>
+              {renderPerStatCardForVerticalComponent(dataDimension1)}
+            </Grid>
           </Grid>
-        </Grid>
-      )
-    })
+        )
+      }
+    )
   }
 
   const renderDashboard = () => {

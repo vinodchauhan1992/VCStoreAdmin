@@ -1,14 +1,13 @@
 import * as Api from '../../services'
 import { takeLatest, call, put } from 'redux-saga/effects'
-import { saveAllUsersData } from '../reducers/UserReducer'
+import { saveAllFileFoldersData } from '../reducers/FileFoldersReducer'
 import { UIReducer } from '../reducers'
 
 const { ApiService, ApiCallTypes } = Api
 
-export function* fetchAllUsers(): any {
+export function* fetchAllFileFolders(): any {
   yield put(UIReducer.showLoader(true))
-  const data = yield call(ApiService.callApiService, ApiCallTypes.GET_ALL_USERS_TYPE, null)
-  console.log('allUsers', data)
+  const data = yield call(ApiService.callApiService, ApiCallTypes.GET_ALL_FILE_FOLDERS_TYPE, null)
   if (
     data.isSucceded &&
     data?.responseData &&
@@ -17,7 +16,7 @@ export function* fetchAllUsers(): any {
     data?.responseData?.data
   ) {
     yield put(
-      saveAllUsersData({
+      saveAllFileFoldersData({
         message: null,
         succeeded: true,
         isCompleted: true,
@@ -26,7 +25,7 @@ export function* fetchAllUsers(): any {
     )
   } else {
     yield put(
-      saveAllUsersData({
+      saveAllFileFoldersData({
         message: data.responseData.message,
         succeeded: false,
         isCompleted: true,
@@ -37,9 +36,6 @@ export function* fetchAllUsers(): any {
   yield put(UIReducer.showLoader(false))
 }
 
-/**
- * Watch login function
- */
-export function* watchFetchAllUsers(): any {
-  yield takeLatest('FETCH_ALL_USERS', fetchAllUsers)
+export function* watchFetchAllFileFolders(): any {
+  yield takeLatest('FETCH_ALL_FILE_FOLDERS', fetchAllFileFolders)
 }

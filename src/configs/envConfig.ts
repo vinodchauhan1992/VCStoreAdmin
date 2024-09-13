@@ -4,7 +4,7 @@ enum ApiVersionEnum {
 }
 
 export default {
-  isLocalHostEnvironment: false,
+  isLocalHostEnvironment: true,
   apiVersion: ApiVersionEnum.v2,
   localHost: {
     v1: 'http://localhost:3371/v1/',

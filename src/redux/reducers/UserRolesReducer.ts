@@ -1,4 +1,5 @@
 import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit'
+import { CommonReducerDataArrayModel } from 'src/models/CommonModel'
 import { ReduxStateModel, UserRolesStateModel } from 'src/models/ReduxStateModel'
 import { UserRoleModel } from 'src/models/UserRoleModel'
 
@@ -7,11 +8,28 @@ const signOutAction = createAction('signout')
 
 /* Initial State */
 const initialState: UserRolesStateModel = {
-  userRolesData: []
+  userRolesData: {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
-const saveAllUserRolesDataInfo = (state: UserRolesStateModel, action: PayloadAction<UserRoleModel[]>): any => {
+const saveAllUserRolesDataInfo = (
+  state: UserRolesStateModel,
+  action: PayloadAction<CommonReducerDataArrayModel<UserRoleModel[]>>
+): any => {
   state.userRolesData = action?.payload ?? []
+}
+
+const resetAllUserRolesDataResultInfo = (state: UserRolesStateModel): any => {
+  state.userRolesData = {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: state?.userRolesData?.dataArray ?? []
+  }
 }
 
 const userRolesSlice: any = createSlice({
@@ -22,17 +40,36 @@ const userRolesSlice: any = createSlice({
       return { ...state }
     })
   },
-  reducers: { saveAllUserRolesData: saveAllUserRolesDataInfo }
+  reducers: {
+    saveAllUserRolesData: saveAllUserRolesDataInfo,
+    resetAllUserRolesDataResult: resetAllUserRolesDataResultInfo
+  }
 })
 
 // ACTIONS
-const { saveAllUserRolesData } = userRolesSlice.actions
+const { saveAllUserRolesData, resetAllUserRolesDataResult } = userRolesSlice.actions
 
 // SELECTOR
 const selectAllUserRolesData = (state: ReduxStateModel) => {
-  return state?.userRoles?.userRolesData ?? []
+  return state?.userRoles?.userRolesData?.dataArray ?? []
+}
+
+const selectAllUserRolesDataResult = (state: ReduxStateModel) => {
+  return {
+    message: state?.userRoles?.userRolesData?.message ?? null,
+    succeeded: state?.userRoles?.userRolesData?.succeeded ?? false,
+    isCompleted: state?.userRoles?.userRolesData?.isCompleted ?? false,
+    dataArray: state?.userRoles?.userRolesData?.dataArray ?? [],
+  }
 }
 
 const userRolesSliceReducer = userRolesSlice.reducer
 
-export { userRolesSliceReducer, saveAllUserRolesData, selectAllUserRolesData, signOutAction }
+export {
+  userRolesSliceReducer,
+  saveAllUserRolesData,
+  resetAllUserRolesDataResult,
+  selectAllUserRolesData,
+  selectAllUserRolesDataResult,
+  signOutAction
+}
