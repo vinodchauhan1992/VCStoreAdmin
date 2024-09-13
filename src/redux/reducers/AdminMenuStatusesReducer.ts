@@ -50,16 +50,12 @@ const adminMenuStatusesSlice: any = createSlice({
 const { saveAllAdminMenuStatusesData, resetAllAdminMenuStatusesDataResult } = adminMenuStatusesSlice.actions
 
 // SELECTOR
-const selectAllAdminMenuStatusesData = (state: ReduxStateModel) => {
-  return state?.adminMenuStatuses?.adminMenuStatusesData?.dataArray ?? []
-}
-
 const selectAllAdminMenuStatusesDataResult = (state: ReduxStateModel) => {
   return {
     message: state?.adminMenuStatuses?.adminMenuStatusesData?.message ?? null,
     succeeded: state?.adminMenuStatuses?.adminMenuStatusesData?.succeeded ?? false,
     isCompleted: state?.adminMenuStatuses?.adminMenuStatusesData?.isCompleted ?? false,
-    dataArray: state?.adminMenuStatuses?.adminMenuStatusesData?.dataArray ?? [],
+    dataArray: state?.adminMenuStatuses?.adminMenuStatusesData?.dataArray ?? []
   }
 }
 
@@ -69,7 +65,6 @@ export {
   adminMenuStatusesSliceReducer,
   saveAllAdminMenuStatusesData,
   resetAllAdminMenuStatusesDataResult,
-  selectAllAdminMenuStatusesData,
   selectAllAdminMenuStatusesDataResult,
   signOutAction
 }

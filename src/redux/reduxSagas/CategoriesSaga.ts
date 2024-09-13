@@ -18,7 +18,8 @@ export function* fetchAllCategories(): any {
   ) {
     yield put(
       saveAllCategoriesData({
-        message: null,
+        message:
+          data.responseData.data.length <= 0 ? 'Categories data not found. Please add some categories data' : null,
         succeeded: true,
         isCompleted: true,
         dataArray: data.responseData.data

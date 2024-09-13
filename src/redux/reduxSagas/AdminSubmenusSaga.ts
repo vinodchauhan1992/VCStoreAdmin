@@ -17,7 +17,10 @@ export function* fetchAllAdminSubmenus(): any {
   ) {
     yield put(
       saveAllAdminSubmenusData({
-        message: null,
+        message:
+          data.responseData.data.length <= 0
+            ? 'Admin submenus data not found. Please add some admin submenus data'
+            : null,
         succeeded: true,
         isCompleted: true,
         dataArray: data.responseData.data

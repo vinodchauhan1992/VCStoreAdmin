@@ -2,7 +2,7 @@ import { all, fork } from 'redux-saga/effects'
 import { watchLoginUser } from './LoginSaga'
 import { watchFetchAllUsers } from './UserSaga'
 import { watchFetchAllCategories } from './CategoriesSaga'
-import { watchFetchAllUserRoles } from './UserRolesSaga'
+import { watchAddUserRole, watchDeleteUserRole, watchFetchAllUserRoles } from './UserRolesSaga'
 import { watchFetchAllUserStatuses } from './UserStatusesSaga'
 import { watchFetchAllFileFolders } from './FileFoldersSaga'
 import { watchFetchAllAdminMenus } from './AdminMenusSaga'
@@ -21,6 +21,8 @@ export default function* rootSaga(): any {
     fork(watchFetchAllAdminMenus),
     fork(watchFetchAllAdminSubmenus),
     fork(watchFetchAllAdminMenuStatuses),
-    fork(watchFetchAllProducts)
+    fork(watchFetchAllProducts),
+    fork(watchDeleteUserRole),
+    fork(watchAddUserRole)
   ])
 }

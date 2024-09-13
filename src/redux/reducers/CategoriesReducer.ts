@@ -50,10 +50,6 @@ const categoriesSlice: any = createSlice({
 const { saveAllCategoriesData, resetAllCategoriesDataResult } = categoriesSlice.actions
 
 // SELECTOR
-const selectAllCategoriesData = (state: ReduxStateModel) => {
-  return state?.categories?.categoriesData?.dataArray ?? []
-}
-
 const selectAllCategoriesDataResult = (state: ReduxStateModel) => {
   return {
     message: state?.categories?.categoriesData?.message ?? null,
@@ -69,7 +65,6 @@ export {
   categoriesSliceReducer,
   saveAllCategoriesData,
   resetAllCategoriesDataResult,
-  selectAllCategoriesData,
   selectAllCategoriesDataResult,
   signOutAction
 }

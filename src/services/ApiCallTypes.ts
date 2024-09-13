@@ -29,7 +29,6 @@ export default {
   GET_ALL_FILE_FOLDERS_TYPE: 'allFileFolders',
   GET_ALL_ADMIN_MENUS_TYPE: 'getAllAdminMenus',
   GET_ALL_ADMIN_SUBMENUS_TYPE: 'getAllAdminSubmenus',
-  
   GET_ALL_ADMIN_MENU_STATUSES_TYPE: 'getAllAdminMenuStatuses',
   GET_ALL_PRODUCTS_TYPE: 'getAllProducts',
   /*-------------------- GET API'S TYPES END --------------------*/

@@ -50,10 +50,6 @@ const fileFoldersSlice: any = createSlice({
 const { saveAllFileFoldersData, resetAllFileFoldersDataResult } = fileFoldersSlice.actions
 
 // SELECTOR
-const selectAllFileFoldersData = (state: ReduxStateModel) => {
-  return state?.fileFolders?.fileFoldersData?.dataArray ?? []
-}
-
 const selectAllFileFoldersDataResult = (state: ReduxStateModel) => {
   return {
     message: state?.fileFolders?.fileFoldersData?.message ?? null,
@@ -69,7 +65,6 @@ export {
   fileFoldersSliceReducer,
   saveAllFileFoldersData,
   resetAllFileFoldersDataResult,
-  selectAllFileFoldersData,
   selectAllFileFoldersDataResult,
   signOutAction
 }

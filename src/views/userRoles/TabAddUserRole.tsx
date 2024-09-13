@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ElementType, ChangeEvent } from 'react'
+import { useState, ElementType, ChangeEvent, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -16,6 +16,7 @@ import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedL
 import { UserRoleModel } from 'src/models/UserRoleModel'
 import { AlertValuesModel } from 'src/models/AlertValuesModel'
 import Alert from '@mui/material/Alert'
+import { UserRolesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 
 const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -35,6 +36,8 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
 }))
 
 const TabAddUserRole = () => {
+  const dispatch = useAppDispatch()
+
   const defaultAlertValues: AlertValuesModel = {
     severity: 'info',
     message: '',
@@ -46,8 +49,10 @@ const TabAddUserRole = () => {
     role: '',
     description: ''
   })
-  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
   const [alertVaues, setAlertValues] = useState<AlertValuesModel>(defaultAlertValues)
+
+  // @ts-ignore
+  const addedUserRoleResponse = useAppSelector(UserRolesReducer.selectAddedUserRoleResponse)
 
   const handleRoleChange = (prop: keyof UserRoleModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
@@ -76,7 +81,6 @@ const TabAddUserRole = () => {
         message: 'Please enter user role.',
         isVisible: true
       })
-
       return
     }
     if (!values?.description || values.description === '') {
@@ -85,16 +89,26 @@ const TabAddUserRole = () => {
         message: 'Please enter description.',
         isVisible: true
       })
-
       return
     }
-    setIsLoaderVisible(true)
-    const response = await httpPostRequest({ apiUrlPath: apiPathsConfig.addUserRoleApiPath, jsonBody: values })
-    if (response.isSucceded) {
-      resetForm()
-    }
-    setIsLoaderVisible(false)
+    dispatch({ type: 'ADD_USER_ROLE', payload: values })
   }
+
+  useEffect(() => {
+    if (addedUserRoleResponse?.isCompleted) {
+      if (addedUserRoleResponse?.succeeded) {
+        resetForm()
+        dispatch(UserRolesReducer.resetAddedUserRoleResponse())
+      } else {
+        setAlertValues({
+          severity: 'error',
+          message: addedUserRoleResponse?.message ?? '',
+          isVisible: true
+        })
+        dispatch(UserRolesReducer.resetAddedUserRoleResponse())
+      }
+    }
+  }, [addedUserRoleResponse])
 
   const renderAlert = () => {
     if (alertVaues?.isVisible) {
@@ -151,7 +165,6 @@ const TabAddUserRole = () => {
             </Box>
           </Grid>
         </form>
-        <CustomisedLoader visible={isLoaderVisible} />
       </CardContent>
     </div>
   )

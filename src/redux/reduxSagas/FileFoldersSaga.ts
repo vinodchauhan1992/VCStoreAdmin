@@ -17,7 +17,7 @@ export function* fetchAllFileFolders(): any {
   ) {
     yield put(
       saveAllFileFoldersData({
-        message: null,
+        message: data.responseData.data.length <= 0 ? 'Folders data not found. Please add some folders data' : null,
         succeeded: true,
         isCompleted: true,
         dataArray: data.responseData.data

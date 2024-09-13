@@ -12,30 +12,20 @@ import apiPathsConfig from 'src/configs/apiPathsConfig'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import { UserRoleModel } from 'src/models/UserRoleModel'
+import { UserRolesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 
 const TabUserRoleByRole = () => {
-  // ** States
-  const [allUserRolesData, setAllUerRolesData] = useState<UserRoleModel[]>([])
-  const [selectedUserRoleData, setSelectedUserRoleData] = useState<UserRoleModel | null>(null)
-  const [isErrored, setIsErrored] = useState<boolean>(false)
-  const [message, setMessage] = useState<string | null>(null)
-  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
+  const dispatch = useAppDispatch()
 
-  const callAllUserRolesApi = async () => {
-    setIsLoaderVisible(true)
-    const response = await httpGetRequest({ apiUrlPath: apiPathsConfig.getAllUserRolesApiPath })
-    if (response.isSucceded) {
-      setAllUerRolesData(response?.responseData?.data ?? [])
-      setMessage(response?.responseData?.message ?? null)
-    } else {
-      setIsErrored(true)
-      setMessage(response?.responseData?.message ?? null)
-    }
-    setIsLoaderVisible(false)
-  }
+  // ** States
+  const [selectedUserRoleData, setSelectedUserRoleData] = useState<UserRoleModel | null>(null)
+  const [message, setMessage] = useState<string | null>(null)
+
+  // @ts-ignore
+  const allUserRolesDataResult = useAppSelector(UserRolesReducer.selectAllUserRolesDataResult)
 
   useEffect(() => {
-    callAllUserRolesApi()
+    dispatch({ type: 'FETCH_ALL_USER_ROLES' })
   }, [])
 
   const renderDetailsFields = () => {
@@ -93,7 +83,7 @@ const TabUserRoleByRole = () => {
   }
 
   const renderData = () => {
-    if (isErrored) {
+    if (allUserRolesDataResult?.isCompleted && !allUserRolesDataResult?.succeeded) {
       return renderError()
     }
     if (!selectedUserRoleData) {
@@ -105,7 +95,6 @@ const TabUserRoleByRole = () => {
 
   return (
     <div>
-      <CustomisedLoader visible={isLoaderVisible} />
       <CardContent>
         <form>
           <Grid container spacing={7}>
@@ -113,7 +102,7 @@ const TabUserRoleByRole = () => {
               <FormControl fullWidth>
                 <InputLabel>User role</InputLabel>
                 <Select label='User role'>
-                  {allUserRolesData?.map(userRole => {
+                  {allUserRolesDataResult?.dataArray?.map(userRole => {
                     return (
                       <MenuItem
                         value={userRole?.role ?? ''}

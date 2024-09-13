@@ -50,16 +50,12 @@ const userStatusesSlice: any = createSlice({
 const { saveAllUserStatusesData, resetAllUserStatusesDataResult } = userStatusesSlice.actions
 
 // SELECTOR
-const selectAllUserStatusesData = (state: ReduxStateModel) => {
-  return state?.userStatuses?.userStatusesData?.dataArray ?? []
-}
-
 const selectAllUserStatusesDataResult = (state: ReduxStateModel) => {
   return {
     message: state?.userStatuses?.userStatusesData?.message ?? null,
     succeeded: state?.userStatuses?.userStatusesData?.succeeded ?? false,
     isCompleted: state?.userStatuses?.userStatusesData?.isCompleted ?? false,
-    dataArray: state?.userStatuses?.userStatusesData?.dataArray ?? [],
+    dataArray: state?.userStatuses?.userStatusesData?.dataArray ?? []
   }
 }
 
@@ -69,7 +65,6 @@ export {
   userStatusesSliceReducer,
   saveAllUserStatusesData,
   resetAllUserStatusesDataResult,
-  selectAllUserStatusesData,
   selectAllUserStatusesDataResult,
   signOutAction
 }

@@ -47,16 +47,12 @@ const productsSlice: any = createSlice({
 const { saveAllProductsData, resetAllProductsDataResult } = productsSlice.actions
 
 // SELECTOR
-const selectAllProductsData = (state: ReduxStateModel) => {
-  return state?.products?.productsData?.dataArray ?? []
-}
-
 const selectAllProductsDataResult = (state: ReduxStateModel) => {
   return {
     message: state?.products?.productsData?.message ?? null,
     succeeded: state?.products?.productsData?.succeeded ?? false,
     isCompleted: state?.products?.productsData?.isCompleted ?? false,
-    dataArray: state?.products?.productsData?.dataArray ?? [],
+    dataArray: state?.products?.productsData?.dataArray ?? []
   }
 }
 
@@ -66,7 +62,6 @@ export {
   productsSliceReducer,
   saveAllProductsData,
   resetAllProductsDataResult,
-  selectAllProductsData,
   selectAllProductsDataResult,
   signOutAction
 }

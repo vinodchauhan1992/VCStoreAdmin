@@ -17,7 +17,10 @@ export function* fetchAllAdminMenuStatuses(): any {
   ) {
     yield put(
       saveAllAdminMenuStatusesData({
-        message: null,
+        message:
+          data.responseData.data.length <= 0
+            ? 'Admin menu statuses data not found. Please add some admin menu statuses data'
+            : null,
         succeeded: true,
         isCompleted: true,
         dataArray: data.responseData.data

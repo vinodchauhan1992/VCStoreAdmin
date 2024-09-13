@@ -17,7 +17,7 @@ export function* fetchAllProducts(): any {
   ) {
     yield put(
       saveAllProductsData({
-        message: null,
+        message: data.responseData.data.length <= 0 ? 'Products data not found. Please add products data' : null,
         succeeded: true,
         isCompleted: true,
         dataArray: data.responseData.data

@@ -50,10 +50,6 @@ const adminMenusSlice: any = createSlice({
 const { saveAllAdminMenusData, resetAllAdminMenusDataResult } = adminMenusSlice.actions
 
 // SELECTOR
-const selectAllAdminMenusData = (state: ReduxStateModel) => {
-  return state?.adminMenus?.adminMenusData?.dataArray ?? []
-}
-
 const selectAllAdminMenusDataResult = (state: ReduxStateModel) => {
   return {
     message: state?.adminMenus?.adminMenusData?.message ?? null,
@@ -69,7 +65,6 @@ export {
   adminMenusSliceReducer,
   saveAllAdminMenusData,
   resetAllAdminMenusDataResult,
-  selectAllAdminMenusData,
   selectAllAdminMenusDataResult,
   signOutAction
 }

@@ -53,10 +53,6 @@ const userSlice: any = createSlice({
 const { saveAllUsersData, resetAllUsersDataResult } = userSlice.actions
 
 // SELECTOR
-const selectAllUsersData = (state: ReduxStateModel) => {
-  return state?.user?.usersData?.dataArray ?? []
-}
-
 const selectAllUsersDataResult = (state: ReduxStateModel) => {
   return {
     message: state?.user?.usersData?.message ?? null,
@@ -72,7 +68,6 @@ export {
   userSliceReducer,
   saveAllUsersData,
   resetAllUsersDataResult,
-  selectAllUsersData,
   selectAllUsersDataResult,
   signOutAction
 }

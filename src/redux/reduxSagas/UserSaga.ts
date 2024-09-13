@@ -18,7 +18,7 @@ export function* fetchAllUsers(): any {
   ) {
     yield put(
       saveAllUsersData({
-        message: null,
+        message: data.responseData.data.length <= 0 ? 'Users data not found. Please add some users data' : null,
         succeeded: true,
         isCompleted: true,
         dataArray: data.responseData.data

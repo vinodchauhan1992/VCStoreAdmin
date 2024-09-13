@@ -2,7 +2,7 @@ import { AdminMenuStatusesModel } from './AdminMenuStatusesModel'
 import { AdminMenusModel } from './AdminMenusModel'
 import { AdminSubmenusModel } from './AdminSubmenusModel'
 import { CategoryModel } from './CategoryModel'
-import { CommonReducerDataArrayModel } from './CommonModel'
+import { AddDataCommonReducerModel, CommonReducerDataArrayModel, DeleteDataCommonReducerModel } from './CommonModel'
 import { FileFoldersModel } from './FileFoldersModel'
 import { LoggedInUserModel } from './LoggedInUserModel'
 import { ProductsModel } from './ProductsModel'
@@ -29,6 +29,8 @@ export interface CategoriesStateModel {
 
 export interface UserRolesStateModel {
   userRolesData?: CommonReducerDataArrayModel<UserRoleModel[]>
+  deletedUserRoleResponse?: DeleteDataCommonReducerModel<null>
+  addUserRoleResponse?: AddDataCommonReducerModel<UserRoleModel>
 }
 
 export interface UserStatusesStateModel {

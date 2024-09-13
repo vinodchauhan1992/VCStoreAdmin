@@ -10,10 +10,8 @@ import Typography from '@mui/material/Typography'
 import TableContainer from '@mui/material/TableContainer'
 import Box from '@mui/material/Box'
 import Button, { ButtonProps } from '@mui/material/Button'
-import apiPathsConfig from '../../configs/apiPathsConfig'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { httpDeleteRequest, httpGetRequest } from 'src/services/AxiosApi'
 import { StyledTableCell } from 'src/@core/components/customised-table/styled-table-cell/StyledTableCell'
 import { StyledTableRow } from 'src/@core/components/customised-table/styled-table-row/StyledTableRow'
 import { styled } from '@mui/material/styles'
@@ -34,17 +32,15 @@ const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
 
 const TabAllUserRoles = () => {
   // ** State
-  const [allUserRoles, setAllUserRolesData] = useState<UserRoleModel[]>([])
-  const [isErrored, setIsErrored] = useState<boolean>(false)
-  const [message, setMessage] = useState<string | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
   const [selectedUserRole, setSelectedUserRole] = useState<UserRoleModel | null>(null)
-  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
 
   const dispatch = useAppDispatch()
 
   // @ts-ignore
   const allUserRolesDataResult = useAppSelector(UserRolesReducer.selectAllUserRolesDataResult)
+  // @ts-ignore
+  const deletedUserRoleResponse = useAppSelector(UserRolesReducer.selectDeletedUserRoleResponse)
 
   useEffect(() => {
     dispatch({ type: 'FETCH_ALL_USER_ROLES' })
@@ -55,16 +51,18 @@ const TabAllUserRoles = () => {
     setIsDialogOpen(false)
   }
 
-  const deleteUserRole = async () => {
-    resetSelectedUserRole()
-    setIsLoaderVisible(true)
-    const response = await httpDeleteRequest({
-      apiUrlPath: `${apiPathsConfig.deleteUserRoleApiPath}/${selectedUserRole?.id}`
-    })
-    if (response.isSucceded) {
-      dispatch({ type: 'FETCH_ALL_USER_ROLES' })
+  useEffect(() => {
+    if (deletedUserRoleResponse?.isCompleted) {
+      resetSelectedUserRole()
+      if (deletedUserRoleResponse?.succeeded) {
+        dispatch({ type: 'FETCH_ALL_USER_ROLES' })
+        dispatch(UserRolesReducer.resetDeletedUserRoleResponse())
+      }
     }
-    setIsLoaderVisible(false)
+  }, [deletedUserRoleResponse])
+
+  const deleteUserRole = async () => {
+    dispatch({ type: 'DELETE_USER_ROLE', payload: { userRoleId: selectedUserRole?.id } })
   }
 
   const onDeleteClick = async (userRoleData: UserRoleModel) => {
@@ -72,9 +70,13 @@ const TabAllUserRoles = () => {
     setIsDialogOpen(true)
   }
 
-  const onEditClick = async (userRoleData: UserRoleModel) => {}
+  const onEditClick = async (userRoleData: UserRoleModel) => {
+    setSelectedUserRole(userRoleData)
+  }
 
-  const onViewClick = async (userRoleData: UserRoleModel) => {}
+  const onViewClick = async (userRoleData: UserRoleModel) => {
+    setSelectedUserRole(userRoleData)
+  }
 
   const handleDialogOpen = () => {
     setIsDialogOpen(!isDialogOpen)
@@ -144,16 +146,26 @@ const TabAllUserRoles = () => {
 
   const renderEmpty = () => {
     return (
-      <CustomisedErrorEmpty title='No user roles found!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+      <CustomisedErrorEmpty
+        title='No user roles found!'
+        type='empty'
+        message={allUserRolesDataResult?.message ?? ''}
+      ></CustomisedErrorEmpty>
     )
   }
 
   const renderError = () => {
-    return <CustomisedErrorEmpty title='Error!' type='empty' message={message ?? ''}></CustomisedErrorEmpty>
+    return (
+      <CustomisedErrorEmpty
+        title='Error!'
+        type='empty'
+        message={allUserRolesDataResult?.message ?? ''}
+      ></CustomisedErrorEmpty>
+    )
   }
 
   const renderData = () => {
-    if (isErrored) {
+    if (allUserRolesDataResult?.isCompleted && !allUserRolesDataResult?.succeeded) {
       return renderError()
     }
     if (!allUserRolesDataResult?.dataArray || allUserRolesDataResult.dataArray.length <= 0) {

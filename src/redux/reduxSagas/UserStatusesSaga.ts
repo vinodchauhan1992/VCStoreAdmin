@@ -17,7 +17,10 @@ export function* fetchAllUserStatuses(): any {
   ) {
     yield put(
       saveAllUserStatusesData({
-        message: null,
+        message:
+          data.responseData.data.length <= 0
+            ? 'User statuses data not found. Please add some user statuses data'
+            : null,
         succeeded: true,
         isCompleted: true,
         dataArray: data.responseData.data
