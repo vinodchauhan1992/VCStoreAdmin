@@ -41,7 +41,7 @@ const TabName = styled('span')(({ theme }) => ({
   }
 }))
 
-const Categories = () => {
+const Products = () => {
   // ** State
   const [value, setValue] = useState<string>('allProducts')
 
@@ -100,4 +100,4 @@ const Categories = () => {
   )
 }
 
-export default Categories
+export default Products

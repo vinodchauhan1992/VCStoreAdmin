@@ -16,9 +16,9 @@ import AccountPlusOutline from 'mdi-material-ui/AccountPlusOutline'
 import AccountWrenchOutline from 'mdi-material-ui/AccountWrenchOutline'
 
 // ** Demo Tabs Imports
-import TabAllFileFolders from 'src/views/fileFolders/TabAllFileFolders'
-import TabFileFolderByFolderName from 'src/views/fileFolders/TabFileFolderByFolderName'
-import TabAddFileFolder from 'src/views/fileFolders/TabAddFileFolder'
+import TabAddMenu from 'src/views/adminMenus/TabAddMenu'
+import TabAllMenus from 'src/views/adminMenus/TabAllMenus'
+import TabMenuByMenuName from 'src/views/adminMenus/TabMenuByMenuName'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
@@ -41,9 +41,9 @@ const TabName = styled('span')(({ theme }) => ({
   }
 }))
 
-const FileFolders = () => {
+const MenusPage = () => {
   // ** State
-  const [value, setValue] = useState<string>('allFileFolders')
+  const [value, setValue] = useState<string>('allMenus')
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -54,50 +54,50 @@ const FileFolders = () => {
       <TabContext value={value}>
         <TabList
           onChange={handleChange}
-          aria-label='userStatuses tabs'
+          aria-label='adminMenus tabs'
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
           <Tab
-            value='allFileFolders'
+            value='allMenus'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountWrenchOutline />
-                <TabName>All File Folders</TabName>
+                <TabName>All Menus</TabName>
               </Box>
             }
           />
           <Tab
-            value='fileFolderByFolderName'
+            value='menuByMenuName'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountSearchOutline />
-                <TabName>File Folder By Folder Name</TabName>
+                <TabName>Menu By Menu Name</TabName>
               </Box>
             }
           />
           <Tab
-            value='addFileFolder'
+            value='addMenu'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountPlusOutline />
-                <TabName>Add File Folder</TabName>
+                <TabName>Add Menu</TabName>
               </Box>
             }
           />
         </TabList>
 
-        <TabPanel sx={{ p: 0 }} value='allFileFolders'>
-          <TabAllFileFolders />
+        <TabPanel sx={{ p: 0 }} value='allMenus'>
+          <TabAllMenus />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='fileFolderByFolderName'>
-          <TabFileFolderByFolderName />
+        <TabPanel sx={{ p: 0 }} value='menuByMenuName'>
+          <TabMenuByMenuName />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='addFileFolder'>
-          <TabAddFileFolder />
+        <TabPanel sx={{ p: 0 }} value='addMenu'>
+          <TabAddMenu />
         </TabPanel>
       </TabContext>
     </Card>
   )
 }
 
-export default FileFolders
+export default MenusPage

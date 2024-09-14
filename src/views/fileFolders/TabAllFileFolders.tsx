@@ -19,6 +19,7 @@ import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/Cu
 import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
 import { FileFoldersModel } from 'src/models/FileFoldersModel'
 import { FileFoldersReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { convertDateIntoReadableFormat } from 'src/utils/CommonUtils'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -115,11 +116,11 @@ const TabAllFileFolders = () => {
                   <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`Added On: ${fileFolderData?.dateAdded ?? 'N/A'}`}
+                        {`Added On: ${convertDateIntoReadableFormat(fileFolderData?.dateAdded)}`}
                       </Typography>
-                      <Typography variant='caption'>{`Modified On: ${
-                        fileFolderData?.dateModified ?? 'N/A'
-                      }`}</Typography>
+                      <Typography variant='caption'>{`Modified On: ${convertDateIntoReadableFormat(
+                        fileFolderData?.dateModified
+                      )}`}</Typography>
                     </Box>
                   </StyledTableCell>
                   <StyledTableCell>

@@ -16,9 +16,9 @@ import AccountPlusOutline from 'mdi-material-ui/AccountPlusOutline'
 import AccountWrenchOutline from 'mdi-material-ui/AccountWrenchOutline'
 
 // ** Demo Tabs Imports
-import TabAddAdminMenu from 'src/views/adminMenus/TabAddAdminMenu'
-import TabAllAdminMenus from 'src/views/adminMenus/TabAllAdminMenus'
-import TabAdminMenuByMenuName from 'src/views/adminMenus/TabAdminMenuByMenuName'
+import TabAddMenuStatus from 'src/views/menuStatuses/TabAddMenuStatus'
+import TabAllMenuStatuses from 'src/views/menuStatuses/TabAllMenuStatuses'
+import TabMenuStatusByTitle from 'src/views/menuStatuses/TabMenuStatusByTitle'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
@@ -41,9 +41,9 @@ const TabName = styled('span')(({ theme }) => ({
   }
 }))
 
-const AdminMenus = () => {
+const MenuStatuses = () => {
   // ** State
-  const [value, setValue] = useState<string>('allAdminMenus')
+  const [value, setValue] = useState<string>('allMenuStatuses')
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -58,46 +58,46 @@ const AdminMenus = () => {
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
           <Tab
-            value='allAdminMenus'
+            value='allMenuStatuses'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountWrenchOutline />
-                <TabName>All Admin Menus</TabName>
+                <TabName>All Menu Statuses</TabName>
               </Box>
             }
           />
           <Tab
-            value='adminMenuByMenuName'
+            value='menuStatusesByTitle'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountSearchOutline />
-                <TabName>Admin Menu By Menu Name</TabName>
+                <TabName>Menu Status By Title</TabName>
               </Box>
             }
           />
           <Tab
-            value='addAdminMenu'
+            value='addMenuStatus'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountPlusOutline />
-                <TabName>Add Admin Menu</TabName>
+                <TabName>Add Menu Status</TabName>
               </Box>
             }
           />
         </TabList>
 
-        <TabPanel sx={{ p: 0 }} value='allAdminMenus'>
-          <TabAllAdminMenus />
+        <TabPanel sx={{ p: 0 }} value='allMenuStatuses'>
+          <TabAllMenuStatuses />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='adminMenuByMenuName'>
-          <TabAdminMenuByMenuName />
+        <TabPanel sx={{ p: 0 }} value='menuStatusesByTitle'>
+          <TabMenuStatusByTitle />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='addAdminMenu'>
-          <TabAddAdminMenu />
+        <TabPanel sx={{ p: 0 }} value='addMenuStatus'>
+          <TabAddMenuStatus />
         </TabPanel>
       </TabContext>
     </Card>
   )
 }
 
-export default AdminMenus
+export default MenuStatuses

@@ -41,7 +41,7 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   }
 }))
 
-const TabAddAdminMenu = () => {
+const TabAddMenu = () => {
   const dispatch = useAppDispatch()
 
   const defaultAlertValues: AlertValuesModel = {
@@ -274,4 +274,4 @@ const TabAddAdminMenu = () => {
   )
 }
 
-export default TabAddAdminMenu
+export default TabAddMenu

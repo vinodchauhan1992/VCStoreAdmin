@@ -17,8 +17,9 @@ import { StyledTableRow } from 'src/@core/components/customised-table/styled-tab
 import { styled } from '@mui/material/styles'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
-import { AdminMenusReducer, LoginReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
-import { AdminMenusModel } from 'src/models/AdminMenusModel'
+import { AdminMenuStatusesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { AdminMenuStatusesModel } from 'src/models/AdminMenuStatusesModel'
+import { convertDateIntoReadableFormat } from 'src/utils/CommonUtils'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -30,66 +31,63 @@ const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   }
 }))
 
-const TabAllAdminMenus = () => {
+const TabAllMenuStatuses = () => {
   // ** State
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
-  const [selectedAdminMenu, setSelectedAdminMenu] = useState<AdminMenusModel | null>(null)
+  const [selectedAdminMenuStatus, setSelectedAdminMenuStatus] = useState<AdminMenuStatusesModel | null>(null)
 
   const dispatch = useAppDispatch()
 
   // @ts-ignore
-  const allAdminMenusDataResult = useAppSelector(AdminMenusReducer.selectAllAdminMenusDataResult)
+  const allAdminMenuStatusesDataResult = useAppSelector(AdminMenuStatusesReducer.selectAllAdminMenuStatusesDataResult)
   // @ts-ignore
-  const deletedAdminMenuResponse = useAppSelector(AdminMenusReducer.selectDeletedAdminMenuResponse)
-  // @ts-ignore
-  const loggedInUserRole = useAppSelector(LoginReducer.selectLoggedInUserRole)
+  const deletedAdminMenuStatusResponse = useAppSelector(AdminMenuStatusesReducer.selectDeletedAdminMenuStatusResponse)
 
-  const callAllMenusApi = () => {
-    dispatch({ type: 'FETCH_ALL_ADMIN_MENUS' })
+  const callAllMenuStatusesApi = () => {
+    dispatch({ type: 'FETCH_ALL_ADMIN_MENU_STATUSES' })
   }
 
   useEffect(() => {
-    callAllMenusApi()
+    callAllMenuStatusesApi()
   }, [])
 
   const resetSelectedAdminMenu = () => {
-    setSelectedAdminMenu(null)
+    setSelectedAdminMenuStatus(null)
     setIsDialogOpen(false)
   }
 
   useEffect(() => {
-    if (deletedAdminMenuResponse?.isCompleted) {
+    if (deletedAdminMenuStatusResponse?.isCompleted) {
       resetSelectedAdminMenu()
-      if (deletedAdminMenuResponse?.succeeded) {
-        dispatch(AdminMenusReducer.resetDeletedAdminMenuResponse())
-        callAllMenusApi()
+      if (deletedAdminMenuStatusResponse?.succeeded) {
+        dispatch(AdminMenuStatusesReducer.resetDeletedAdminMenuStatusResponse())
+        callAllMenuStatusesApi()
       } else {
-        dispatch(AdminMenusReducer.resetDeletedAdminMenuResponse())
+        dispatch(AdminMenuStatusesReducer.resetDeletedAdminMenuStatusResponse())
       }
     }
-  }, [deletedAdminMenuResponse])
+  }, [deletedAdminMenuStatusResponse])
 
-  const deleteAdminMenu = async () => {
+  const deleteMenuStatus = async () => {
     dispatch({
-      type: 'DELETE_ADMIN_MENU',
+      type: 'DELETE_ADMIN_MENU_STATUS',
       payload: {
-        adminMenuId: selectedAdminMenu?.id,
-        panelType: loggedInUserRole && loggedInUserRole?.toLowerCase() === 'administrator' ? 'admin_panel' : 'others'
+        adminMenuStatusId: selectedAdminMenuStatus?.id
       }
     })
   }
 
-  const onDeleteClick = async (adminMenuData: AdminMenusModel) => {
-    setSelectedAdminMenu(adminMenuData)
+  const onDeleteClick = async (adminMenuStatusData: AdminMenuStatusesModel) => {
+    setSelectedAdminMenuStatus(adminMenuStatusData)
     setIsDialogOpen(true)
   }
 
-  const onEditClick = async (adminMenuData: AdminMenusModel) => {
-    setSelectedAdminMenu(adminMenuData)
+  const onEditClick = async (adminMenuStatusData: AdminMenuStatusesModel) => {
+    setSelectedAdminMenuStatus(adminMenuStatusData)
   }
 
-  const onViewClick = async (adminMenuData: AdminMenusModel) => {
-    setSelectedAdminMenu(adminMenuData)
+  const onViewClick = async (adminMenuStatusData: AdminMenuStatusesModel) => {
+    setSelectedAdminMenuStatus(adminMenuStatusData)
   }
 
   const handleDialogOpen = () => {
@@ -97,71 +95,55 @@ const TabAllAdminMenus = () => {
   }
 
   const renderDataTable = () => {
-    if (allAdminMenusDataResult?.dataArray && allAdminMenusDataResult.dataArray.length > 0) {
+    if (allAdminMenuStatusesDataResult?.dataArray && allAdminMenuStatusesDataResult.dataArray.length > 0) {
       return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label='table in dashboard'>
             <TableHead>
               <TableRow>
                 <StyledTableCell>ID</StyledTableCell>
-                <StyledTableCell>Details</StyledTableCell>
+                <StyledTableCell>Menu Status Title</StyledTableCell>
                 <StyledTableCell>Dates</StyledTableCell>
                 <StyledTableCell>Manage</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {allAdminMenusDataResult.dataArray.map((adminMenuData: AdminMenusModel) => (
+              {allAdminMenuStatusesDataResult.dataArray.map((adminMenuStatusData: AdminMenuStatusesModel) => (
                 <StyledTableRow
                   hover
-                  key={adminMenuData?.id}
+                  key={adminMenuStatusData?.id}
                   sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
                 >
-                  <StyledTableCell>{adminMenuData?.id}</StyledTableCell>
+                  <StyledTableCell>{adminMenuStatusData?.id}</StyledTableCell>
                   <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`Title: ${adminMenuData?.menuTitle ?? 'N/A'}`}
+                        {`${adminMenuStatusData?.menuStatusTitle ?? 'N/A'}`}
                       </Typography>
-                      <Typography
-                        variant='caption'
-                        color={
-                          adminMenuData?.adminMenuStatus && adminMenuData.adminMenuStatus.toLowerCase() === 'active'
-                            ? 'success.dark'
-                            : 'error.dark'
-                        }
-                      >{`Status: ${adminMenuData?.adminMenuStatus ?? 'N/A'}`}</Typography>
-                      <Typography
-                        variant='caption'
-                        color={adminMenuData?.isDeleteable ? 'success.dark' : 'error.dark'}
-                      >{`Can be deleted: ${adminMenuData?.isDeleteable ? 'Yes' : 'No'}`}</Typography>
-                      <Typography
-                        variant='caption'
-                        color={adminMenuData?.isAdminDeleteable ? 'success.dark' : 'error.dark'}
-                      >{`Can be deleted by admin: ${adminMenuData?.isAdminDeleteable ? 'Yes' : 'No'}`}</Typography>
                     </Box>
                   </StyledTableCell>
                   <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`Added On: ${adminMenuData?.dateAdded ?? 'N/A'}`}
+                        {`Added On: ${convertDateIntoReadableFormat(adminMenuStatusData?.dateAdded)}`}
                       </Typography>
-                      <Typography variant='caption'>{`Modified On: ${
-                        adminMenuData?.dateModified ?? 'N/A'
-                      }`}</Typography>
+                      <Typography variant='caption'>{`Modified On: ${convertDateIntoReadableFormat(
+                        adminMenuStatusData?.dateModified
+                      )}`}</Typography>
                     </Box>
                   </StyledTableCell>
                   <StyledTableCell>
-                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(adminMenuData)}>
+                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(adminMenuStatusData)}>
                       <Typography color='error' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         Delete
                       </Typography>
                     </ButtonStyled>
-                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(adminMenuData)}>
+                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(adminMenuStatusData)}>
                       <Typography color='info' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         Edit
                       </Typography>
                     </ButtonStyled>
-                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(adminMenuData)}>
+                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(adminMenuStatusData)}>
                       <Typography color='success' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         View
                       </Typography>
@@ -181,7 +163,7 @@ const TabAllAdminMenus = () => {
       <CustomisedErrorEmpty
         title='No admin menus found!'
         type='empty'
-        message={allAdminMenusDataResult?.message ?? ''}
+        message={allAdminMenuStatusesDataResult?.message ?? ''}
       ></CustomisedErrorEmpty>
     )
   }
@@ -191,16 +173,16 @@ const TabAllAdminMenus = () => {
       <CustomisedErrorEmpty
         title='Error!'
         type='empty'
-        message={allAdminMenusDataResult?.message ?? ''}
+        message={allAdminMenuStatusesDataResult?.message ?? ''}
       ></CustomisedErrorEmpty>
     )
   }
 
   const renderData = () => {
-    if (allAdminMenusDataResult?.isCompleted && !allAdminMenusDataResult?.succeeded) {
+    if (allAdminMenuStatusesDataResult?.isCompleted && !allAdminMenuStatusesDataResult?.succeeded) {
       return renderError()
     }
-    if (!allAdminMenusDataResult?.dataArray || allAdminMenusDataResult.dataArray.length <= 0) {
+    if (!allAdminMenuStatusesDataResult?.dataArray || allAdminMenuStatusesDataResult.dataArray.length <= 0) {
       return renderEmpty()
     }
 
@@ -212,13 +194,13 @@ const TabAllAdminMenus = () => {
       <CustomisedAlertDialog
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={handleDialogOpen}
-        dialogTitle='Delete admin menu!'
-        dialogMessage={`Are you sure you want to delete ${selectedAdminMenu?.menuTitle} menu?`}
+        dialogTitle='Delete menu status!'
+        dialogMessage={`Are you sure you want to delete ${selectedAdminMenuStatus?.menuStatusTitle} menu status?`}
         dialogButtons={[
           {
             title: 'Yes',
             onClick: () => {
-              deleteAdminMenu()
+              deleteMenuStatus()
             },
             autoFocus: true,
             color: 'error'
@@ -247,4 +229,4 @@ const TabAllAdminMenus = () => {
   )
 }
 
-export default TabAllAdminMenus
+export default TabAllMenuStatuses

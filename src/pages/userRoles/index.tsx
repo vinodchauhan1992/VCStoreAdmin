@@ -41,7 +41,7 @@ const TabName = styled('span')(({ theme }) => ({
   }
 }))
 
-const Users = () => {
+const UserRoles = () => {
   // ** State
   const [value, setValue] = useState<string>('allUserRoles')
 
@@ -100,4 +100,4 @@ const Users = () => {
   )
 }
 
-export default Users
+export default UserRoles

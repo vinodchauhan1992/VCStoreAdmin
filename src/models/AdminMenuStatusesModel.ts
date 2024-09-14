@@ -1,7 +1,7 @@
 export interface AdminMenuStatusesModel {
-  id: string
+  id?: string
   menuStatusTitle: string
   menuStatusDescription: string
-  dateAdded: Date
-  dateModified: Date
+  dateAdded?: Date
+  dateModified?: Date
 }

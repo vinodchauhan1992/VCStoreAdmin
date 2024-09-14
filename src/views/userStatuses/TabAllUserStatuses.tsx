@@ -19,6 +19,7 @@ import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/Cu
 import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
 import { UserStatusModel } from 'src/models/UserStatusModel'
 import { UserStatusesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { convertDateIntoReadableFormat } from 'src/utils/CommonUtils'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -113,11 +114,11 @@ const TabAllUserStatuses = () => {
                   <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`Added On: ${userStatusData?.dateAdded ?? 'N/A'}`}
+                        {`Added On: ${convertDateIntoReadableFormat(userStatusData?.dateAdded)}`}
                       </Typography>
-                      <Typography variant='caption'>{`Modified On: ${
-                        userStatusData?.dateModified ?? 'N/A'
-                      }`}</Typography>
+                      <Typography variant='caption'>{`Modified On: ${convertDateIntoReadableFormat(
+                        userStatusData?.dateModified
+                      )}`}</Typography>
                     </Box>
                   </StyledTableCell>
                   <StyledTableCell>

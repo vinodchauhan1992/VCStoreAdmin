@@ -17,7 +17,7 @@ import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 
-const TabAdminMenuByMenuName = () => {
+const TabMenuByMenuName = () => {
   const dispatch = useAppDispatch()
 
   // ** States
@@ -175,4 +175,4 @@ const TabAdminMenuByMenuName = () => {
     </div>
   )
 }
-export default TabAdminMenuByMenuName
+export default TabMenuByMenuName

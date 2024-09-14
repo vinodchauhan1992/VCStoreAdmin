@@ -7,3 +7,12 @@ export const getApiBaseUrl = () => {
 
   return envConfig.localHost[`${envConfig.apiVersion}`]
 }
+
+export const convertDateIntoReadableFormat = (date?: Date | null) => {
+  let convertedData = 'N/A'
+  if (date) {
+    const newDate = new Date(date)
+    convertedData = `${newDate.toUTCString()}`
+  }
+  return convertedData
+}
