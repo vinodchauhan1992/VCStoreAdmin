@@ -128,9 +128,9 @@ const TabSubmenuByTitle = () => {
   const renderEmpty = () => {
     return (
       <CustomisedErrorEmpty
-        title='Select user role!'
+        title='Select submenu!'
         type='empty'
-        message='Please select a user role from above drop down.'
+        message='Please select a submenu from above drop down.'
       ></CustomisedErrorEmpty>
     )
   }
