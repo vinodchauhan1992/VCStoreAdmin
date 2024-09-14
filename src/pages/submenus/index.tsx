@@ -18,7 +18,7 @@ import AccountWrenchOutline from 'mdi-material-ui/AccountWrenchOutline'
 // ** Demo Tabs Imports
 import TabAddSubmenu from 'src/views/submenus/TabAddSubmenu'
 import TabAllSubmenus from 'src/views/submenus/TabAllSubmenus'
-import TabMenuByMenuName from 'src/views/adminMenus/TabMenuByMenuName'
+import TabSubmenuByTitle from 'src/views/submenus/TabSubmenuByTitle'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
@@ -66,7 +66,7 @@ const SubmenusPage = () => {
               </Box>
             }
           />
-          {/* <Tab
+          <Tab
             value='submenuByTitle'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -74,7 +74,7 @@ const SubmenusPage = () => {
                 <TabName>Submenu By Title</TabName>
               </Box>
             }
-          /> */}
+          />
           <Tab
             value='addSubmenu'
             label={
@@ -89,9 +89,9 @@ const SubmenusPage = () => {
         <TabPanel sx={{ p: 0 }} value='allSubmenus'>
           <TabAllSubmenus />
         </TabPanel>
-        {/* <TabPanel sx={{ p: 0 }} value='submenuByTitle'>
-          <TabMenuByMenuName />
-        </TabPanel> */}
+        <TabPanel sx={{ p: 0 }} value='submenuByTitle'>
+          <TabSubmenuByTitle />
+        </TabPanel>
         <TabPanel sx={{ p: 0 }} value='addSubmenu'>
           <TabAddSubmenu />
         </TabPanel>
