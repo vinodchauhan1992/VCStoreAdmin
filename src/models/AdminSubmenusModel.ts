@@ -1,5 +1,5 @@
 export interface AdminSubmenusModel {
-  id: string
+  id?: string
   submenuTitle: string
   adminMenuID: string
   adminMenuTitle: string
@@ -8,6 +8,6 @@ export interface AdminSubmenusModel {
   isDeleteable: boolean
   isAdminDeleteable: boolean
   description: string
-  dateAdded: Date
-  dateModified: Date
+  dateAdded?: Date
+  dateModified?: Date
 }

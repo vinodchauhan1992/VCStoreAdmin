@@ -12,7 +12,13 @@ import Button, { ButtonProps } from '@mui/material/Button'
 // ** Icons Imports
 import { AlertValuesModel } from 'src/models/AlertValuesModel'
 import Alert from '@mui/material/Alert'
-import { AdminMenuStatusesReducer, AdminMenusReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import {
+  AdminMenuStatusesReducer,
+  AdminMenusReducer,
+  AdminSubmenusReducer,
+  useAppDispatch,
+  useAppSelector
+} from 'src/redux/reducers'
 import { AdminMenusModel } from 'src/models/AdminMenusModel'
 import Radio from '@mui/material/Radio'
 import FormLabel from '@mui/material/FormLabel'
@@ -23,6 +29,7 @@ import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import InputLabel from '@mui/material/InputLabel'
 import { AdminMenuStatusesModel } from 'src/models/AdminMenuStatusesModel'
+import { AdminSubmenusModel } from 'src/models/AdminSubmenusModel'
 
 const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -41,7 +48,7 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   }
 }))
 
-const TabAddMenu = () => {
+const TabAddSubmenu = () => {
   const dispatch = useAppDispatch()
 
   const defaultAlertValues: AlertValuesModel = {
@@ -51,30 +58,39 @@ const TabAddMenu = () => {
   }
 
   const defaultFormValues = {
-    menuTitle: '',
-    adminMenuStatusID: '',
-    adminMenuStatus: '',
+    submenuTitle: '',
+    adminMenuID: '',
+    adminMenuTitle: '',
+    statusID: '',
+    status: '',
     isDeleteable: false,
     isAdminDeleteable: true,
     description: ''
   }
 
   // ** State
-  const [values, setValues] = useState<AdminMenusModel>(defaultFormValues)
+  const [values, setValues] = useState<AdminSubmenusModel>(defaultFormValues)
   const [alertVaues, setAlertValues] = useState<AlertValuesModel>(defaultAlertValues)
 
   // @ts-ignore
-  const addedAdminMenuResponse = useAppSelector(AdminMenusReducer.selectAddedAdminMenuResponse)
+  const addedAdminSubmenuResponse = useAppSelector(AdminSubmenusReducer.selectAddedAdminSubmenuResponse)
   // @ts-ignore
   const allAdminMenuStatusesDataResult = useAppSelector(AdminMenuStatusesReducer.selectAllAdminMenuStatusesDataResult)
+  // @ts-ignore
+  const allAdminMenusDataResult = useAppSelector(AdminMenusReducer.selectAllAdminMenusDataResult)
 
   const [selectedMenuStatusData, setSelectedMenuStatusData] = useState<AdminMenuStatusesModel | null>(null)
+  const [selectedMenuData, setSelectedMenuData] = useState<AdminMenusModel | null>(null)
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_ALL_ADMIN_MENUS' })
+  }, [])
 
   useEffect(() => {
     dispatch({ type: 'FETCH_ALL_ADMIN_MENU_STATUSES' })
-  }, [])
+  }, [allAdminMenusDataResult?.dataArray])
 
-  const handleMenuTitleChange = (prop: keyof AdminMenusModel) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleSubmenuTitleChange = (prop: keyof AdminSubmenusModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
@@ -99,11 +115,11 @@ const TabAddMenu = () => {
     resetForm()
   }
 
-  const onAddNewAdminMenuClick = async () => {
-    if (!values?.menuTitle || values.menuTitle === '') {
+  const onAddNewSubmenuClick = async () => {
+    if (!values?.submenuTitle || values.submenuTitle === '') {
       setAlertValues({
         severity: 'error',
-        message: 'Please enter menu title.',
+        message: 'Please enter submenu title.',
         isVisible: true
       })
       return
@@ -111,7 +127,7 @@ const TabAddMenu = () => {
     if (!values?.description || values.description === '') {
       setAlertValues({
         severity: 'error',
-        message: 'Please enter description.',
+        message: 'Please enter submenu description.',
         isVisible: true
       })
       return
@@ -119,36 +135,48 @@ const TabAddMenu = () => {
     if (!selectedMenuStatusData?.id || selectedMenuStatusData.id === '') {
       setAlertValues({
         severity: 'error',
-        message: 'Please select the menu status.',
+        message: 'Please select the submenu status.',
+        isVisible: true
+      })
+      return
+    }
+    if (!selectedMenuData?.id || selectedMenuData.id === '') {
+      setAlertValues({
+        severity: 'error',
+        message: 'Please select the menu.',
         isVisible: true
       })
       return
     }
 
+    setAlertValues(defaultAlertValues)
+
     const valuesToAdd = {
       ...values,
-      adminMenuStatusID: selectedMenuStatusData?.id ?? '',
-      adminMenuStatus: selectedMenuStatusData?.menuStatusTitle ?? ''
+      adminMenuID: selectedMenuData?.id ?? '',
+      adminMenuTitle: selectedMenuData?.menuTitle ?? '',
+      statusID: selectedMenuStatusData?.id ?? '',
+      status: selectedMenuStatusData?.menuStatusTitle ?? ''
     }
     console.log('valuesToAdd', valuesToAdd)
-    dispatch({ type: 'ADD_ADMIN_MENU', payload: valuesToAdd })
+    dispatch({ type: 'ADD_ADMIN_SUBMENU', payload: valuesToAdd })
   }
 
   useEffect(() => {
-    if (addedAdminMenuResponse?.isCompleted) {
-      if (addedAdminMenuResponse?.succeeded) {
+    if (addedAdminSubmenuResponse?.isCompleted) {
+      if (addedAdminSubmenuResponse?.succeeded) {
         resetForm()
-        dispatch(AdminMenusReducer.resetAddedAdminMenuResponse())
+        dispatch(AdminSubmenusReducer.resetAddedAdminSubmenuResponse())
       } else {
         setAlertValues({
           severity: 'error',
-          message: addedAdminMenuResponse?.message ?? '',
+          message: addedAdminSubmenuResponse?.message ?? '',
           isVisible: true
         })
-        dispatch(AdminMenusReducer.resetAddedAdminMenuResponse())
+        dispatch(AdminSubmenusReducer.resetAddedAdminSubmenuResponse())
       }
     }
-  }, [addedAdminMenuResponse])
+  }, [addedAdminSubmenuResponse])
 
   const renderAlert = () => {
     if (alertVaues?.isVisible) {
@@ -172,19 +200,39 @@ const TabAddMenu = () => {
         {renderAlert()}
         <form>
           <Grid container spacing={7}>
+            <Grid item xs={12} sm={12}>
+              <FormControl fullWidth>
+                <InputLabel>Menu</InputLabel>
+                <Select label='Menu'>
+                  {allAdminMenusDataResult?.dataArray?.map(menu => {
+                    return (
+                      <MenuItem
+                        value={menu?.menuTitle ?? ''}
+                        key={`${menu.id}`}
+                        onClick={() => {
+                          setSelectedMenuData(menu)
+                        }}
+                      >
+                        {menu.menuTitle}
+                      </MenuItem>
+                    )
+                  })}
+                </Select>
+              </FormControl>
+            </Grid>
             <Grid item xs={6} sm={6}>
               <TextField
                 fullWidth
-                label='Menu title'
-                placeholder='Menu title'
-                value={values.menuTitle}
-                onChange={handleMenuTitleChange('menuTitle')}
+                label='Submenu title'
+                placeholder='Submenu title'
+                value={values.submenuTitle}
+                onChange={handleSubmenuTitleChange('submenuTitle')}
               />
             </Grid>
             <Grid item xs={6} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>Menu status</InputLabel>
-                <Select label='Menu status'>
+                <InputLabel>Submenu status</InputLabel>
+                <Select label='Submenu status'>
                   {allAdminMenuStatusesDataResult?.dataArray?.map(menuStatus => {
                     return (
                       <MenuItem
@@ -201,6 +249,7 @@ const TabAddMenu = () => {
                 </Select>
               </FormControl>
             </Grid>
+
             <Grid item xs={6} sm={6}>
               <FormControl>
                 <FormLabel sx={{ fontSize: '0.875rem' }}>Can be deleted?</FormLabel>
@@ -248,8 +297,8 @@ const TabAddMenu = () => {
             <Grid item xs={12} sm={12}>
               <TextField
                 fullWidth
-                label='Menu description'
-                placeholder='Menu description'
+                label='Submenu description'
+                placeholder='Submenu description'
                 value={values.description}
                 onChange={handleDescriptionChange('description')}
                 multiline
@@ -260,8 +309,8 @@ const TabAddMenu = () => {
           </Grid>
           <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
             <Box>
-              <ButtonStyled component='label' variant='contained' onClick={onAddNewAdminMenuClick}>
-                Add new menu
+              <ButtonStyled component='label' variant='contained' onClick={onAddNewSubmenuClick}>
+                Add new submenu
               </ButtonStyled>
               <ResetButtonStyled color='error' variant='outlined' onClick={onResetClick}>
                 Reset
@@ -274,4 +323,4 @@ const TabAddMenu = () => {
   )
 }
 
-export default TabAddMenu
+export default TabAddSubmenu

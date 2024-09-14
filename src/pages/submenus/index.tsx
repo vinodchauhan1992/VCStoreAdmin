@@ -16,9 +16,9 @@ import AccountPlusOutline from 'mdi-material-ui/AccountPlusOutline'
 import AccountWrenchOutline from 'mdi-material-ui/AccountWrenchOutline'
 
 // ** Demo Tabs Imports
-import TabAddMenuStatus from 'src/views/menuStatuses/TabAddMenuStatus'
-import TabAllMenuStatuses from 'src/views/menuStatuses/TabAllMenuStatuses'
-import TabMenuStatusByTitle from 'src/views/menuStatuses/TabMenuStatusByTitle'
+import TabAddSubmenu from 'src/views/submenus/TabAddSubmenu'
+import TabAllSubmenus from 'src/views/submenus/TabAllSubmenus'
+import TabMenuByMenuName from 'src/views/adminMenus/TabMenuByMenuName'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
@@ -41,9 +41,9 @@ const TabName = styled('span')(({ theme }) => ({
   }
 }))
 
-const MenuStatuses = () => {
+const SubmenusPage = () => {
   // ** State
-  const [value, setValue] = useState<string>('allMenuStatuses')
+  const [value, setValue] = useState<string>('allSubmenus')
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -54,50 +54,50 @@ const MenuStatuses = () => {
       <TabContext value={value}>
         <TabList
           onChange={handleChange}
-          aria-label='adminMenuStatuses tabs'
+          aria-label='adminSubmenus tabs'
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
           <Tab
-            value='allMenuStatuses'
+            value='allSubmenus'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountWrenchOutline />
-                <TabName>All Menu Statuses</TabName>
+                <TabName>All Submenus</TabName>
               </Box>
             }
           />
-          <Tab
-            value='menuStatusesByTitle'
+          {/* <Tab
+            value='submenuByTitle'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountSearchOutline />
-                <TabName>Menu Status By Title</TabName>
+                <TabName>Submenu By Title</TabName>
               </Box>
             }
-          />
+          /> */}
           <Tab
-            value='addMenuStatus'
+            value='addSubmenu'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountPlusOutline />
-                <TabName>Add Menu Status</TabName>
+                <TabName>Add Submenu</TabName>
               </Box>
             }
           />
         </TabList>
 
-        <TabPanel sx={{ p: 0 }} value='allMenuStatuses'>
-          <TabAllMenuStatuses />
+        <TabPanel sx={{ p: 0 }} value='allSubmenus'>
+          <TabAllSubmenus />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='menuStatusesByTitle'>
-          <TabMenuStatusByTitle />
-        </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='addMenuStatus'>
-          <TabAddMenuStatus />
+        {/* <TabPanel sx={{ p: 0 }} value='submenuByTitle'>
+          <TabMenuByMenuName />
+        </TabPanel> */}
+        <TabPanel sx={{ p: 0 }} value='addSubmenu'>
+          <TabAddSubmenu />
         </TabPanel>
       </TabContext>
     </Card>
   )
 }
 
-export default MenuStatuses
+export default SubmenusPage

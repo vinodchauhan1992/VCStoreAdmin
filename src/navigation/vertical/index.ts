@@ -38,6 +38,11 @@ const Navigation = (): VerticalNavItemsType => {
           path: '/menus'
         },
         {
+          title: 'Submenus',
+          icon: AccountOutline,
+          path: '/submenus'
+        },
+        {
           title: 'Menu Statuses',
           icon: AccountOutline,
           path: '/menuStatuses'

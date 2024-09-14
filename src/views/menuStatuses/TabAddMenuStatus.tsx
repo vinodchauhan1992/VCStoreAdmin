@@ -154,7 +154,7 @@ const TabAddMenuStatus = () => {
           <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
             <Box>
               <ButtonStyled component='label' variant='contained' onClick={onAddNewMenuStatusClick}>
-                Add new admin menu
+                Add new menu status
               </ButtonStyled>
               <ResetButtonStyled color='error' variant='outlined' onClick={onResetClick}>
                 Reset
