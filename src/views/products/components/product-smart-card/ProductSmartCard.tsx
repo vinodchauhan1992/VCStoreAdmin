@@ -2,10 +2,9 @@ import * as React from 'react'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
-import { Button, CardActionArea, CardActions, ButtonProps } from '@mui/material'
+import { CardActions } from '@mui/material'
 import CardContent from '@mui/material/CardContent'
 import { styled } from '@mui/material/styles'
-import MoreDetails from '../moreDetails/MoreDetails'
 import { ProductsDataModel } from 'src/models/ProductsModel'
 import IconButton, { IconButtonProps } from '@mui/material/IconButton'
 import CardHeader from '@mui/material/CardHeader'
@@ -28,16 +27,6 @@ import Tooltip from '@mui/material/Tooltip'
 import CustomisedMenu from 'src/@core/components/customised-menu/CustomisedMenu'
 import { getStaticMenuOptionData } from 'src/views/products/staticData/staticMenuOptions'
 import { CustomisedMenuItemOptionProps } from 'src/models/CustomisedMenuModel'
-
-const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
-  marginRight: theme.spacing(4.5),
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    marginLeft: 0,
-    textAlign: 'center',
-    marginTop: theme.spacing(4)
-  }
-}))
 
 export interface ExpandMoreProps extends IconButtonProps {
   expand: boolean
@@ -70,7 +59,6 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 interface Props {
   dataIndex?: number
   productData?: ProductsDataModel | null
-  selectedProductData?: ProductsDataModel | null
   isButtonsVisible?: boolean
   isButton1Visible?: boolean
   isButton2Visible?: boolean
@@ -83,9 +71,6 @@ interface Props {
   onButton3Click?: (dataIndex: number, productData?: ProductsDataModel | null) => void
   onShowBrandDetailsClick?: (dataIndex: number, productData?: ProductsDataModel | null) => void
   onShowStockDetailsClick?: (dataIndex: number, productData?: ProductsDataModel | null) => void
-  isCardClickable?: boolean
-  openViewProduct?: boolean
-  setOpenViewProduct?: (openViewProduct: boolean) => void
   forPage?: 'allProducts' | 'productByTitle' | null
   cardSx?: any
 }
@@ -94,7 +79,6 @@ const ProductSmartCard = (props: Props) => {
   const {
     dataIndex = 0,
     productData,
-    selectedProductData,
     isButtonsVisible = true,
     isButton1Visible = true,
     isButton2Visible = true,
@@ -105,10 +89,7 @@ const ProductSmartCard = (props: Props) => {
     onButton1Click,
     onButton2Click,
     onButton3Click,
-    isCardClickable = true,
     cardSx = { maxWidth: 345 },
-    openViewProduct,
-    setOpenViewProduct,
     onShowBrandDetailsClick,
     onShowStockDetailsClick,
     forPage = 'allProducts'
@@ -121,10 +102,6 @@ const ProductSmartCard = (props: Props) => {
 
   const handleExpandClick = () => {
     setExpanded(!expanded)
-  }
-
-  const handleOpeningClosingViewProduct = () => {
-    setOpenViewProduct?.(!openViewProduct)
   }
 
   const onMenuItemClick = (
@@ -270,7 +247,7 @@ const ProductSmartCard = (props: Props) => {
             <Chip
               label='Brand details'
               size='medium'
-              color={isProfit ? 'success' : 'error'}
+              color={isProductActive ? 'success' : 'error'}
               variant='outlined'
               onClick={() => onShowBrandDetailsClick?.(dataIndex, productData)}
             />
@@ -369,7 +346,7 @@ const ProductSmartCard = (props: Props) => {
   }
 
   return (
-    <Card sx={{ maxWidth: 345, backgroundColor: isProductActive ? green[50] : red[50] }}>
+    <Card sx={{ maxWidth: 345, backgroundColor: isProductActive ? green[50] : red[50], ...cardSx }}>
       {renderCardHeader()}
       {renderCardMedia()}
       {renderVisibleCardContent()}
@@ -377,28 +354,6 @@ const ProductSmartCard = (props: Props) => {
       {renderCollapsedCardContent()}
     </Card>
   )
-
-  // return (
-  //   <Card sx={cardSx}>
-  //     {isCardClickable ? (
-  //       <CardActionArea
-  //         onClick={() => {
-  //           handleOpeningClosingViewProduct()
-  //         }}
-  //       >
-  //         {renderCardActionAreaContent()}
-  //       </CardActionArea>
-  //     ) : (
-  //       renderCardActionAreaContent()
-  //     )}
-  //     {isActionsVisible ? <CardActions disableSpacing>{renderButtonActions()}</CardActions> : null}
-  //     <MoreDetails
-  //       selectedProductData={selectedProductData}
-  //       openViewProduct={openViewProduct}
-  //       handleOpeningClosingViewProduct={() => handleOpeningClosingViewProduct()}
-  //     />
-  //   </Card>
-  // )
 }
 
 export default ProductSmartCard
