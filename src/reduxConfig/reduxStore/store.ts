@@ -10,7 +10,7 @@ const persistConfig = {
   key: 'root',
   storage: storage,
   blacklist: ['ui'],
-  whitelist: ['loggedInUser'] //persisted reducers
+  whitelist: ['loggedInUser', 'adminMenus', 'adminSubmenus'] //persisted reducers
 }
 
 /* boolean if environment is dev then true otherwise false */
@@ -28,7 +28,7 @@ const store = configureStore({
   // @ts-ignore
   reducer: persistReducer<ReturnType<typeof rootReducer>>(persistConfig, rootReducer),
   middleware: (getDefaultMiddleware: any) => getDefaultMiddleware({ serializableCheck: false }).concat(sagaMiddleware),
-  devTools: isDevEnvironment,
+  devTools: isDevEnvironment
   // enhancers: getDefaultEnhancers => getDefaultEnhancers().concat(enhancers)
 })
 

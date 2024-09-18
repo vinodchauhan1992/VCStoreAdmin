@@ -8,8 +8,7 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Grid from '@mui/material/Grid'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
-import { UserRoleModel } from 'src/models/UserRoleModel'
-import { AdminMenusReducer, UserRolesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { AdminMenusReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 import { AdminMenusModel } from 'src/models/AdminMenusModel'
 
 import FormLabel from '@mui/material/FormLabel'
@@ -35,6 +34,24 @@ const TabMenuByMenuName = () => {
       <>
         <Grid item xs={12} sm={6}>
           <TextField disabled fullWidth label='Menu ID' placeholder='Menu ID' value={selectedAdminMenuData?.id ?? ''} />
+        </Grid>
+        <Grid item xs={6} sm={6}>
+          <TextField
+            disabled
+            fullWidth
+            label='Menu Path'
+            placeholder='Menu Path'
+            value={selectedAdminMenuData?.menuPath ?? ''}
+          />
+        </Grid>
+        <Grid item xs={6} sm={6}>
+          <TextField
+            disabled
+            fullWidth
+            label='Priority'
+            placeholder='Priority'
+            value={selectedAdminMenuData?.priority ?? ''}
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormControl>

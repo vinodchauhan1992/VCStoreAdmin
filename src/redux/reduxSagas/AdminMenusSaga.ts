@@ -3,7 +3,8 @@ import { takeLatest, call, put } from 'redux-saga/effects'
 import {
   saveAllAdminMenusData,
   saveDeletedAdminMenuResponse,
-  saveAddAdminMenuResponse
+  saveAddAdminMenuResponse,
+  saveMenusMaxPriorityData
 } from '../reducers/AdminMenusReducer'
 import { UIReducer } from '../reducers'
 
@@ -109,6 +110,31 @@ export function* addAdminMenu(action: any): any {
   yield put(UIReducer.showLoader(false))
 }
 
+export function* fetchMenusMaxPriority(): any {
+  yield put(UIReducer.showLoader(true))
+  const data = yield call(ApiService.callApiService, ApiCallTypes.GET_MENUS_MAX_PRIORITY_TYPE, null)
+  if (
+    data.isSucceded &&
+    data?.responseData &&
+    data?.responseData?.status &&
+    data.responseData.status === 'success' &&
+    data?.responseData?.data
+  ) {
+    yield put(
+      saveMenusMaxPriorityData({
+        maxPriorityValue: data.responseData.data.maxPriorityValue
+      })
+    )
+  } else {
+    yield put(
+      saveMenusMaxPriorityData({
+        maxPriorityValue: 0
+      })
+    )
+  }
+  yield put(UIReducer.showLoader(false))
+}
+
 export function* watchFetchAllAdminMenus(): any {
   yield takeLatest('FETCH_ALL_ADMIN_MENUS', fetchAllAdminMenus)
 }
@@ -119,4 +145,8 @@ export function* watchDeleteAdminMenu(): any {
 
 export function* watchAddAdminMenu(): any {
   yield takeLatest('ADD_ADMIN_MENU', addAdminMenu)
+}
+
+export function* watchFetchMenusMaxPriority(): any {
+  yield takeLatest('FETCH_MENUS_MAX_PRIORITY', fetchMenusMaxPriority)
 }

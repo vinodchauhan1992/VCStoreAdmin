@@ -1,8 +1,9 @@
 import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit'
-import { AdminSubmenusModel } from 'src/models/AdminSubmenusModel'
+import { AdminSubmenusMaxPriorityDataModel, AdminSubmenusModel } from 'src/models/AdminSubmenusModel'
 import {
   AddDataCommonReducerModel,
   CommonReducerDataArrayModel,
+  CommonReducerByIdDataArrayModel,
   DeleteDataCommonReducerModel
 } from 'src/models/CommonModel'
 import { AdminSubmenusStateModel, ReduxStateModel } from 'src/models/ReduxStateModel'
@@ -29,6 +30,15 @@ const initialState: AdminSubmenusStateModel = {
     succeeded: false,
     isCompleted: false,
     data: null
+  },
+  submenusMaxPriorityData: {
+    maxPriorityValue: 0
+  },
+  adminSubmenusDataByMenuId: {
+    isCompleted: false,
+    succeeded: false,
+    message: null,
+    data: []
   }
 }
 
@@ -63,6 +73,27 @@ const saveAddAdminSubmenuResponseInfo = (
   }
 }
 
+const saveSubmenusMaxPriorityDataInfo = (
+  state: AdminSubmenusStateModel,
+  action: PayloadAction<AdminSubmenusMaxPriorityDataModel>
+): any => {
+  state.submenusMaxPriorityData = action?.payload ?? {
+    maxPriorityValue: 0
+  }
+}
+
+const saveAdminSubmenusDataByMenuIdInfo = (
+  state: AdminSubmenusStateModel,
+  action: PayloadAction<CommonReducerByIdDataArrayModel<AdminSubmenusModel[]>>
+): any => {
+  state.adminSubmenusDataByMenuId = action?.payload ?? {
+    isCompleted: false,
+    succeeded: false,
+    message: null,
+    data: []
+  }
+}
+
 const resetAllAdminSubmenusDataResultInfo = (state: AdminSubmenusStateModel): any => {
   state.adminSubmenusData = {
     message: null,
@@ -90,6 +121,15 @@ const resetAddedAdminSubmenuResponseInfo = (state: AdminSubmenusStateModel): any
   }
 }
 
+const resetAdminSubmenusByMenuIdDataResultInfo = (state: AdminSubmenusStateModel): any => {
+  state.adminSubmenusDataByMenuId = {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: state?.adminSubmenusDataByMenuId?.data ?? []
+  }
+}
+
 const adminSubmenusSlice: any = createSlice({
   name: 'adminSubmenus',
   initialState: initialState,
@@ -102,9 +142,12 @@ const adminSubmenusSlice: any = createSlice({
     saveAllAdminSubmenusData: saveAllAdminSubmenusDataInfo,
     saveDeletedAdminSubmenuResponse: saveDeletedAdminSubmenuResponseInfo,
     saveAddAdminSubmenuResponse: saveAddAdminSubmenuResponseInfo,
+    saveSubmenusMaxPriorityData: saveSubmenusMaxPriorityDataInfo,
+    saveAdminSubmenusDataByMenuId: saveAdminSubmenusDataByMenuIdInfo,
     resetAllAdminSubmenusDataResult: resetAllAdminSubmenusDataResultInfo,
     resetDeletedAdminSubmenuResponse: resetDeletedAdminSubmenuResponseInfo,
-    resetAddedAdminSubmenuResponse: resetAddedAdminSubmenuResponseInfo
+    resetAddedAdminSubmenuResponse: resetAddedAdminSubmenuResponseInfo,
+    resetAdminSubmenusByMenuIdDataResult: resetAdminSubmenusByMenuIdDataResultInfo
   }
 })
 
@@ -113,9 +156,12 @@ const {
   saveAllAdminSubmenusData,
   saveDeletedAdminSubmenuResponse,
   saveAddAdminSubmenuResponse,
+  saveSubmenusMaxPriorityData,
+  saveAdminSubmenusDataByMenuId,
   resetAllAdminSubmenusDataResult,
   resetDeletedAdminSubmenuResponse,
-  resetAddedAdminSubmenuResponse
+  resetAddedAdminSubmenuResponse,
+  resetAdminSubmenusByMenuIdDataResult
 } = adminSubmenusSlice.actions
 
 // SELECTOR
@@ -146,6 +192,21 @@ const selectAddedAdminSubmenuResponse = (state: ReduxStateModel) => {
   }
 }
 
+const selectSubmenusMaxPriorityDataValue = (state: ReduxStateModel) => {
+  return state?.adminSubmenus?.submenusMaxPriorityData?.maxPriorityValue
+    ? state.adminSubmenus.submenusMaxPriorityData.maxPriorityValue + 1
+    : 1
+}
+
+const selectAdminSubmenusDataByMenuIdResponse = (state: ReduxStateModel) => {
+  return {
+    message: state?.adminSubmenus?.adminSubmenusDataByMenuId?.message ?? null,
+    succeeded: state?.adminSubmenus?.adminSubmenusDataByMenuId?.succeeded ?? false,
+    isCompleted: state?.adminSubmenus?.adminSubmenusDataByMenuId?.isCompleted ?? false,
+    data: state?.adminSubmenus?.adminSubmenusDataByMenuId?.data ?? []
+  }
+}
+
 const adminSubmenusSliceReducer = adminSubmenusSlice.reducer
 
 export {
@@ -153,11 +214,16 @@ export {
   saveAllAdminSubmenusData,
   saveDeletedAdminSubmenuResponse,
   saveAddAdminSubmenuResponse,
+  saveSubmenusMaxPriorityData,
+  saveAdminSubmenusDataByMenuId,
   resetAllAdminSubmenusDataResult,
   resetDeletedAdminSubmenuResponse,
   resetAddedAdminSubmenuResponse,
+  resetAdminSubmenusByMenuIdDataResult,
   selectAllAdminSubmenusDataResult,
   selectDeletedAdminSubmenuResponse,
   selectAddedAdminSubmenuResponse,
+  selectSubmenusMaxPriorityDataValue,
+  selectAdminSubmenusDataByMenuIdResponse,
   signOutAction
 }

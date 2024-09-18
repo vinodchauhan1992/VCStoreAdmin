@@ -108,7 +108,7 @@ const TabAllSubmenus = () => {
     if (allAdminSubmenusDataResult?.dataArray && allAdminSubmenusDataResult.dataArray.length > 0) {
       return (
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700 }} aria-label='table in dashboard'>
+          <Table sx={{ minWidth: 700 }} aria-label='table in submenu'>
             <TableHead>
               <TableRow>
                 <StyledTableCell>ID</StyledTableCell>
@@ -130,6 +130,7 @@ const TabAllSubmenus = () => {
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         {`Title: ${submenuData?.submenuTitle ?? 'N/A'}`}
                       </Typography>
+                      <Typography variant='caption'>{`Priority: ${submenuData?.priority ?? 'N/A'}`}</Typography>
                       <Typography
                         variant='caption'
                         color={

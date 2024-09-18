@@ -5,14 +5,26 @@ import { watchAddCategory, watchDeleteCategory, watchFetchAllCategories, watchUp
 import { watchAddUserRole, watchDeleteUserRole, watchFetchAllUserRoles } from './UserRolesSaga'
 import { watchAddUserStatus, watchDeleteUserStatus, watchFetchAllUserStatuses } from './UserStatusesSaga'
 import { watchAddFileFolder, watchDeleteFileFolder, watchFetchAllFileFolders } from './FileFoldersSaga'
-import { watchAddAdminMenu, watchDeleteAdminMenu, watchFetchAllAdminMenus } from './AdminMenusSaga'
-import { watchAddAdminSubmenu, watchDeleteAdminSubmenu, watchFetchAllAdminSubmenus } from './AdminSubmenusSaga'
+import {
+  watchAddAdminMenu,
+  watchDeleteAdminMenu,
+  watchFetchAllAdminMenus,
+  watchFetchMenusMaxPriority
+} from './AdminMenusSaga'
+import {
+  watchAddAdminSubmenu,
+  watchDeleteAdminSubmenu,
+  watchFetchAllAdminSubmenus,
+  watchFetchSubmenusByMenuId,
+  watchFetchSubmenusMaxPriority
+} from './AdminSubmenusSaga'
 import {
   watchAddAdminMenuStatus,
   watchDeleteAdminMenuStatus,
   watchFetchAllAdminMenuStatuses
 } from './AdminMenuStatusesSaga'
 import { watchAddProduct, watchDeleteProduct, watchFetchAllProducts } from './ProductsSaga'
+import { watchAddBrand, watchDeleteBrand, watchFetchAllBrands, watchUpdateBrand } from './BrandsSaga'
 
 export default function* rootSaga(): any {
   return yield all([
@@ -44,6 +56,13 @@ export default function* rootSaga(): any {
     fork(watchAddAdminMenuStatus),
     fork(watchFetchAllProducts),
     fork(watchDeleteProduct),
-    fork(watchAddProduct)
+    fork(watchAddProduct),
+    fork(watchFetchMenusMaxPriority),
+    fork(watchFetchSubmenusMaxPriority),
+    fork(watchFetchSubmenusByMenuId),
+    fork(watchFetchAllBrands),
+    fork(watchAddBrand),
+    fork(watchDeleteBrand),
+    fork(watchUpdateBrand)
   ])
 }

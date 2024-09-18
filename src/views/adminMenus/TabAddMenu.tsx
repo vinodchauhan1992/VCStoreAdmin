@@ -52,6 +52,8 @@ const TabAddMenu = () => {
 
   const defaultFormValues = {
     menuTitle: '',
+    menuPath: '',
+    priority: 1,
     adminMenuStatusID: '',
     adminMenuStatus: '',
     isDeleteable: false,
@@ -67,6 +69,8 @@ const TabAddMenu = () => {
   const addedAdminMenuResponse = useAppSelector(AdminMenusReducer.selectAddedAdminMenuResponse)
   // @ts-ignore
   const allAdminMenuStatusesDataResult = useAppSelector(AdminMenuStatusesReducer.selectAllAdminMenuStatusesDataResult)
+  // @ts-ignore
+  const menusMaxPriorityDataValue = useAppSelector(AdminMenusReducer.selectMenusMaxPriorityDataValue)
 
   const [selectedMenuStatusData, setSelectedMenuStatusData] = useState<AdminMenuStatusesModel | null>(null)
 
@@ -74,7 +78,26 @@ const TabAddMenu = () => {
     dispatch({ type: 'FETCH_ALL_ADMIN_MENU_STATUSES' })
   }, [])
 
+  const callMenusMaxPriorityApi = () => {
+    dispatch({ type: 'FETCH_MENUS_MAX_PRIORITY' })
+  }
+
+  useEffect(() => {
+    callMenusMaxPriorityApi()
+  }, [allAdminMenuStatusesDataResult?.dataArray])
+
+  useEffect(() => {
+    setValues({
+      ...defaultFormValues,
+      priority: menusMaxPriorityDataValue
+    })
+  }, [menusMaxPriorityDataValue])
+
   const handleMenuTitleChange = (prop: keyof AdminMenusModel) => (event: ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, [prop]: event.target.value })
+  }
+
+  const handleMenuPathChange = (prop: keyof AdminMenusModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
@@ -88,6 +111,10 @@ const TabAddMenu = () => {
 
   const handleDeleteableByAdminRadioChange = (newValue: string) => {
     setValues({ ...values, isAdminDeleteable: newValue === 'yes' ? true : false })
+  }
+
+  const handlePriorityChange = (prop: keyof AdminMenusModel) => (event: ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, [prop]: event.target.value })
   }
 
   const resetForm = () => {
@@ -116,6 +143,22 @@ const TabAddMenu = () => {
       })
       return
     }
+    if (!values?.menuPath || values.menuPath === '') {
+      setAlertValues({
+        severity: 'error',
+        message: 'Please enter menu path.',
+        isVisible: true
+      })
+      return
+    }
+    if (values?.priority === null || values.priority === undefined) {
+      setAlertValues({
+        severity: 'error',
+        message: 'Please enter priority.',
+        isVisible: true
+      })
+      return
+    }
     if (!selectedMenuStatusData?.id || selectedMenuStatusData.id === '') {
       setAlertValues({
         severity: 'error',
@@ -130,7 +173,6 @@ const TabAddMenu = () => {
       adminMenuStatusID: selectedMenuStatusData?.id ?? '',
       adminMenuStatus: selectedMenuStatusData?.menuStatusTitle ?? ''
     }
-    console.log('valuesToAdd', valuesToAdd)
     dispatch({ type: 'ADD_ADMIN_MENU', payload: valuesToAdd })
   }
 
@@ -139,6 +181,7 @@ const TabAddMenu = () => {
       if (addedAdminMenuResponse?.succeeded) {
         resetForm()
         dispatch(AdminMenusReducer.resetAddedAdminMenuResponse())
+        callMenusMaxPriorityApi()
       } else {
         setAlertValues({
           severity: 'error',
@@ -166,9 +209,27 @@ const TabAddMenu = () => {
     return null
   }
 
+  const renderInfoAlert = () => {
+    if (menusMaxPriorityDataValue !== undefined && menusMaxPriorityDataValue !== null) {
+      return (
+        <Grid container spacing={7}>
+          <Grid item xs={12} sm={12} sx={{ marginBottom: 4.8 }}>
+            <Alert severity='info'>{`Currently highest registered priority is ${
+              menusMaxPriorityDataValue > 0 ? menusMaxPriorityDataValue - 1 : 0
+            }. So it must be greater than ${
+              menusMaxPriorityDataValue > 0 ? menusMaxPriorityDataValue - 1 : 0
+            } Which is ${menusMaxPriorityDataValue}`}</Alert>
+          </Grid>
+        </Grid>
+      )
+    }
+    return null
+  }
+
   return (
     <div>
       <CardContent>
+        {renderInfoAlert()}
         {renderAlert()}
         <form>
           <Grid container spacing={7}>
@@ -179,6 +240,25 @@ const TabAddMenu = () => {
                 placeholder='Menu title'
                 value={values.menuTitle}
                 onChange={handleMenuTitleChange('menuTitle')}
+              />
+            </Grid>
+            <Grid item xs={6} sm={6}>
+              <TextField
+                fullWidth
+                label='Menu path'
+                placeholder='Menu path'
+                value={values.menuPath}
+                onChange={handleMenuPathChange('menuPath')}
+              />
+            </Grid>
+            <Grid item xs={6} sm={6}>
+              <TextField
+                fullWidth
+                label='Priority'
+                placeholder='Priority'
+                value={values.priority}
+                onChange={handlePriorityChange('priority')}
+                type='number'
               />
             </Grid>
             <Grid item xs={6} sm={6}>

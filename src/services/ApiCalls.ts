@@ -66,6 +66,30 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       requestUrl = ApiContainerUrls.GET_ALL_PRODUCTS_API_PATH
       contentType = 'application/json'
       break
+
+    case ApiCallTypes.GET_MENUS_MAX_PRIORITY_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_MENUS_MAX_PRIORITY_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_SUBMENUS_MAX_PRIORITY_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_SUBMENUS_MAX_PRIORITY_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_SUBMENU_BY_MENU_ID_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_SUBMENU_BY_MENU_ID_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_ALL_BRANDS_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_ALL_BRANDS_API_PATH
+      contentType = 'application/json'
+      break
     /* ---------- GET requests ends ---------------------------- */
 
     /* ---------- POST requests starts ---------------------------- */
@@ -129,6 +153,11 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       contentType = 'application/json'
       break
 
+    case ApiCallTypes.ADD_BRAND_TYPE:
+      requestType = 'POST'
+      requestUrl = ApiContainerUrls.ADD_BRAND_API_PATH
+      contentType = 'multipart/form-data'
+      break
     /* ---------- POST requests ends ---------------------------- */
 
     /* ---------- DELETE requests starts ---------------------------- */
@@ -186,6 +215,11 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       contentType = 'application/json'
       break
 
+    case ApiCallTypes.DELETE_BRAND_TYPE:
+      requestType = 'DELETE'
+      requestUrl = ApiContainerUrls.DELETE_BRAND_API_PATH
+      contentType = 'application/json'
+      break
     /* ---------- DELETE requests ends ---------------------------- */
 
     /* ---------- UPDATE requests starts ---------------------------- */
@@ -195,6 +229,11 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       contentType = 'multipart/form-data'
       break
 
+    case ApiCallTypes.UPDATE_BRAND_TYPE:
+      requestType = 'PUT'
+      requestUrl = ApiContainerUrls.UPDATE_BRAND_API_PATH
+      contentType = 'multipart/form-data'
+      break
     /* ---------- UPDATE requests ends ---------------------------- */
   }
 

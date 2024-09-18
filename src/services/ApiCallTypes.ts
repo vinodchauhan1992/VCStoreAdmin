@@ -13,10 +13,12 @@ export default {
   ADD_ADMIN_SUBMENU_TYPE: 'addAdminSubmenu',
   ADD_PRODUCT_TYPE: 'addProduct',
   ADD_USER_TYPE: 'addNewUser',
+  ADD_BRAND_TYPE: 'addProductBrand',
   /*-------------------- ADD API'S TYPES END --------------------*/
 
   /*-------------------- UPDATE API'S TYPES START --------------------*/
   UPDATE_CATEGORY_TYPE: 'updateProductCategory',
+  UPDATE_BRAND_TYPE: 'updateProductBrand',
   /*-------------------- UPDATE API'S TYPES END --------------------*/
 
   /*-------------------- DELETE API'S TYPES START --------------------*/
@@ -29,6 +31,7 @@ export default {
   DELETE_ADMIN_SUBMENU_TYPE: 'deleteAdminSubmenu',
   DELETE_PRODUCT_TYPE: 'deleteProduct',
   DELETE_USER_TYPE: 'deleteUser',
+  DELETE_BRAND_TYPE: 'deleteProductBrand',
   /*-------------------- DELETE API'S TYPES END --------------------*/
 
   /*-------------------- GET API'S TYPES START --------------------*/
@@ -40,6 +43,10 @@ export default {
   GET_ALL_ADMIN_MENUS_TYPE: 'getAllAdminMenus',
   GET_ALL_ADMIN_SUBMENUS_TYPE: 'getAllAdminSubmenus',
   GET_ALL_ADMIN_MENU_STATUSES_TYPE: 'getAllAdminMenuStatuses',
-  GET_ALL_PRODUCTS_TYPE: 'getAllProducts'
+  GET_ALL_PRODUCTS_TYPE: 'allProducts',
+  GET_MENUS_MAX_PRIORITY_TYPE: 'adminMenusHighestPriority',
+  GET_SUBMENUS_MAX_PRIORITY_TYPE: 'adminSubmenusHighestPriority',
+  GET_SUBMENU_BY_MENU_ID_TYPE: 'submenuByMenuID',
+  GET_ALL_BRANDS_TYPE: 'allProductBrands'
   /*-------------------- GET API'S TYPES END --------------------*/
 }

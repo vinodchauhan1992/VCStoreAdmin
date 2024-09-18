@@ -61,6 +61,7 @@ const TabAddSubmenu = () => {
     submenuTitle: '',
     adminMenuID: '',
     adminMenuTitle: '',
+    priority: 1,
     statusID: '',
     status: '',
     isDeleteable: false,
@@ -78,6 +79,8 @@ const TabAddSubmenu = () => {
   const allAdminMenuStatusesDataResult = useAppSelector(AdminMenuStatusesReducer.selectAllAdminMenuStatusesDataResult)
   // @ts-ignore
   const allAdminMenusDataResult = useAppSelector(AdminMenusReducer.selectAllAdminMenusDataResult)
+  // @ts-ignore
+  const submenusMaxPriorityDataValue = useAppSelector(AdminSubmenusReducer.selectSubmenusMaxPriorityDataValue)
 
   const [selectedMenuStatusData, setSelectedMenuStatusData] = useState<AdminMenuStatusesModel | null>(null)
   const [selectedMenuData, setSelectedMenuData] = useState<AdminMenusModel | null>(null)
@@ -90,11 +93,30 @@ const TabAddSubmenu = () => {
     dispatch({ type: 'FETCH_ALL_ADMIN_MENU_STATUSES' })
   }, [allAdminMenusDataResult?.dataArray])
 
+  const callSubmenusMaxPriorityApi = () => {
+    dispatch({ type: 'FETCH_SUBMENUS_MAX_PRIORITY' })
+  }
+
+  useEffect(() => {
+    callSubmenusMaxPriorityApi()
+  }, [allAdminMenuStatusesDataResult?.dataArray])
+
+  useEffect(() => {
+    setValues({
+      ...defaultFormValues,
+      priority: submenusMaxPriorityDataValue
+    })
+  }, [submenusMaxPriorityDataValue])
+
   const handleSubmenuTitleChange = (prop: keyof AdminSubmenusModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
   const handleDescriptionChange = (prop: keyof AdminMenusModel) => (event: ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, [prop]: event.target.value })
+  }
+
+  const handlePriorityChange = (prop: keyof AdminMenusModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
@@ -128,6 +150,14 @@ const TabAddSubmenu = () => {
       setAlertValues({
         severity: 'error',
         message: 'Please enter submenu description.',
+        isVisible: true
+      })
+      return
+    }
+    if (values?.priority === null || values.priority === undefined) {
+      setAlertValues({
+        severity: 'error',
+        message: 'Please enter priority.',
         isVisible: true
       })
       return
@@ -167,6 +197,7 @@ const TabAddSubmenu = () => {
       if (addedAdminSubmenuResponse?.succeeded) {
         resetForm()
         dispatch(AdminSubmenusReducer.resetAddedAdminSubmenuResponse())
+        callSubmenusMaxPriorityApi()
       } else {
         setAlertValues({
           severity: 'error',
@@ -194,13 +225,31 @@ const TabAddSubmenu = () => {
     return null
   }
 
+  const renderInfoAlert = () => {
+    if (submenusMaxPriorityDataValue !== undefined && submenusMaxPriorityDataValue !== null) {
+      return (
+        <Grid container spacing={7}>
+          <Grid item xs={12} sm={12} sx={{ marginBottom: 4.8 }}>
+            <Alert severity='info'>{`Currently highest registered priority is ${
+              submenusMaxPriorityDataValue > 0 ? submenusMaxPriorityDataValue - 1 : 0
+            }. So it must be greater than ${
+              submenusMaxPriorityDataValue > 0 ? submenusMaxPriorityDataValue - 1 : 0
+            } Which is ${submenusMaxPriorityDataValue}`}</Alert>
+          </Grid>
+        </Grid>
+      )
+    }
+    return null
+  }
+
   return (
     <div>
       <CardContent>
+        {renderInfoAlert()}
         {renderAlert()}
         <form>
           <Grid container spacing={7}>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={6} sm={6}>
               <FormControl fullWidth>
                 <InputLabel>Menu</InputLabel>
                 <Select label='Menu'>
@@ -219,15 +268,6 @@ const TabAddSubmenu = () => {
                   })}
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid item xs={6} sm={6}>
-              <TextField
-                fullWidth
-                label='Submenu title'
-                placeholder='Submenu title'
-                value={values.submenuTitle}
-                onChange={handleSubmenuTitleChange('submenuTitle')}
-              />
             </Grid>
             <Grid item xs={6} sm={6}>
               <FormControl fullWidth>
@@ -249,7 +289,24 @@ const TabAddSubmenu = () => {
                 </Select>
               </FormControl>
             </Grid>
-
+            <Grid item xs={6} sm={6}>
+              <TextField
+                fullWidth
+                label='Submenu title'
+                placeholder='Submenu title'
+                value={values.submenuTitle}
+                onChange={handleSubmenuTitleChange('submenuTitle')}
+              />
+            </Grid>
+            <Grid item xs={6} sm={6}>
+              <TextField
+                fullWidth
+                label='Priority'
+                placeholder='Priority'
+                value={values.priority}
+                onChange={handlePriorityChange('priority')}
+              />
+            </Grid>
             <Grid item xs={6} sm={6}>
               <FormControl>
                 <FormLabel sx={{ fontSize: '0.875rem' }}>Can be deleted?</FormLabel>

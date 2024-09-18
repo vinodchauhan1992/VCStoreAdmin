@@ -3,7 +3,7 @@ import { AdminMenusModel } from "./AdminMenusModel"
 import { AdminSubmenusModel } from "./AdminSubmenusModel"
 import { CategoryModel } from "./CategoryModel"
 import { FileFoldersModel } from "./FileFoldersModel"
-import { ProductsModel } from "./ProductsModel"
+import { ProductsDataModel } from "./ProductsModel"
 import { UserRoleModel } from "./UserRoleModel"
 import { UserStatusModel } from "./UserStatusModel"
 
@@ -28,5 +28,5 @@ export interface VerticalCardStatisticParamsDataProps {
   allAdminMenusDataArray: AdminMenusModel[] | []
   allAdminSubmenusDataArray: AdminSubmenusModel[] | []
   allAdminMenuStatusesDataArray: AdminMenuStatusesModel[] | []
-  allProductsDataArray: ProductsModel[] | []
+  allProductsDataArray: ProductsDataModel[] | []
 }

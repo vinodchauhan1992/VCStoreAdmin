@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import { Settings } from 'src/@core/context/settingsContext'
+import { AdminMenusModel } from 'src/models/AdminMenusModel'
 
 export type ContentWidth = 'full' | 'boxed'
 
@@ -16,6 +17,7 @@ export type NavLink = {
   openInNewTab?: boolean
   icon?: string | string[] | ReactNode
   badgeColor?: 'default' | 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info'
+  extraData?: AdminMenusModel
 }
 
 export type NavSectionTitle = {

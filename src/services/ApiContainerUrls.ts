@@ -13,10 +13,12 @@ export default {
   ADD_ADMIN_SUBMENU_API_PATH: 'adminSubmenu/addNewAdminSubmenu',
   ADD_PRODUCT_API_PATH: 'products/addProduct',
   ADD_USER_API_PATH: 'user/addNewUser',
+  ADD_BRAND_API_PATH: 'brands/addProductBrand',
   /*-------------------- ADD API'S END --------------------*/
 
   /*-------------------- UPDATE API'S START --------------------*/
   UPDATE_CATEGORY_API_PATH: 'categories/updateProductCategory',
+  UPDATE_BRAND_API_PATH: 'brands/updateProductBrand',
   /*-------------------- UPDATE API'S START --------------------*/
 
   /*-------------------- DELETE API'S START --------------------*/
@@ -29,6 +31,7 @@ export default {
   DELETE_ADMIN_SUBMENU_API_PATH: 'adminSubmenu/deleteAdminSubmenu',
   DELETE_PRODUCT_API_PATH: 'products/deleteProduct',
   DELETE_USER_API_PATH: 'user/deleteUser',
+  DELETE_BRAND_API_PATH: 'brands/deleteProductBrand',
   /*-------------------- DELETE API'S START --------------------*/
 
   /*-------------------- GET API'S START --------------------*/
@@ -40,6 +43,10 @@ export default {
   GET_ALL_ADMIN_MENUS_API_PATH: 'adminMenu/allAdminMenus',
   GET_ALL_ADMIN_SUBMENUS_API_PATH: 'adminSubmenu/allAdminSubmenus',
   GET_ALL_ADMIN_MENU_STATUSES_API_PATH: 'adminMenuStatuses/allAdminMenuStatuses',
-  GET_ALL_PRODUCTS_API_PATH: 'products/getAllProducts'
+  GET_ALL_PRODUCTS_API_PATH: 'products/allProducts',
+  GET_MENUS_MAX_PRIORITY_API_PATH: 'adminMenu/adminMenusHighestPriority',
+  GET_SUBMENUS_MAX_PRIORITY_API_PATH: 'adminSubmenu/adminSubmenusHighestPriority',
+  GET_SUBMENU_BY_MENU_ID_API_PATH: 'adminSubmenu/submenuByMenuID',
+  GET_ALL_BRANDS_API_PATH: 'brands/allProductBrands'
   /*-------------------- GET API'S END --------------------*/
 }

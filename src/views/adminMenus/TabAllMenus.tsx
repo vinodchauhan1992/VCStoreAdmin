@@ -123,6 +123,8 @@ const TabAllMenus = () => {
                       <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                         {`Title: ${adminMenuData?.menuTitle ?? 'N/A'}`}
                       </Typography>
+                      <Typography variant='caption'>{`Path: ${adminMenuData?.menuPath ?? 'N/A'}`}</Typography>
+                      <Typography variant='caption'>{`Priority: ${adminMenuData?.priority ?? 'N/A'}`}</Typography>
                       <Typography
                         variant='caption'
                         color={

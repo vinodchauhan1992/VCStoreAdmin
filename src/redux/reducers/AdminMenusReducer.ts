@@ -1,5 +1,6 @@
 import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit'
-import { AdminMenusModel } from 'src/models/AdminMenusModel'
+import { NavLink } from 'src/@core/layouts/types'
+import { AdminMenusMaxPriorityDataModel, AdminMenusModel } from 'src/models/AdminMenusModel'
 import {
   AddDataCommonReducerModel,
   CommonReducerDataArrayModel,
@@ -29,7 +30,11 @@ const initialState: AdminMenusStateModel = {
     succeeded: false,
     isCompleted: false,
     data: null
-  }
+  },
+  menusMaxPriorityData: {
+    maxPriorityValue: 0
+  },
+  selectedVerticalNavMenu: null
 }
 
 const saveAllAdminMenusDataInfo = (
@@ -61,6 +66,19 @@ const saveAddAdminMenuResponseInfo = (
     isCompleted: false,
     data: null
   }
+}
+
+const saveMenusMaxPriorityDataInfo = (
+  state: AdminMenusStateModel,
+  action: PayloadAction<AdminMenusMaxPriorityDataModel>
+): any => {
+  state.menusMaxPriorityData = action?.payload ?? {
+    maxPriorityValue: 0
+  }
+}
+
+const saveSelectedVerticalNavMenuDataInfo = (state: AdminMenusStateModel, action: PayloadAction<NavLink>): any => {
+  state.selectedVerticalNavMenu = action?.payload
 }
 
 const resetAllAdminMenusDataResultInfo = (state: AdminMenusStateModel): any => {
@@ -102,6 +120,8 @@ const adminMenusSlice: any = createSlice({
     saveAllAdminMenusData: saveAllAdminMenusDataInfo,
     saveDeletedAdminMenuResponse: saveDeletedAdminMenuResponseInfo,
     saveAddAdminMenuResponse: saveAddAdminMenuResponseInfo,
+    saveMenusMaxPriorityData: saveMenusMaxPriorityDataInfo,
+    saveSelectedVerticalNavMenuData: saveSelectedVerticalNavMenuDataInfo,
     resetAllAdminMenusDataResult: resetAllAdminMenusDataResultInfo,
     resetDeletedAdminMenuResponse: resetDeletedAdminMenuResponseInfo,
     resetAddedAdminMenuResponse: resetAddedAdminMenuResponseInfo
@@ -113,6 +133,8 @@ const {
   saveAllAdminMenusData,
   saveDeletedAdminMenuResponse,
   saveAddAdminMenuResponse,
+  saveMenusMaxPriorityData,
+  saveSelectedVerticalNavMenuData,
   resetAllAdminMenusDataResult,
   resetDeletedAdminMenuResponse,
   resetAddedAdminMenuResponse
@@ -146,6 +168,32 @@ const selectAddedAdminMenuResponse = (state: ReduxStateModel) => {
   }
 }
 
+const selectMenusMaxPriorityDataValue = (state: ReduxStateModel) => {
+  return state?.adminMenus?.menusMaxPriorityData?.maxPriorityValue
+    ? state.adminMenus.menusMaxPriorityData.maxPriorityValue + 1
+    : 1
+}
+
+const selectSelectedVerticalNavMenu = (state: ReduxStateModel) => {
+  return state?.adminMenus?.selectedVerticalNavMenu ?? null
+}
+
+const selectSelectedVerticalNavMenuExtraData = (state: ReduxStateModel) => {
+  return state?.adminMenus?.selectedVerticalNavMenu?.extraData ?? null
+}
+
+const selectSelectedVerticalNavMenuIcon = (state: ReduxStateModel) => {
+  return state?.adminMenus?.selectedVerticalNavMenu?.icon ?? null
+}
+
+const selectSelectedVerticalNavMenuTitle = (state: ReduxStateModel) => {
+  return state?.adminMenus?.selectedVerticalNavMenu?.title ?? null
+}
+
+const selectSelectedVerticalNavMenuPath = (state: ReduxStateModel) => {
+  return state?.adminMenus?.selectedVerticalNavMenu?.path ?? null
+}
+
 const adminMenusSliceReducer = adminMenusSlice.reducer
 
 export {
@@ -153,11 +201,19 @@ export {
   saveAllAdminMenusData,
   saveDeletedAdminMenuResponse,
   saveAddAdminMenuResponse,
+  saveMenusMaxPriorityData,
+  saveSelectedVerticalNavMenuData,
   resetAllAdminMenusDataResult,
   resetDeletedAdminMenuResponse,
   resetAddedAdminMenuResponse,
   selectAllAdminMenusDataResult,
   selectDeletedAdminMenuResponse,
   selectAddedAdminMenuResponse,
+  selectMenusMaxPriorityDataValue,
+  selectSelectedVerticalNavMenu,
+  selectSelectedVerticalNavMenuExtraData,
+  selectSelectedVerticalNavMenuIcon,
+  selectSelectedVerticalNavMenuTitle,
+  selectSelectedVerticalNavMenuPath,
   signOutAction
 }

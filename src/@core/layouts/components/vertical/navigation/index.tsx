@@ -57,7 +57,7 @@ const Navigation = (props: Props) => {
     hidden,
     afterVerticalNavMenuContent,
     beforeVerticalNavMenuContent,
-    verticalNavMenuContent: userVerticalNavMenuContent
+    verticalNavMenuContent: userVerticalNavMenuContent,
   } = props
 
   // @ts-ignore

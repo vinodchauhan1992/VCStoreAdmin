@@ -4,7 +4,7 @@ import {
   CommonReducerDataArrayModel,
   DeleteDataCommonReducerModel
 } from 'src/models/CommonModel'
-import { ProductsModel } from 'src/models/ProductsModel'
+import { ProductsDataModel } from 'src/models/ProductsModel'
 import { ProductsStateModel, ReduxStateModel } from 'src/models/ReduxStateModel'
 
 /* Signout Action */
@@ -34,7 +34,7 @@ const initialState: ProductsStateModel = {
 
 const saveAllProductsDataInfo = (
   state: ProductsStateModel,
-  action: PayloadAction<CommonReducerDataArrayModel<ProductsModel[]>>
+  action: PayloadAction<CommonReducerDataArrayModel<ProductsDataModel[]>>
 ): any => {
   state.productsData = action?.payload ?? []
 }
@@ -53,7 +53,7 @@ const saveDeletedProductResponseInfo = (
 
 const saveAddProductResponseInfo = (
   state: ProductsStateModel,
-  action: PayloadAction<AddDataCommonReducerModel<ProductsModel>>
+  action: PayloadAction<AddDataCommonReducerModel<ProductsDataModel>>
 ): any => {
   state.addProductResponse = action?.payload ?? {
     message: null,

@@ -26,6 +26,7 @@ import UserIcon from 'src/layouts/components/UserIcon'
 
 // ** Utils
 import { handleURLQueries } from 'src/@core/layouts/utils'
+import { AdminMenusReducer, useAppDispatch } from 'src/redux/reducers'
 
 interface Props {
   item: NavLink
@@ -63,6 +64,8 @@ const MenuItemTextMetaWrapper = styled(Box)<BoxProps>({
 })
 
 const VerticalNavLink = ({ item, navVisible, toggleNavVisibility }: Props) => {
+  const dispatch = useAppDispatch()
+
   // ** Hooks
   const router = useRouter()
 
@@ -96,6 +99,7 @@ const VerticalNavLink = ({ item, navVisible, toggleNavVisibility }: Props) => {
             if (navVisible) {
               toggleNavVisibility()
             }
+            dispatch(AdminMenusReducer.saveSelectedVerticalNavMenuData(item))
           }}
           sx={{
             pl: 5.5,

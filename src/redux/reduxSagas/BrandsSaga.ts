@@ -1,19 +1,19 @@
 import * as Api from '../../services'
 import { takeLatest, call, put } from 'redux-saga/effects'
 import {
-  saveAllAdminSubmenusData,
-  saveDeletedAdminSubmenuResponse,
-  saveAddAdminSubmenuResponse,
-  saveSubmenusMaxPriorityData,
-  saveAdminSubmenusDataByMenuId
-} from '../reducers/AdminSubmenusReducer'
+  saveAllBrandsData,
+  saveDeletedBrandResponse,
+  saveAddBrandResponse,
+  saveUpdateBrandResponse
+} from '../reducers/BrandsReducer'
 import { UIReducer } from '../reducers'
 
 const { ApiService, ApiCallTypes } = Api
 
-export function* fetchAllAdminSubmenus(): any {
+export function* fetchAllBrands(): any {
   yield put(UIReducer.showLoader(true))
-  const data = yield call(ApiService.callApiService, ApiCallTypes.GET_ALL_ADMIN_SUBMENUS_TYPE, null)
+  const data = yield call(ApiService.callApiService, ApiCallTypes.GET_ALL_BRANDS_TYPE, null)
+
   if (
     data.isSucceded &&
     data?.responseData &&
@@ -22,11 +22,8 @@ export function* fetchAllAdminSubmenus(): any {
     data?.responseData?.data
   ) {
     yield put(
-      saveAllAdminSubmenusData({
-        message:
-          data.responseData.data.length <= 0
-            ? 'Admin submenus data not found. Please add some admin submenus data'
-            : null,
+      saveAllBrandsData({
+        message: data.responseData.data.length <= 0 ? 'Brands data not found. Please add some brands data' : null,
         succeeded: true,
         isCompleted: true,
         dataArray: data.responseData.data
@@ -34,7 +31,7 @@ export function* fetchAllAdminSubmenus(): any {
     )
   } else {
     yield put(
-      saveAllAdminSubmenusData({
+      saveAllBrandsData({
         message: data.responseData.message,
         succeeded: false,
         isCompleted: true,
@@ -45,14 +42,13 @@ export function* fetchAllAdminSubmenus(): any {
   yield put(UIReducer.showLoader(false))
 }
 
-export function* deleteAdminSubmenu(action: any): any {
+export function* deleteBrand(action: any): any {
   yield put(UIReducer.showLoader(true))
   const data = yield call(
     ApiService.callApiService,
-    ApiCallTypes.DELETE_ADMIN_SUBMENU_TYPE,
+    ApiCallTypes.DELETE_BRAND_TYPE,
     null,
-    `/${action?.payload?.adminSubmenuId}`,
-    { panel_type: action?.payload?.panelType }
+    `/${action?.payload?.brandId}`
   )
   if (
     data.isSucceded &&
@@ -62,7 +58,7 @@ export function* deleteAdminSubmenu(action: any): any {
     data?.responseData?.data
   ) {
     yield put(
-      saveDeletedAdminSubmenuResponse({
+      saveDeletedBrandResponse({
         message: data.responseData.message,
         succeeded: true,
         isCompleted: true,
@@ -71,7 +67,7 @@ export function* deleteAdminSubmenu(action: any): any {
     )
   } else {
     yield put(
-      saveDeletedAdminSubmenuResponse({
+      saveDeletedBrandResponse({
         message: data.responseData.message,
         succeeded: false,
         isCompleted: true,
@@ -82,9 +78,9 @@ export function* deleteAdminSubmenu(action: any): any {
   yield put(UIReducer.showLoader(false))
 }
 
-export function* addAdminSubmenu(action: any): any {
+export function* addBrand(action: any): any {
   yield put(UIReducer.showLoader(true))
-  const data = yield call(ApiService.callApiService, ApiCallTypes.ADD_ADMIN_SUBMENU_TYPE, action?.payload)
+  const data = yield call(ApiService.callApiService, ApiCallTypes.ADD_BRAND_TYPE, action?.payload)
   if (
     data.isSucceded &&
     data?.responseData &&
@@ -93,7 +89,7 @@ export function* addAdminSubmenu(action: any): any {
     data?.responseData?.data
   ) {
     yield put(
-      saveAddAdminSubmenuResponse({
+      saveAddBrandResponse({
         message: data.responseData.message,
         succeeded: true,
         isCompleted: true,
@@ -102,7 +98,7 @@ export function* addAdminSubmenu(action: any): any {
     )
   } else {
     yield put(
-      saveAddAdminSubmenuResponse({
+      saveAddBrandResponse({
         message: data.responseData.message,
         succeeded: false,
         isCompleted: true,
@@ -113,40 +109,14 @@ export function* addAdminSubmenu(action: any): any {
   yield put(UIReducer.showLoader(false))
 }
 
-export function* fetchSubmenusMaxPriority(): any {
-  yield put(UIReducer.showLoader(true))
-  const data = yield call(ApiService.callApiService, ApiCallTypes.GET_SUBMENUS_MAX_PRIORITY_TYPE, null)
-  if (
-    data.isSucceded &&
-    data?.responseData &&
-    data?.responseData?.status &&
-    data.responseData.status === 'success' &&
-    data?.responseData?.data
-  ) {
-    yield put(
-      saveSubmenusMaxPriorityData({
-        maxPriorityValue: data.responseData.data.maxPriorityValue
-      })
-    )
-  } else {
-    yield put(
-      saveSubmenusMaxPriorityData({
-        maxPriorityValue: 0
-      })
-    )
-  }
-  yield put(UIReducer.showLoader(false))
-}
-
-export function* fetchSubmenusByMenuId(action: any): any {
+export function* updateBrand(action: any): any {
   yield put(UIReducer.showLoader(true))
   const data = yield call(
     ApiService.callApiService,
-    ApiCallTypes.GET_SUBMENU_BY_MENU_ID_TYPE,
-    null,
-    `/${action?.payload?.adminMenuId}`
+    ApiCallTypes.UPDATE_BRAND_TYPE,
+    action?.payload?.formData,
+    `/${action?.payload?.brandId}`
   )
-  console.log('data', data)
   if (
     data.isSucceded &&
     data?.responseData &&
@@ -155,7 +125,7 @@ export function* fetchSubmenusByMenuId(action: any): any {
     data?.responseData?.data
   ) {
     yield put(
-      saveAdminSubmenusDataByMenuId({
+      saveUpdateBrandResponse({
         message: data.responseData.message,
         succeeded: true,
         isCompleted: true,
@@ -164,33 +134,29 @@ export function* fetchSubmenusByMenuId(action: any): any {
     )
   } else {
     yield put(
-      saveAdminSubmenusDataByMenuId({
+      saveUpdateBrandResponse({
         message: data.responseData.message,
         succeeded: false,
         isCompleted: true,
-        data: []
+        data: data?.responseData?.data ?? null
       })
     )
   }
   yield put(UIReducer.showLoader(false))
 }
 
-export function* watchFetchAllAdminSubmenus(): any {
-  yield takeLatest('FETCH_ALL_ADMIN_SUBMENUS', fetchAllAdminSubmenus)
+export function* watchFetchAllBrands(): any {
+  yield takeLatest('FETCH_ALL_BRANDS', fetchAllBrands)
 }
 
-export function* watchDeleteAdminSubmenu(): any {
-  yield takeLatest('DELETE_ADMIN_SUBMENU', deleteAdminSubmenu)
+export function* watchDeleteBrand(): any {
+  yield takeLatest('DELETE_BRAND', deleteBrand)
 }
 
-export function* watchAddAdminSubmenu(): any {
-  yield takeLatest('ADD_ADMIN_SUBMENU', addAdminSubmenu)
+export function* watchAddBrand(): any {
+  yield takeLatest('ADD_BRAND', addBrand)
 }
 
-export function* watchFetchSubmenusMaxPriority(): any {
-  yield takeLatest('FETCH_SUBMENUS_MAX_PRIORITY', fetchSubmenusMaxPriority)
-}
-
-export function* watchFetchSubmenusByMenuId(): any {
-  yield takeLatest('FETCH_SUBMENUS_BY_MENU_ID', fetchSubmenusByMenuId)
+export function* watchUpdateBrand(): any {
+  yield takeLatest('UPDATE_BRAND', updateBrand)
 }

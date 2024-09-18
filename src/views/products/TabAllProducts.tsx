@@ -1,125 +1,259 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // ** React Imports
-import { forwardRef, useState } from 'react'
+import { useState, useEffect, ChangeEvent } from 'react'
 
 // ** MUI Imports
-import Grid from '@mui/material/Grid'
-import Radio from '@mui/material/Radio'
-import Select from '@mui/material/Select'
-import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
-import TextField from '@mui/material/TextField'
-import FormLabel from '@mui/material/FormLabel'
-import InputLabel from '@mui/material/InputLabel'
-import RadioGroup from '@mui/material/RadioGroup'
 import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import FormControlLabel from '@mui/material/FormControlLabel'
-
-// ** Third Party Imports
-import DatePicker from 'react-datepicker'
-
-// ** Styled Components
-import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
-
-const CustomInput = forwardRef((props, ref) => {
-  return <TextField inputRef={ref} label='Birth Date' fullWidth {...props} />
-})
+import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
+import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
+import EditProduct from './editProduct/EditProduct'
+import ProductSmartCard from './components/product-smart-card/ProductSmartCard'
+import Grid from '@mui/material/Grid'
+import CustomisedSearchField from 'src/@core/components/customised-search-field/CustomisedSearchField'
+import { ProductsReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { ProductsDataModel } from 'src/models/ProductsModel'
+import { useRouter } from 'next/router'
 
 const TabAllProducts = () => {
+  const router = useRouter()
+  const dispatch = useAppDispatch()
+
+  // @ts-ignore
+  const allProductsDataResult = useAppSelector(ProductsReducer.selectAllProductsDataResult)
+  // @ts-ignore
+  const deletedProductResponse = useAppSelector(ProductsReducer.selectDeletedProductResponse)
+
   // ** State
-  const [date, setDate] = useState<Date | null | undefined>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+  const [selectedProduct, setSelectedProduct] = useState<ProductsDataModel | null>(null)
+  const [openViewProduct, setOpenViewProduct] = useState<boolean>(false)
+  const [openEditProduct, setOpenEditProduct] = useState<boolean>(false)
+  const [searchedText, setSearchedText] = useState<string>('')
+  const [searchedProducts, setSearchedProducts] = useState<ProductsDataModel[]>([])
+
+  const callAllProductsApi = async () => {
+    dispatch({ type: 'FETCH_ALL_PRODUCTS' })
+  }
+
+  useEffect(() => {
+    callAllProductsApi()
+  }, [])
+
+  useEffect(() => {
+    setSearchedProducts(allProductsDataResult?.dataArray ?? [])
+  }, [allProductsDataResult?.dataArray])
+
+  const searchProducts = () => {
+    if (searchedText && searchedText !== '') {
+      const filtered = allProductsDataResult?.dataArray?.filter(
+        entry =>
+          Object.values(entry.productData).some(val => typeof val === 'string' && val.includes(searchedText)) ||
+          Object.values(entry.brandDetails).some(val => typeof val === 'string' && val.includes(searchedText))
+      )
+      setSearchedProducts(filtered)
+    } else {
+      setSearchedProducts(allProductsDataResult?.dataArray ?? [])
+    }
+  }
+
+  useEffect(() => {
+    searchProducts()
+  }, [searchedText])
+
+  const resetSelectedProduct = () => {
+    setSelectedProduct(null)
+    setIsDialogOpen(false)
+    setOpenEditProduct(false)
+  }
+
+  const deleteProduct = async () => {
+    dispatch({ type: 'DELETE_PRODUCT', payload: { productId: selectedProduct?.productData?.id } })
+  }
+
+  useEffect(() => {
+    if (deletedProductResponse?.isCompleted) {
+      resetSelectedProduct()
+      if (deletedProductResponse?.succeeded) {
+        dispatch(ProductsReducer.resetDeletedProductResponse())
+        callAllProductsApi()
+      } else {
+        dispatch(ProductsReducer.resetDeletedProductResponse())
+      }
+    }
+  }, [deletedProductResponse])
+
+  const onDeleteClick = async (product: ProductsDataModel) => {
+    setSelectedProduct(product)
+    setIsDialogOpen(true)
+  }
+
+  const onEditClick = async (product: ProductsDataModel) => {
+    setSelectedProduct(product)
+    setOpenEditProduct(true)
+  }
+
+  const handleDialogOpen = () => {
+    setIsDialogOpen(!isDialogOpen)
+  }
+
+  const renderEmpty = () => {
+    return (
+      <Grid item xs={12} sm={12}>
+        <CustomisedErrorEmpty
+          title='No products found!'
+          type='empty'
+          message={allProductsDataResult?.message ?? ''}
+        ></CustomisedErrorEmpty>
+      </Grid>
+    )
+  }
+
+  const renderEmptySearch = () => {
+    return (
+      <Grid item xs={12} sm={12}>
+        <CustomisedErrorEmpty
+          title='No search results found!'
+          type='empty'
+          message='Products not found for the searched item'
+        ></CustomisedErrorEmpty>
+      </Grid>
+    )
+  }
+
+  const renderError = () => {
+    return (
+      <Grid item xs={12} sm={12}>
+        <CustomisedErrorEmpty
+          title='Error!'
+          type='empty'
+          message={allProductsDataResult?.message ?? ''}
+        ></CustomisedErrorEmpty>
+      </Grid>
+    )
+  }
+
+  const setTheOpenViewProduct = (productData: ProductsDataModel, isOpenViewProduct: boolean) => {
+    console.log('productData', productData)
+    setSelectedProduct(productData)
+    setOpenViewProduct(isOpenViewProduct)
+  }
+
+  const onShowBrandDetailsClick = (productData: ProductsDataModel) => {
+    router.push({ pathname: '/brands', query: { passedSearchTextForAllBrands: productData?.brandDetails?.title ?? '' } }, '/brands')
+  }
+
+  const renderCards = () => {
+    if (searchedProducts && searchedProducts.length > 0) {
+      return searchedProducts.map((productData, index) => {
+        return (
+          <Grid key={`${index.toString()}`} item xs={12} sm={4}>
+            <ProductSmartCard
+              productData={productData}
+              selectedProductData={selectedProduct}
+              onButton1Click={() => onDeleteClick(productData)}
+              onButton2Click={() => onEditClick(productData)}
+              onShowBrandDetailsClick={() => onShowBrandDetailsClick(productData)}
+              dataIndex={index}
+              openViewProduct={openViewProduct}
+              setOpenViewProduct={isOpenViewProduct => setTheOpenViewProduct(productData, isOpenViewProduct)}
+            />
+          </Grid>
+        )
+      })
+    }
+
+    return null
+  }
+
+  const handleSearch = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setSearchedText(event.target.value)
+  }
+
+  const renderSearchField = () => {
+    return (
+      <Grid item xs={12} sm={12}>
+        <CustomisedSearchField placeholderText='Search product' value={searchedText} onChange={handleSearch} />
+      </Grid>
+    )
+  }
+
+  const renderData = () => {
+    if (allProductsDataResult?.isCompleted && !allProductsDataResult?.succeeded) {
+      return renderError()
+    }
+    if (!allProductsDataResult?.dataArray || allProductsDataResult.dataArray.length <= 0) {
+      return renderEmpty()
+    }
+
+    return (
+      <>
+        {renderSearchField()}
+        {searchedProducts && searchedProducts.length > 0 ? renderCards() : renderEmptySearch()}
+      </>
+    )
+  }
+
+  const renderWholeMainData = () => {
+    return (
+      <Grid container spacing={7}>
+        {renderData()}
+      </Grid>
+    )
+  }
+
+  const renderAlertDialog = () => {
+    return (
+      <CustomisedAlertDialog
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={handleDialogOpen}
+        dialogTitle='Delete product!'
+        dialogMessage={`Are you sure you want to delete ${selectedProduct?.productData?.title} product by ${selectedProduct?.brandDetails?.title} brand?`}
+        dialogButtons={[
+          {
+            title: 'Yes',
+            onClick: () => {
+              deleteProduct()
+            },
+            autoFocus: true,
+            color: 'error'
+          },
+          {
+            title: 'No',
+            onClick: () => {
+              setIsDialogOpen(false)
+              resetSelectedProduct()
+            },
+            autoFocus: false,
+            color: 'success'
+          }
+        ]}
+      />
+    )
+  }
+
+  // const renderEditProductDialog = () => {
+  //   return (
+  //     <EditProduct
+  //       selectedProductData={selectedProduct}
+  //       openEditProduct={openEditProduct}
+  //       setOpenEditProduct={setOpenEditProduct}
+  //       setSelectedProduct={setSelectedProduct}
+  //       onCloseModal={() => {
+  //         resetSelectedProduct()
+  //         callAllProductsApi()
+  //       }}
+  //     ></EditProduct>
+  //   )
+  // }
 
   return (
-    <CardContent>
-      <form>
-        <Grid container spacing={7}>
-          <Grid item xs={12} sx={{ marginTop: 4.8 }}>
-            <TextField
-              fullWidth
-              multiline
-              label='Bio'
-              minRows={2}
-              placeholder='Bio'
-              defaultValue='The name’s John Deo. I am a tireless seeker of knowledge, occasional purveyor of wisdom and also, coincidentally, a graphic designer. Algolia helps businesses across industries quickly create relevant 😎, scalable 😀, and lightning 😍 fast search and discovery experiences.'
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <DatePickerWrapper>
-              <DatePicker
-                selected={date}
-                showYearDropdown
-                showMonthDropdown
-                id='account-settings-date'
-                placeholderText='MM-DD-YYYY'
-                customInput={<CustomInput />}
-                onChange={(date: Date) => setDate(date)}
-              />
-            </DatePickerWrapper>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField fullWidth type='number' label='Phone' placeholder='(123) 456-7890' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label='Website'
-              placeholder='https://example.com/'
-              defaultValue='https://themeselection.com/'
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Country</InputLabel>
-              <Select label='Country' defaultValue='USA'>
-                <MenuItem value='USA'>USA</MenuItem>
-                <MenuItem value='UK'>UK</MenuItem>
-                <MenuItem value='Australia'>Australia</MenuItem>
-                <MenuItem value='Germany'>Germany</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel id='form-layouts-separator-multiple-select-label'>Languages</InputLabel>
-              <Select
-                multiple
-                defaultValue={['English']}
-                id='account-settings-multiple-select'
-                labelId='account-settings-multiple-select-label'
-                input={<OutlinedInput label='Languages' id='select-multiple-language' />}
-              >
-                <MenuItem value='English'>English</MenuItem>
-                <MenuItem value='French'>French</MenuItem>
-                <MenuItem value='Spanish'>Spanish</MenuItem>
-                <MenuItem value='Portuguese'>Portuguese</MenuItem>
-                <MenuItem value='Italian'>Italian</MenuItem>
-                <MenuItem value='German'>German</MenuItem>
-                <MenuItem value='Arabic'>Arabic</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl>
-              <FormLabel sx={{ fontSize: '0.875rem' }}>Gender</FormLabel>
-              <RadioGroup row defaultValue='male' aria-label='gender' name='account-settings-info-radio'>
-                <FormControlLabel value='male' label='Male' control={<Radio />} />
-                <FormControlLabel value='female' label='Female' control={<Radio />} />
-                <FormControlLabel value='other' label='Other' control={<Radio />} />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }}>
-              Save Changes
-            </Button>
-            <Button type='reset' variant='outlined' color='secondary' onClick={() => setDate(null)}>
-              Reset
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-    </CardContent>
+    <div>
+      <CardContent>
+        {renderAlertDialog()}
+        {renderWholeMainData()}
+      </CardContent>
+      {/* {renderEditProductDialog()} */}
+    </div>
   )
 }
 

@@ -1,6 +1,7 @@
 export interface AdminSubmenusModel {
   id?: string
   submenuTitle: string
+  priority: number
   adminMenuID: string
   adminMenuTitle: string
   statusID: string
@@ -10,4 +11,8 @@ export interface AdminSubmenusModel {
   description: string
   dateAdded?: Date
   dateModified?: Date
+}
+
+export interface AdminSubmenusMaxPriorityDataModel {
+  maxPriorityValue: number
 }

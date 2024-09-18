@@ -104,6 +104,24 @@ const TabSubmenuByTitle = () => {
           <TextField
             disabled
             fullWidth
+            label='Menu ID'
+            placeholder='Menu ID'
+            value={selectedAdminSubmenuData?.adminMenuID ?? 'N/A'}
+          />
+        </Grid>
+        <Grid item xs={6} sm={6}>
+          <TextField
+            disabled
+            fullWidth
+            label='Priority'
+            placeholder='Priority'
+            value={selectedAdminSubmenuData?.priority ?? 'N/A'}
+          />
+        </Grid>
+        <Grid item xs={6} sm={6}>
+          <TextField
+            disabled
+            fullWidth
             label='Submenu status'
             placeholder='Submenu status'
             value={selectedAdminSubmenuData?.status ?? 'N/A'}
