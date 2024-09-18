@@ -17,6 +17,11 @@ import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import { BrandsReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 import { AddBrandRequestModel } from 'src/models/BrandsModel'
+import Radio from '@mui/material/Radio'
+import FormLabel from '@mui/material/FormLabel'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
 const defaultImage = '/images/avatars/9.jpeg'
 
@@ -49,6 +54,7 @@ const TabAddBrand = () => {
   const defaultValues: AddBrandRequestModel = {
     title: '',
     description: '',
+    isActive: true,
     file: null
   }
 
@@ -81,6 +87,10 @@ const TabAddBrand = () => {
 
   const handleDescriptionChange = (prop: keyof AddBrandRequestModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
+  }
+
+  const handleIsBrandActiveChange = (newValue: string) => {
+    setValues({ ...values, isActive: newValue === 'yes' ? true : false })
   }
 
   const resetForm = () => {
@@ -121,6 +131,7 @@ const TabAddBrand = () => {
     const formData = new FormData()
     formData.append('title', values.title)
     formData.append('description', values.description)
+    formData.append('isActive', `${values?.isActive ?? false}`)
     formData.append('file', values.file)
 
     dispatch({ type: 'ADD_BRAND', payload: formData })
@@ -184,7 +195,29 @@ const TabAddBrand = () => {
                 </Box>
               </Box>
             </Grid>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={6} sm={6}>
+              <FormControl>
+                <FormLabel sx={{ fontSize: '0.875rem' }}>Is brand active?</FormLabel>
+                <RadioGroup
+                  row
+                  defaultValue={values?.isActive ? 'yes' : 'no'}
+                  aria-label='Is brand active?'
+                  name='account-settings-info-radio'
+                >
+                  <FormControlLabel
+                    value='no'
+                    label='No'
+                    control={<Radio onClick={() => handleIsBrandActiveChange('no')} />}
+                  />
+                  <FormControlLabel
+                    value='yes'
+                    label='Yes'
+                    control={<Radio onClick={() => handleIsBrandActiveChange('yes')} />}
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6} sm={6}>
               <TextField
                 fullWidth
                 label='Brand title'

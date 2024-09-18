@@ -42,11 +42,16 @@ export interface AddProductModel {
   purchasePrice: number
   sellingPrice: number
   maxDiscountPercentage: number
-  imageData: UploadedFileModel | null
+  file?: any
   brandID: string
 }
 
 export interface ProductsDataModel {
   productData: ProductsModel
   brandDetails: BrandsModel
+}
+
+export interface MaxDiscuntPercentagesDataModel {
+  title: string
+  code: number
 }

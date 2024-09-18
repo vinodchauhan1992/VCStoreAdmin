@@ -30,7 +30,6 @@ const TabAllBrands = (props: TabAllBrandsProps) => {
   // ** State
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
   const [selectedBrand, setSelectedBrand] = useState<BrandsModel | null>(null)
-  const [openViewBrand, setOpenViewBrand] = useState<boolean>(false)
   const [openEditBrand, setOpenEditBrand] = useState<boolean>(false)
   const [searchedText, setSearchedText] = useState<string>('')
   const [searchedBrands, setSearchedBrands] = useState<BrandsModel[]>([])
@@ -142,12 +141,6 @@ const TabAllBrands = (props: TabAllBrandsProps) => {
     )
   }
 
-  const setTheOpenViewBrand = (brandData: BrandsModel, isOpenViewBrand: boolean) => {
-    console.log('brandData', brandData)
-    setSelectedBrand(brandData)
-    setOpenViewBrand(isOpenViewBrand)
-  }
-
   const renderCards = () => {
     if (searchedBrands && searchedBrands.length > 0) {
       return searchedBrands.map((brandData, index) => {
@@ -155,12 +148,10 @@ const TabAllBrands = (props: TabAllBrandsProps) => {
           <Grid key={`${index.toString()}`} item xs={12} sm={4}>
             <BrandSmartCard
               brandData={brandData}
-              selectedBrandData={selectedBrand}
               onButton1Click={() => onDeleteClick(brandData)}
               onButton2Click={() => onEditClick(brandData)}
               dataIndex={index}
-              openViewBrand={openViewBrand}
-              setOpenViewBrand={isOpenViewBrand => setTheOpenViewBrand(brandData, isOpenViewBrand)}
+              forPage='allBrands'
             />
           </Grid>
         )

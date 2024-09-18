@@ -19,27 +19,20 @@ const TabBrandByTitle = () => {
 
   // ** States
   const [selectedBrandData, setSelectedBrandData] = useState<BrandsModel | null>(null)
-  const [openViewBrand, setOpenViewBrand] = useState<boolean>(false)
 
   useEffect(() => {
     dispatch({ type: 'FETCH_ALL_BRANDS' })
   }, [])
-
-  const setTheOpenViewBrand = (isOpenViewBrand: boolean) => {
-    setOpenViewBrand(isOpenViewBrand)
-  }
 
   const renderDetailsFields = () => {
     return (
       <Grid item xs={12} sm={12}>
         <BrandSmartCard
           brandData={selectedBrandData}
-          selectedBrandData={selectedBrandData}
           dataIndex={0}
-          openViewBrand={openViewBrand}
-          setOpenViewBrand={isOpenViewBrand => setTheOpenViewBrand(isOpenViewBrand)}
-          isActionsVisible={false}
-          isButtonsVisible={false}
+          isButton1Visible={false}
+          isButton2Visible={false}
+          forPage='brandByTitle'
         />
       </Grid>
     )

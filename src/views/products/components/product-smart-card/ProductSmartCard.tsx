@@ -420,6 +420,15 @@ const ProductSmartCard = (props: Props) => {
               {`Full path: ${productData?.productData?.imageData?.fullPath ?? 'N/A'}`}
             </Typography>
           </div>
+          <Divider variant='middle' sx={{ backgroundColor: amber[100], marginTop: 8, marginBottom: 8 }} />
+          <div style={{ backgroundColor: 'InfoBackground', borderRadius: 10, padding: 15 }}>
+            <Typography variant='h6' sx={{ color: 'text.secondary' }}>
+              Description:
+            </Typography>
+            <Typography variant='body2' sx={{ color: cyan[800] }}>
+              {`${productData?.productData?.description ?? 'N/A'}`}
+            </Typography>
+          </div>
         </CardContent>
       </Collapse>
     )

@@ -41,9 +41,11 @@ const TabName = styled('span')(({ theme }) => ({
   }
 }))
 
+const tabsDataArray = ['allProducts', 'productByTitle', 'addProduct']
+
 const Products = () => {
   // ** State
-  const [value, setValue] = useState<string>('allProducts')
+  const [value, setValue] = useState<string>(tabsDataArray[0])
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -54,11 +56,11 @@ const Products = () => {
       <TabContext value={value}>
         <TabList
           onChange={handleChange}
-          aria-label='users tabs'
+          aria-label='products tabs'
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
           <Tab
-            value='allProducts'
+            value={tabsDataArray[0]}
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <InformationOutline />
@@ -67,7 +69,7 @@ const Products = () => {
             }
           />
           <Tab
-            value='productByTitle'
+            value={tabsDataArray[1]}
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountOutline />
@@ -76,7 +78,7 @@ const Products = () => {
             }
           />
           <Tab
-            value='addProduct'
+            value={tabsDataArray[2]}
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <LockOpenOutline />
@@ -86,13 +88,13 @@ const Products = () => {
           />
         </TabList>
 
-        <TabPanel sx={{ p: 0 }} value='allProducts'>
+        <TabPanel sx={{ p: 0 }} value={tabsDataArray[0]}>
           <TabAllProducts />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='productByTitle'>
+        <TabPanel sx={{ p: 0 }} value={tabsDataArray[1]}>
           <TabProductByTitle />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='addProduct'>
+        <TabPanel sx={{ p: 0 }} value={tabsDataArray[2]}>
           <TabAddProduct />
         </TabPanel>
       </TabContext>

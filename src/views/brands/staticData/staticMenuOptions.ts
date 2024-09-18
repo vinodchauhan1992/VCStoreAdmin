@@ -6,33 +6,19 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import InventoryIcon from '@mui/icons-material/Inventory'
 import { MaxDiscuntPercentagesDataModel } from 'src/models/ProductsModel'
 
-export const getStaticMenuOptionData = ({
-  forPage = 'allProducts'
+export const getBrandStaticMenuOptionData = ({
+  forPage = 'allBrands'
 }: {
-  forPage?: 'allProducts' | 'productByTitle' | null
+  forPage?: 'allBrands' | 'brandByTitle' | null
 }) => {
   const data: CustomisedMenuItemOptionProps[] = [
-    {
-      optionTitle: 'Show brand details',
-      optionCode: 'show_brand_details',
-      titleColor: 'info.dark',
-      OptionIcon: VisibilityIcon,
-      iconColor: blue[500]
-    },
-    {
-      optionTitle: 'Show stock details',
-      optionCode: 'show_stock_details',
-      titleColor: 'info.dark',
-      OptionIcon: InventoryIcon,
-      iconColor: blue[500]
-    },
     {
       optionTitle: 'Update product',
       optionCode: 'update_product',
       titleColor: 'success.dark',
       OptionIcon: EditIcon,
       iconColor: green[500],
-      visible: forPage === 'productByTitle' ? false : true
+      visible: forPage === 'brandByTitle' ? false : true
     },
     {
       optionTitle: 'Delete product',
@@ -40,7 +26,7 @@ export const getStaticMenuOptionData = ({
       titleColor: 'error.dark',
       OptionIcon: DeleteForeverSharpIcon,
       iconColor: red[500],
-      visible: forPage === 'productByTitle' ? false : true
+      visible: forPage === 'brandByTitle' ? false : true
     }
   ]
   return data

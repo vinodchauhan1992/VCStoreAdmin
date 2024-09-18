@@ -13,12 +13,16 @@ import Box from '@mui/material/Box'
 import { styled } from '@mui/material/styles'
 import { ButtonProps } from '@mui/material/Button'
 import { AlertValuesModel } from 'src/models/AlertValuesModel'
-import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import Alert from '@mui/material/Alert'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import { BrandsReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 import { BrandsModel } from 'src/models/BrandsModel'
+import Radio from '@mui/material/Radio'
+import FormLabel from '@mui/material/FormLabel'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
 const defaultImage = '/images/avatars/9.jpeg'
 
@@ -74,6 +78,7 @@ const EditBrand = (props: Props) => {
     title: '',
     description: '',
     brandLogo: null,
+    isActive: true,
     id: '',
     code: '',
     dateAdded: new Date()
@@ -105,7 +110,8 @@ const EditBrand = (props: Props) => {
       id: selectedBrandData?.id ?? '',
       code: selectedBrandData?.code ?? '',
       dateAdded: selectedBrandData?.dateAdded,
-      dateModified: selectedBrandData?.dateModified
+      dateModified: selectedBrandData?.dateModified,
+      isActive: selectedBrandData?.isActive ?? true
     })
     resetImage()
     resetFile()
@@ -149,6 +155,10 @@ const EditBrand = (props: Props) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
+  const handleIsBrandActiveChange = (newValue: string) => {
+    setValues({ ...values, isActive: newValue === 'yes' ? true : false })
+  }
+
   const renderDetailsFields = () => {
     return (
       <>
@@ -189,8 +199,30 @@ const EditBrand = (props: Props) => {
             onChange={handleTitleChange('title')}
           />
         </Grid>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={6} sm={6}>
           <TextField disabled fullWidth label='Brand code' placeholder='Brand code' value={values?.code ?? ''} />
+        </Grid>
+        <Grid item xs={6} sm={6}>
+          <FormControl>
+            <FormLabel sx={{ fontSize: '0.875rem' }}>Is brand active?</FormLabel>
+            <RadioGroup
+              row
+              defaultValue={values?.isActive ? 'yes' : 'no'}
+              aria-label='Is brand active?'
+              name='account-settings-info-radio'
+            >
+              <FormControlLabel
+                value='no'
+                label='No'
+                control={<Radio onClick={() => handleIsBrandActiveChange('no')} />}
+              />
+              <FormControlLabel
+                value='yes'
+                label='Yes'
+                control={<Radio onClick={() => handleIsBrandActiveChange('yes')} />}
+              />
+            </RadioGroup>
+          </FormControl>
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -287,6 +319,7 @@ const EditBrand = (props: Props) => {
     formData.append('id', values?.id ?? '')
     formData.append('code', values?.code ?? '')
     formData.append('dateAdded', `${values?.dateAdded ?? new Date()}`)
+    formData.append('isActive', `${values?.isActive}`)
     if (file) {
       formData.append('file', file)
     }
