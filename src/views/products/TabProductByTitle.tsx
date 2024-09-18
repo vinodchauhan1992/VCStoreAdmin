@@ -22,15 +22,10 @@ const TabProductByTitle = () => {
 
   // ** States
   const [selectedProductData, setSelectedProductData] = useState<ProductsDataModel | null>(null)
-  const [openViewProduct, setOpenViewProduct] = useState<boolean>(false)
 
   useEffect(() => {
     dispatch({ type: 'FETCH_ALL_BRANDS' })
   }, [])
-
-  const setTheOpenViewBrand = (isOpenViewProduct: boolean) => {
-    setOpenViewProduct(isOpenViewProduct)
-  }
 
   const onShowBrandDetailsClick = (productData?: ProductsDataModel | null) => {
     if (productData) {
@@ -46,10 +41,8 @@ const TabProductByTitle = () => {
       <Grid item xs={12} sm={12}>
         <ProductSmartCard
           productData={selectedProductData}
-          selectedProductData={selectedProductData}
           onShowBrandDetailsClick={() => onShowBrandDetailsClick(selectedProductData)}
           dataIndex={0}
-          openViewProduct={openViewProduct}
           isButton1Visible={false}
           isButton2Visible={false}
           forPage='productByTitle'

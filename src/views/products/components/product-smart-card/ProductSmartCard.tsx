@@ -10,7 +10,7 @@ import IconButton, { IconButtonProps } from '@mui/material/IconButton'
 import CardHeader from '@mui/material/CardHeader'
 import Collapse from '@mui/material/Collapse'
 import Avatar from '@mui/material/Avatar'
-import { amber, cyan, green, red } from '@mui/material/colors'
+import { amber, cyan, green, grey, red } from '@mui/material/colors'
 import DeleteForeverSharpIcon from '@mui/icons-material/DeleteForeverSharp'
 import EditIcon from '@mui/icons-material/Edit'
 import MoreSharpIcon from '@mui/icons-material/MoreSharp'
@@ -27,6 +27,12 @@ import Tooltip from '@mui/material/Tooltip'
 import CustomisedMenu from 'src/@core/components/customised-menu/CustomisedMenu'
 import { getStaticMenuOptionData } from 'src/views/products/staticData/staticMenuOptions'
 import { CustomisedMenuItemOptionProps } from 'src/models/CustomisedMenuModel'
+import Skeleton from '@mui/material/Skeleton'
+
+const productImageLoadedBlockSize = '220px'
+const productImageLoadedInlineSize = '100%'
+const productImageUnloadedBlockSize = '0px'
+const productImageUnloadedInlineSize = '0px'
 
 export interface ExpandMoreProps extends IconButtonProps {
   expand: boolean
@@ -96,9 +102,16 @@ const ProductSmartCard = (props: Props) => {
   } = props
 
   const [expanded, setExpanded] = React.useState(false)
+  const [isAvatarLoading, setIsAvatarLoading] = React.useState(false)
+  const [isProductImgLoading, setIsProductImgLoading] = React.useState(false)
 
   const isProfit = productData?.productData?.priceDetails?.isProfit ?? false
   const isProductActive = productData?.productData?.isActive ?? false
+
+  React.useEffect(() => {
+    setIsAvatarLoading(true)
+    setIsProductImgLoading(true)
+  }, [])
 
   const handleExpandClick = () => {
     setExpanded(!expanded)
@@ -109,9 +122,6 @@ const ProductSmartCard = (props: Props) => {
     cardData?: ProductsDataModel | null,
     selectedMenuOption?: CustomisedMenuItemOptionProps | null
   ) => {
-    console.log('onMenuItemClick_isClickedOutside', isClickedOutside)
-    console.log('onMenuItemClick_cardData', cardData)
-    console.log('onMenuItemClick_selectedMenuOption', selectedMenuOption)
     if (!isClickedOutside) {
       switch (selectedMenuOption?.optionCode) {
         case 'show_brand_details':
@@ -142,25 +152,63 @@ const ProductSmartCard = (props: Props) => {
       : false
   }
 
+  const onAvatarLoaded = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    setIsAvatarLoading(false)
+  }
+
+  const onAvatarLoadingError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    if (e?.nativeEvent?.type === 'error') {
+      setIsAvatarLoading(true)
+    }
+  }
+
+  const getSkeleton = (loading: boolean, skeletonSx?: any) => {
+    return loading ? (
+      <Skeleton
+        animation='wave'
+        sx={{
+          blockSize: '80px',
+          inlineSize: '80px',
+          borderRadius: 1,
+          position: 'absolute',
+          backgroundColor: grey[400],
+          ...skeletonSx
+        }}
+        variant='rectangular'
+      ></Skeleton>
+    ) : null
+  }
+
+  const getAvatarComponent = () => {
+    return (
+      <>
+        <Avatar
+          imgProps={{
+            onLoad: e => onAvatarLoaded(e),
+            onError: e => onAvatarLoadingError(e)
+          }}
+          src={isAvatarUrlValid() ? productData?.brandDetails?.brandLogo?.imageUrl : ''}
+          sx={{
+            bgcolor: 'white',
+            color: 'white',
+            border: '2px solid orange',
+            blockSize: '80px',
+            inlineSize: '80px'
+          }}
+          aria-label='brand-logo'
+          variant='rounded'
+        >
+          {!isAvatarUrlValid() ? getAvatarText(productData?.brandDetails?.title) : null}
+        </Avatar>
+        {getSkeleton(isAvatarLoading)}
+      </>
+    )
+  }
+
   const renderCardHeader = () => {
     return (
       <CardHeader
-        avatar={
-          <Avatar
-            src={isAvatarUrlValid() ? productData?.brandDetails?.brandLogo?.imageUrl : ''}
-            sx={{
-              bgcolor: 'white',
-              color: 'white',
-              border: '2px solid orange',
-              blockSize: '80px',
-              inlineSize: '80px'
-            }}
-            aria-label='brand-logo'
-            variant='rounded'
-          >
-            {!isAvatarUrlValid() ? getAvatarText('Vinod Chauhan') : null}
-          </Avatar>
-        }
+        avatar={getAvatarComponent()}
         action={
           <CustomisedMenu
             cardData={productData}
@@ -176,14 +224,46 @@ const ProductSmartCard = (props: Props) => {
     )
   }
 
+  const onProductImageLoaded = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    setIsProductImgLoading(false)
+  }
+
+  const onProductImageLoadingError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    if (e?.nativeEvent?.type === 'error') {
+      setIsProductImgLoading(true)
+    }
+  }
+
   const renderCardMedia = () => {
     return (
-      <CardMedia
-        component='img'
-        height='220'
-        image={productData?.productData?.imageData?.imageUrl}
-        alt={`${productData?.productData?.title} By ${productData?.brandDetails?.title}`}
-      />
+      <>
+        <div style={{ flex: 1 }}>
+          <CardMedia
+            sx={{
+              blockSize: isProductImgLoading ? productImageUnloadedBlockSize : productImageLoadedBlockSize,
+              inlineSize: isProductImgLoading ? productImageUnloadedInlineSize : productImageLoadedInlineSize,
+              position: isProductImgLoading ? 'absolute' : 'relative'
+            }}
+            component='img'
+            onLoad={e => onProductImageLoaded(e)}
+            onError={e => onProductImageLoadingError(e)}
+            image={productData?.productData?.imageData?.imageUrl ?? ''}
+            hidden={isProductImgLoading ? true : false}
+            alt={`${productData?.productData?.title} By ${productData?.brandDetails?.title}`}
+          ></CardMedia>
+          {isProductImgLoading ? (
+            <Skeleton
+              animation='wave'
+              sx={{
+                blockSize: productImageLoadedBlockSize,
+                inlineSize: productImageLoadedInlineSize,
+                backgroundColor: grey[400]
+              }}
+              variant='rectangular'
+            ></Skeleton>
+          ) : null}
+        </div>
+      </>
     )
   }
 
@@ -247,14 +327,14 @@ const ProductSmartCard = (props: Props) => {
             <Chip
               label='Brand details'
               size='medium'
-              color={isProductActive ? 'success' : 'error'}
+              color={isProductActive && isProfit ? 'success' : 'error'}
               variant='outlined'
               onClick={() => onShowBrandDetailsClick?.(dataIndex, productData)}
             />
             <Chip
               label='Stock details'
               size='medium'
-              color={isProductActive ? 'success' : 'error'}
+              color={isProductActive && isProfit ? 'success' : 'error'}
               variant='outlined'
               onClick={() => onShowStockDetailsClick?.(dataIndex, productData)}
             />
@@ -346,7 +426,7 @@ const ProductSmartCard = (props: Props) => {
   }
 
   return (
-    <Card sx={{ maxWidth: 345, backgroundColor: isProductActive ? green[50] : red[50], ...cardSx }}>
+    <Card sx={{ maxWidth: 345, backgroundColor: isProductActive && isProfit ? green[50] : red[50], ...cardSx }}>
       {renderCardHeader()}
       {renderCardMedia()}
       {renderVisibleCardContent()}
