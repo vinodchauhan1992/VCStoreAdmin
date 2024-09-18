@@ -17,7 +17,7 @@ import InformationOutline from 'mdi-material-ui/InformationOutline'
 
 // ** Demo Tabs Imports
 import TabAllProducts from 'src/views/products/TabAllProducts'
-import TabProductByID from 'src/views/products/TabProductByID'
+import TabProductByTitle from 'src/views/products/TabProductByTitle'
 import TabAddProduct from 'src/views/products/TabAddProduct'
 
 // ** Third Party Styles Imports
@@ -90,7 +90,7 @@ const Products = () => {
           <TabAllProducts />
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='productByTitle'>
-          <TabProductByID />
+          <TabProductByTitle />
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='addProduct'>
           <TabAddProduct />

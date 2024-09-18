@@ -4,4 +4,5 @@ export interface CustomisedMenuItemOptionProps {
   titleColor?: string
   OptionIcon?: any
   iconColor?: string
+  visible?: boolean
 }

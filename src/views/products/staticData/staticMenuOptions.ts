@@ -3,9 +3,13 @@ import { CustomisedMenuItemOptionProps } from 'src/models/CustomisedMenuModel'
 import DeleteForeverSharpIcon from '@mui/icons-material/DeleteForeverSharp'
 import { blue, green, red } from '@mui/material/colors'
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import InventoryIcon from '@mui/icons-material/Inventory';
+import InventoryIcon from '@mui/icons-material/Inventory'
 
-export const getStaticMenuOptionData = () => {
+export const getStaticMenuOptionData = ({
+  forPage = 'allProducts'
+}: {
+  forPage?: 'allProducts' | 'productByTitle' | null
+}) => {
   const data: CustomisedMenuItemOptionProps[] = [
     {
       optionTitle: 'Show brand details',
@@ -26,14 +30,16 @@ export const getStaticMenuOptionData = () => {
       optionCode: 'update_product',
       titleColor: 'success.dark',
       OptionIcon: EditIcon,
-      iconColor: green[500]
+      iconColor: green[500],
+      visible: forPage === 'productByTitle' ? false : true
     },
     {
       optionTitle: 'Delete product',
       optionCode: 'delete_product',
       titleColor: 'error.dark',
       OptionIcon: DeleteForeverSharpIcon,
-      iconColor: red[500]
+      iconColor: red[500],
+      visible: forPage === 'productByTitle' ? false : true
     }
   ]
   return data

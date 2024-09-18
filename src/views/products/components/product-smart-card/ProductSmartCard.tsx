@@ -71,7 +71,6 @@ interface Props {
   dataIndex?: number
   productData?: ProductsDataModel | null
   selectedProductData?: ProductsDataModel | null
-  isActionsVisible?: boolean
   isButtonsVisible?: boolean
   isButton1Visible?: boolean
   isButton2Visible?: boolean
@@ -87,6 +86,7 @@ interface Props {
   isCardClickable?: boolean
   openViewProduct?: boolean
   setOpenViewProduct?: (openViewProduct: boolean) => void
+  forPage?: 'allProducts' | 'productByTitle' | null
   cardSx?: any
 }
 
@@ -95,7 +95,6 @@ const ProductSmartCard = (props: Props) => {
     dataIndex = 0,
     productData,
     selectedProductData,
-    isActionsVisible = true,
     isButtonsVisible = true,
     isButton1Visible = true,
     isButton2Visible = true,
@@ -111,7 +110,8 @@ const ProductSmartCard = (props: Props) => {
     openViewProduct,
     setOpenViewProduct,
     onShowBrandDetailsClick,
-    onShowStockDetailsClick
+    onShowStockDetailsClick,
+    forPage = 'allProducts'
   } = props
 
   const [expanded, setExpanded] = React.useState(false)
@@ -187,7 +187,7 @@ const ProductSmartCard = (props: Props) => {
         action={
           <CustomisedMenu
             cardData={productData}
-            menuOptions={getStaticMenuOptionData()}
+            menuOptions={getStaticMenuOptionData({ forPage })}
             onMenuItemClick={({ cardData, selectedMenuOption, isClickedOutside }) =>
               onMenuItemClick(isClickedOutside, cardData, selectedMenuOption)
             }

@@ -113,16 +113,21 @@ const CustomisedMenu = (props: CustomisedMenuProps) => {
         open={open}
         onClose={() => handleOnMenuClose(false)}
       >
-        {menuOptions?.map((option, index) => (
-          <MenuItem
-            key={`${index.toString()}`}
-            onClick={() => handleOnMenuClose(false, option)}
-            sx={{ color: option?.titleColor && option.titleColor !== '' ? option.titleColor : 'default' }}
-          >
-            {getOptionIcon(option)}
-            {option.optionTitle}
-          </MenuItem>
-        ))}
+        {menuOptions?.map((option, index) => {
+          if (option?.visible === undefined || option?.visible === null || option.visible) {
+            return (
+              <MenuItem
+                key={`${index.toString()}`}
+                onClick={() => handleOnMenuClose(false, option)}
+                sx={{ color: option?.titleColor && option.titleColor !== '' ? option.titleColor : 'default' }}
+              >
+                {getOptionIcon(option)}
+                {option.optionTitle}
+              </MenuItem>
+            )
+          }
+          return null
+        })}
       </StyledMenu>
     </div>
   )
