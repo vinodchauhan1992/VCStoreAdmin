@@ -6,6 +6,7 @@ export interface CategoryModel {
   code?: string
   description?: string
   imageData?: UploadedFileModel | null
+  isActive?: boolean
   dateAdded?: Date
   dateModified?: Date
 }
@@ -13,5 +14,6 @@ export interface CategoryModel {
 export interface AddCategoryRequestModel {
   title?: string
   description?: string
+  isActive?: boolean
   file?: any
 }

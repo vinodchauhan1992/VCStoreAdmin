@@ -24,7 +24,6 @@ const TabAllCategories = () => {
   // ** State
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
   const [selectedCategory, setSelectedCategory] = useState<CategoryModel | null>(null)
-  const [openViewCategory, setOpenViewCategory] = useState<boolean>(false)
   const [openEditCategory, setOpenEditCategory] = useState<boolean>(false)
   const [searchedText, setSearchedText] = useState<string>('')
   const [searchedCategories, setSearchedCategories] = useState<CategoryModel[]>([])
@@ -128,25 +127,16 @@ const TabAllCategories = () => {
     )
   }
 
-  const setTheOpenViewCategory = (catData: CategoryModel, isOpenViewCategory: boolean) => {
-    console.log('catData', catData)
-    setSelectedCategory(catData)
-    setOpenViewCategory(isOpenViewCategory)
-  }
-
   const renderCards = () => {
     if (searchedCategories && searchedCategories.length > 0) {
-      return searchedCategories.map((catData, index) => {
+      return searchedCategories.map((categoryData, index) => {
         return (
           <Grid key={`${index.toString()}`} item xs={12} sm={4}>
             <CategorySmartCard
-              catData={catData}
-              selectedCategoryData={selectedCategory}
-              onButton1Click={() => onDeleteClick(catData)}
-              onButton2Click={() => onEditClick(catData)}
+              categoryData={categoryData}
+              onButton1Click={() => onDeleteClick(categoryData)}
+              onButton2Click={() => onEditClick(categoryData)}
               dataIndex={index}
-              openViewCategory={openViewCategory}
-              setOpenViewCategory={isOpenViewCategory => setTheOpenViewCategory(catData, isOpenViewCategory)}
             />
           </Grid>
         )

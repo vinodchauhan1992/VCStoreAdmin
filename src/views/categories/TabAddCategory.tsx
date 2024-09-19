@@ -17,6 +17,11 @@ import { AlertValuesModel } from 'src/models/AlertValuesModel'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import { CategoriesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import Radio from '@mui/material/Radio'
+import FormLabel from '@mui/material/FormLabel'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
 const defaultImage = '/images/avatars/9.jpeg'
 
@@ -49,6 +54,7 @@ const TabAddCategory = () => {
   const defaultValues: AddCategoryRequestModel = {
     title: '',
     description: '',
+    isActive: true,
     file: null
   }
 
@@ -81,6 +87,10 @@ const TabAddCategory = () => {
 
   const handleDescriptionChange = (prop: keyof AddCategoryRequestModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
+  }
+
+  const handleIsCategoryActiveChange = (newValue: string) => {
+    setValues({ ...values, isActive: newValue === 'yes' ? true : false })
   }
 
   const resetForm = () => {
@@ -121,6 +131,7 @@ const TabAddCategory = () => {
     const formData = new FormData()
     formData.append('title', values.title)
     formData.append('description', values.description)
+    formData.append('isActive', `${values.isActive}`)
     formData.append('file', values.file)
 
     dispatch({ type: 'ADD_CATEGORY', payload: formData })
@@ -184,7 +195,29 @@ const TabAddCategory = () => {
                 </Box>
               </Box>
             </Grid>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={6} sm={6}>
+              <FormControl>
+                <FormLabel sx={{ fontSize: '0.875rem' }}>Is category active?</FormLabel>
+                <RadioGroup
+                  row
+                  defaultValue={values?.isActive ? 'yes' : 'no'}
+                  aria-label='Is category active?'
+                  name='account-settings-info-radio'
+                >
+                  <FormControlLabel
+                    value='no'
+                    label='No'
+                    control={<Radio onClick={() => handleIsCategoryActiveChange('no')} />}
+                  />
+                  <FormControlLabel
+                    value='yes'
+                    label='Yes'
+                    control={<Radio onClick={() => handleIsCategoryActiveChange('yes')} />}
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6} sm={6}>
               <TextField
                 fullWidth
                 label='Category title'

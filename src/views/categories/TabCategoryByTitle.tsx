@@ -19,27 +19,20 @@ const TabCategoryByTitle = () => {
 
   // ** States
   const [selectedCategoryData, setSelectedCategoryData] = useState<CategoryModel | null>(null)
-  const [openViewCategory, setOpenViewCategory] = useState<boolean>(false)
 
   useEffect(() => {
     dispatch({ type: 'FETCH_ALL_CATEGORIES' })
   }, [])
 
-  const setTheOpenViewCategory = (isOpenViewCategory: boolean) => {
-    setOpenViewCategory(isOpenViewCategory)
-  }
-
   const renderDetailsFields = () => {
     return (
       <Grid item xs={12} sm={12}>
         <CategorySmartCard
-          catData={selectedCategoryData}
-          selectedCategoryData={selectedCategoryData}
+          categoryData={selectedCategoryData}
           dataIndex={0}
-          openViewCategory={openViewCategory}
-          setOpenViewCategory={isOpenViewCategory => setTheOpenViewCategory(isOpenViewCategory)}
-          isActionsVisible={false}
-          isButtonsVisible={false}
+          isButton1Visible={false}
+          isButton2Visible={false}
+          forPage='categoryByTitle'
         />
       </Grid>
     )

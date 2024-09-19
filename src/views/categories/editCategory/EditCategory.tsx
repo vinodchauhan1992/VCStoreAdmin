@@ -14,11 +14,15 @@ import Box from '@mui/material/Box'
 import { styled } from '@mui/material/styles'
 import { ButtonProps } from '@mui/material/Button'
 import { AlertValuesModel } from 'src/models/AlertValuesModel'
-import CustomisedLoader from 'src/@core/components/customised-loader/CustomisedLoader'
 import Alert from '@mui/material/Alert'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import { CategoriesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import Radio from '@mui/material/Radio'
+import FormLabel from '@mui/material/FormLabel'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
 const defaultImage = '/images/avatars/9.jpeg'
 
@@ -82,13 +86,13 @@ const EditCategory = (props: Props) => {
     imageData: null,
     id: '',
     code: '',
+    isActive: true,
     dateAdded: new Date()
   }
 
   // ** State
   const [values, setValues] = useState<CategoryModel>(defaultValues)
   const [alertVaues, setAlertValues] = useState<AlertValuesModel>(defaultAlertValues)
-  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(false)
   const [imageFileData, setImageFileData] = useState<string>(defaultImage)
   const [file, setFile] = useState<any>(null)
 
@@ -111,6 +115,7 @@ const EditCategory = (props: Props) => {
       imageData: selectedCategoryData?.imageData ?? null,
       id: selectedCategoryData?.id ?? '',
       code: selectedCategoryData?.code ?? '',
+      isActive: selectedCategoryData?.isActive,
       dateAdded: selectedCategoryData?.dateAdded,
       dateModified: selectedCategoryData?.dateModified
     })
@@ -156,6 +161,10 @@ const EditCategory = (props: Props) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
+  const handleIsCategoryActiveChange = (newValue: string) => {
+    setValues({ ...values, isActive: newValue === 'yes' ? true : false })
+  }
+
   const renderDetailsFields = () => {
     return (
       <>
@@ -184,10 +193,10 @@ const EditCategory = (props: Props) => {
             </Box>
           </Box>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6} sm={6}>
           <TextField disabled fullWidth label='Category id' placeholder='Category id' value={values?.id ?? ''} />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6} sm={6}>
           <TextField
             fullWidth
             label='Category title'
@@ -196,10 +205,32 @@ const EditCategory = (props: Props) => {
             onChange={handleTitleChange('title')}
           />
         </Grid>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={6} sm={6}>
           <TextField disabled fullWidth label='Category code' placeholder='Category code' value={values?.code ?? ''} />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6} sm={6}>
+          <FormControl>
+            <FormLabel sx={{ fontSize: '0.875rem' }}>Is brand active?</FormLabel>
+            <RadioGroup
+              row
+              defaultValue={values?.isActive ? 'yes' : 'no'}
+              aria-label='Is brand active?'
+              name='account-settings-info-radio'
+            >
+              <FormControlLabel
+                value='no'
+                label='No'
+                control={<Radio onClick={() => handleIsCategoryActiveChange('no')} />}
+              />
+              <FormControlLabel
+                value='yes'
+                label='Yes'
+                control={<Radio onClick={() => handleIsCategoryActiveChange('yes')} />}
+              />
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+        <Grid item xs={6} sm={6}>
           <TextField
             disabled
             fullWidth
@@ -208,7 +239,7 @@ const EditCategory = (props: Props) => {
             value={values?.dateAdded ?? 'N/A'}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6} sm={6}>
           <TextField
             disabled
             fullWidth
@@ -293,6 +324,7 @@ const EditCategory = (props: Props) => {
     formData.append('imageData', values?.imageData ? JSON.stringify(JSON.stringify(values.imageData)) : '')
     formData.append('id', values?.id ?? '')
     formData.append('code', values?.code ?? '')
+    formData.append('isActive', `${values?.isActive}`)
     formData.append('dateAdded', `${values?.dateAdded ?? new Date()}`)
     if (file) {
       formData.append('file', file)
@@ -350,7 +382,6 @@ const EditCategory = (props: Props) => {
           <CardContent>
             {renderAlert()}
             {renderForm()}
-            <CustomisedLoader visible={isLoaderVisible} />
           </CardContent>
         </div>
       </Dialog>

@@ -115,11 +115,11 @@ const BrandSmartCard = (props: Props) => {
   ) => {
     if (!isClickedOutside) {
       switch (selectedMenuOption?.optionCode) {
-        case 'update_product':
+        case 'update_brand':
           onButton2Click?.(dataIndex, cardData)
           break
 
-        case 'delete_product':
+        case 'delete_brand':
           onButton1Click?.(dataIndex, cardData)
           break
 

@@ -1,32 +1,30 @@
 import EditIcon from '@mui/icons-material/Edit'
 import { CustomisedMenuItemOptionProps } from 'src/models/CustomisedMenuModel'
 import DeleteForeverSharpIcon from '@mui/icons-material/DeleteForeverSharp'
-import { blue, green, red } from '@mui/material/colors'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import InventoryIcon from '@mui/icons-material/Inventory'
+import { green, red } from '@mui/material/colors'
 import { MaxDiscuntPercentagesDataModel } from 'src/models/ProductsModel'
 
-export const getBrandStaticMenuOptionData = ({
-  forPage = 'allBrands'
+export const getCategoryStaticMenuOptionData = ({
+  forPage = 'allCategories'
 }: {
-  forPage?: 'allBrands' | 'brandByTitle' | null
+  forPage?: 'allCategories' | 'categoryByTitle' | null
 }) => {
   const data: CustomisedMenuItemOptionProps[] = [
     {
-      optionTitle: 'Update brand',
-      optionCode: 'update_brand',
+      optionTitle: 'Update category',
+      optionCode: 'update_category',
       titleColor: 'success.dark',
       OptionIcon: EditIcon,
       iconColor: green[500],
-      visible: forPage === 'brandByTitle' ? false : true
+      visible: forPage === 'categoryByTitle' ? false : true
     },
     {
-      optionTitle: 'Delete brand',
-      optionCode: 'delete_brand',
+      optionTitle: 'Delete category',
+      optionCode: 'delete_category',
       titleColor: 'error.dark',
       OptionIcon: DeleteForeverSharpIcon,
       iconColor: red[500],
-      visible: forPage === 'brandByTitle' ? false : true
+      visible: forPage === 'categoryByTitle' ? false : true
     }
   ]
   return data
