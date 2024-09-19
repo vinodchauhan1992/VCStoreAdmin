@@ -26,7 +26,6 @@ const TabAllProducts = () => {
   // ** State
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
   const [selectedProduct, setSelectedProduct] = useState<ProductsDataModel | null>(null)
-  const [openViewProduct, setOpenViewProduct] = useState<boolean>(false)
   const [openEditProduct, setOpenEditProduct] = useState<boolean>(false)
   const [searchedText, setSearchedText] = useState<string>('')
   const [searchedProducts, setSearchedProducts] = useState<ProductsDataModel[]>([])
@@ -132,14 +131,11 @@ const TabAllProducts = () => {
     )
   }
 
-  const setTheOpenViewProduct = (productData: ProductsDataModel, isOpenViewProduct: boolean) => {
-    console.log('productData', productData)
-    setSelectedProduct(productData)
-    setOpenViewProduct(isOpenViewProduct)
-  }
-
   const onShowBrandDetailsClick = (productData: ProductsDataModel) => {
-    router.push({ pathname: '/brands', query: { passedSearchTextForAllBrands: productData?.brandDetails?.title ?? '' } }, '/brands')
+    router.push(
+      { pathname: '/brands', query: { passedSearchTextForAllBrands: productData?.brandDetails?.title ?? '' } },
+      '/brands'
+    )
   }
 
   const renderCards = () => {
@@ -149,13 +145,10 @@ const TabAllProducts = () => {
           <Grid key={`${index.toString()}`} item xs={12} sm={4}>
             <ProductSmartCard
               productData={productData}
-              selectedProductData={selectedProduct}
               onButton1Click={() => onDeleteClick(productData)}
               onButton2Click={() => onEditClick(productData)}
               onShowBrandDetailsClick={() => onShowBrandDetailsClick(productData)}
               dataIndex={index}
-              openViewProduct={openViewProduct}
-              setOpenViewProduct={isOpenViewProduct => setTheOpenViewProduct(productData, isOpenViewProduct)}
             />
           </Grid>
         )

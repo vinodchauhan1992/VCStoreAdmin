@@ -28,6 +28,7 @@ import CustomisedMenu from 'src/@core/components/customised-menu/CustomisedMenu'
 import { getStaticMenuOptionData } from 'src/views/products/staticData/staticMenuOptions'
 import { CustomisedMenuItemOptionProps } from 'src/models/CustomisedMenuModel'
 import Skeleton from '@mui/material/Skeleton'
+import Rating from '@mui/material/Rating'
 
 const productImageLoadedBlockSize = '220px'
 const productImageLoadedInlineSize = '100%'
@@ -205,6 +206,23 @@ const ProductSmartCard = (props: Props) => {
     )
   }
 
+  const renderCardSubheader = () => {
+    return (
+      <>
+        <Typography variant='body2' sx={{ color: 'text.secondary', marginTop: 1, marginBottom: 1 }}>
+          {`${productData?.brandDetails?.title}`}
+        </Typography>
+        <Rating
+          name='half-rating-read'
+          defaultValue={productData?.productData?.rating?.count ?? 0}
+          precision={0.5}
+          readOnly
+          max={productData?.productData?.rating?.rate ?? 5}
+        />
+      </>
+    )
+  }
+
   const renderCardHeader = () => {
     return (
       <CardHeader
@@ -219,7 +237,7 @@ const ProductSmartCard = (props: Props) => {
           />
         }
         title={productData?.productData?.title}
-        subheader={`${productData?.brandDetails?.title}`}
+        subheader={renderCardSubheader()}
       />
     )
   }
