@@ -20,6 +20,7 @@ import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/
 import { FileFoldersModel } from 'src/models/FileFoldersModel'
 import { FileFoldersReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 import { convertDateIntoReadableFormat } from 'src/utils/CommonUtils'
+import EnhancedTable from 'src/@core/components/enhanced-table-view/EnhancedTable'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -79,8 +80,6 @@ const TabAllFileFolders = () => {
 
   const onEditClick = async (fileFolderData: FileFoldersModel) => {}
 
-  const onViewClick = async (fileFolderData: FileFoldersModel) => {}
-
   const handleDialogOpen = () => {
     setIsDialogOpen(!isDialogOpen)
   }
@@ -88,63 +87,12 @@ const TabAllFileFolders = () => {
   const renderDataTable = () => {
     if (allFileFoldersDataResult?.dataArray && allFileFoldersDataResult.dataArray.length > 0) {
       return (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700 }} aria-label='table in dashboard'>
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>ID</StyledTableCell>
-                <StyledTableCell>Folder Name</StyledTableCell>
-                <StyledTableCell>Dates</StyledTableCell>
-                <StyledTableCell>Manage</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {allFileFoldersDataResult.dataArray.map((fileFolderData: FileFoldersModel) => (
-                <StyledTableRow
-                  hover
-                  key={fileFolderData?.folderName}
-                  sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
-                >
-                  <StyledTableCell>{fileFolderData?.id}</StyledTableCell>
-                  <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {fileFolderData?.folderName}
-                      </Typography>
-                    </Box>
-                  </StyledTableCell>
-                  <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`Added On: ${convertDateIntoReadableFormat(fileFolderData?.dateAdded)}`}
-                      </Typography>
-                      <Typography variant='caption'>{`Modified On: ${convertDateIntoReadableFormat(
-                        fileFolderData?.dateModified
-                      )}`}</Typography>
-                    </Box>
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(fileFolderData)}>
-                      <Typography color='error' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        Delete
-                      </Typography>
-                    </ButtonStyled>
-                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(fileFolderData)}>
-                      <Typography color='info' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        Edit
-                      </Typography>
-                    </ButtonStyled>
-                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(fileFolderData)}>
-                      <Typography color='success' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        View
-                      </Typography>
-                    </ButtonStyled>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <EnhancedTable
+          tableDataArray={allFileFoldersDataResult.dataArray}
+          onDeleteClick={(data: any) => onDeleteClick(data)}
+          onEditClick={(data: any) => onEditClick(data)}
+          deletionResponse={deletedFileFolderResponse}
+        ></EnhancedTable>
       )
     }
   }
@@ -152,7 +100,7 @@ const TabAllFileFolders = () => {
   const renderEmpty = () => {
     return (
       <CustomisedErrorEmpty
-        title='No user statuses found!'
+        title='No file folders found!'
         type='empty'
         message={allFileFoldersDataResult?.message ?? ''}
       ></CustomisedErrorEmpty>
@@ -185,8 +133,8 @@ const TabAllFileFolders = () => {
       <CustomisedAlertDialog
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={handleDialogOpen}
-        dialogTitle='Delete user status!'
-        dialogMessage={`Are you sure you want to delete ${selectedFileFolder?.folderName} user status?`}
+        dialogTitle='Delete file folder!'
+        dialogMessage={`Are you sure you want to delete ${selectedFileFolder?.folderName} file folder?`}
         dialogButtons={[
           {
             title: 'Yes',

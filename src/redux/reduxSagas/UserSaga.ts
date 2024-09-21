@@ -8,7 +8,6 @@ const { ApiService, ApiCallTypes } = Api
 export function* fetchAllUsers(): any {
   yield put(UIReducer.showLoader(true))
   const data = yield call(ApiService.callApiService, ApiCallTypes.GET_ALL_USERS_TYPE, null)
-  console.log('allUsers', data)
   if (
     data.isSucceded &&
     data?.responseData &&
@@ -39,12 +38,7 @@ export function* fetchAllUsers(): any {
 
 export function* deleteUser(action: any): any {
   yield put(UIReducer.showLoader(true))
-  const data = yield call(
-    ApiService.callApiService,
-    ApiCallTypes.DELETE_USER_TYPE,
-    null,
-    `/${action?.payload?.userId}`
-  )
+  const data = yield call(ApiService.callApiService, ApiCallTypes.DELETE_USER_TYPE, null, `/${action?.payload?.userId}`)
   if (
     data.isSucceded &&
     data?.responseData &&

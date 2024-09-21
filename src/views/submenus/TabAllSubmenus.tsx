@@ -27,6 +27,7 @@ import {
 import { AdminMenusModel } from 'src/models/AdminMenusModel'
 import { convertDateIntoReadableFormat } from 'src/utils/CommonUtils'
 import { AdminSubmenusModel } from 'src/models/AdminSubmenusModel'
+import EnhancedTable from 'src/@core/components/enhanced-table-view/EnhancedTable'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -96,10 +97,6 @@ const TabAllSubmenus = () => {
     setSelectedAdminSubmenu(submenuData)
   }
 
-  const onViewClick = async (submenuData: AdminSubmenusModel) => {
-    setSelectedAdminSubmenu(submenuData)
-  }
-
   const handleDialogOpen = () => {
     setIsDialogOpen(!isDialogOpen)
   }
@@ -107,80 +104,12 @@ const TabAllSubmenus = () => {
   const renderDataTable = () => {
     if (allAdminSubmenusDataResult?.dataArray && allAdminSubmenusDataResult.dataArray.length > 0) {
       return (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700 }} aria-label='table in submenu'>
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>ID</StyledTableCell>
-                <StyledTableCell>Details</StyledTableCell>
-                <StyledTableCell>Dates</StyledTableCell>
-                <StyledTableCell>Manage</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {allAdminSubmenusDataResult.dataArray.map((submenuData: AdminSubmenusModel) => (
-                <StyledTableRow
-                  hover
-                  key={submenuData?.id}
-                  sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
-                >
-                  <StyledTableCell>{submenuData?.id}</StyledTableCell>
-                  <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`Title: ${submenuData?.submenuTitle ?? 'N/A'}`}
-                      </Typography>
-                      <Typography variant='caption'>{`Priority: ${submenuData?.priority ?? 'N/A'}`}</Typography>
-                      <Typography
-                        variant='caption'
-                        color={
-                          submenuData?.status && submenuData.status.toLowerCase() === 'active'
-                            ? 'success.dark'
-                            : 'error.dark'
-                        }
-                      >{`Status: ${submenuData?.status ?? 'N/A'}`}</Typography>
-                      <Typography
-                        variant='caption'
-                        color={submenuData?.isDeleteable ? 'success.dark' : 'error.dark'}
-                      >{`Can be deleted: ${submenuData?.isDeleteable ? 'Yes' : 'No'}`}</Typography>
-                      <Typography
-                        variant='caption'
-                        color={submenuData?.isAdminDeleteable ? 'success.dark' : 'error.dark'}
-                      >{`Can be deleted by admin: ${submenuData?.isAdminDeleteable ? 'Yes' : 'No'}`}</Typography>
-                    </Box>
-                  </StyledTableCell>
-                  <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`Added On: ${convertDateIntoReadableFormat(submenuData?.dateAdded)}`}
-                      </Typography>
-                      <Typography variant='caption'>{`Modified On: ${convertDateIntoReadableFormat(
-                        submenuData?.dateModified
-                      )}`}</Typography>
-                    </Box>
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(submenuData)}>
-                      <Typography color='error' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        Delete
-                      </Typography>
-                    </ButtonStyled>
-                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(submenuData)}>
-                      <Typography color='info' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        Edit
-                      </Typography>
-                    </ButtonStyled>
-                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(submenuData)}>
-                      <Typography color='success' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        View
-                      </Typography>
-                    </ButtonStyled>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <EnhancedTable
+          tableDataArray={allAdminSubmenusDataResult.dataArray}
+          onDeleteClick={(data: any) => onDeleteClick(data)}
+          onEditClick={(data: any) => onEditClick(data)}
+          deletionResponse={deletedAdminSubmenuResponse}
+        ></EnhancedTable>
       )
     }
   }

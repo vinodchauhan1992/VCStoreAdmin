@@ -188,7 +188,6 @@ const TabAddSubmenu = () => {
       statusID: selectedMenuStatusData?.id ?? '',
       status: selectedMenuStatusData?.menuStatusTitle ?? ''
     }
-    console.log('valuesToAdd', valuesToAdd)
     dispatch({ type: 'ADD_ADMIN_SUBMENU', payload: valuesToAdd })
   }
 

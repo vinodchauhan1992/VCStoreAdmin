@@ -12,7 +12,6 @@ const { ApiService, ApiCallTypes } = Api
 export function* loginUser(action: any): any {
   yield put(UIReducer.showLoader(true))
   const data = yield call(ApiService.callApiService, ApiCallTypes.AUTH_LOGIN_TYPE, action?.payload)
-  console.log('loginUser', data)
   if (
     data.isSucceded &&
     data?.responseData &&

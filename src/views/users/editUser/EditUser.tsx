@@ -55,7 +55,7 @@ const Transition = forwardRef(function Transition(
   return <Slide direction='up' ref={ref} {...props} />
 })
 
-const EditProduct = (props: Props) => {
+const EditUser = (props: Props) => {
   const dispatch = useAppDispatch()
 
   // @ts-ignore
@@ -349,4 +349,4 @@ const EditProduct = (props: Props) => {
   )
 }
 
-export default EditProduct
+export default EditUser

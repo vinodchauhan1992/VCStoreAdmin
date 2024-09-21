@@ -17,7 +17,7 @@ import AccountWrenchOutline from 'mdi-material-ui/AccountWrenchOutline'
 
 // ** Demo Tabs Imports
 import TabAllUsers from 'src/views/users/TabAllUsers'
-import TabUserByID from 'src/views/users/TabUserByID'
+import TabUserByID from 'src/views/users/TabUserByTitle'
 import TabAddUser from 'src/views/users/TabAddUser'
 
 // ** Third Party Styles Imports
@@ -41,9 +41,11 @@ const TabName = styled('span')(({ theme }) => ({
   }
 }))
 
+const tabsDataArray = ['allUsers', 'userByTitle', 'addUser']
+
 const Users = () => {
   // ** State
-  const [value, setValue] = useState<string>('allUsers')
+  const [value, setValue] = useState<string>(tabsDataArray[0])
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -58,7 +60,7 @@ const Users = () => {
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
           <Tab
-            value='allUsers'
+            value={tabsDataArray[0]}
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountWrenchOutline />
@@ -67,16 +69,16 @@ const Users = () => {
             }
           />
           <Tab
-            value='userByID'
+            value={tabsDataArray[1]}
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountSearchOutline />
-                <TabName>User By ID</TabName>
+                <TabName>User By Title</TabName>
               </Box>
             }
           />
           <Tab
-            value='addUser'
+            value={tabsDataArray[2]}
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountPlusOutline />
@@ -86,13 +88,13 @@ const Users = () => {
           />
         </TabList>
 
-        <TabPanel sx={{ p: 0 }} value='allUsers'>
+        <TabPanel sx={{ p: 0 }} value={tabsDataArray[0]}>
           <TabAllUsers />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='userByID'>
+        <TabPanel sx={{ p: 0 }} value={tabsDataArray[1]}>
           <TabUserByID />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='addUser'>
+        <TabPanel sx={{ p: 0 }} value={tabsDataArray[2]}>
           <TabAddUser />
         </TabPanel>
       </TabContext>

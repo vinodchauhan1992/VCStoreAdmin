@@ -27,10 +27,10 @@ const TabUserRoleByRole = () => {
   const renderDetailsFields = () => {
     return (
       <>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6} sm={6}>
           <TextField disabled fullWidth label='Role ID' placeholder='Role ID' value={selectedUserRoleData?.id ?? ''} />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6} sm={6}>
           <TextField
             disabled
             fullWidth
@@ -39,13 +39,22 @@ const TabUserRoleByRole = () => {
             value={selectedUserRoleData?.dateAdded ?? 'N/A'}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6} sm={6}>
           <TextField
             disabled
             fullWidth
             label='Role updated on'
             placeholder='Role updated on'
             value={selectedUserRoleData?.dateModified ?? 'N/A'}
+          />
+        </Grid>
+        <Grid item xs={12} sm={12}>
+          <TextField
+            disabled
+            fullWidth
+            label='User type'
+            placeholder='User type'
+            value={selectedUserRoleData?.userType ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={12} sm={12}>

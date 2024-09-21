@@ -67,7 +67,6 @@ export interface StatisticsCardProps {
 
 const StatisticsCard = (props: StatisticsCardProps) => {
   const { statsDataArray, growthData } = props
-  console.log('growthData', growthData)
 
   const getGrowthShowText = () => {
     let signToShow = ''

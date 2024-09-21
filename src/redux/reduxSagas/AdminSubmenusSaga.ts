@@ -146,7 +146,6 @@ export function* fetchSubmenusByMenuId(action: any): any {
     null,
     `/${action?.payload?.adminMenuId}`
   )
-  console.log('data', data)
   if (
     data.isSucceded &&
     data?.responseData &&

@@ -20,6 +20,7 @@ import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/
 import { UserStatusModel } from 'src/models/UserStatusModel'
 import { UserStatusesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 import { convertDateIntoReadableFormat } from 'src/utils/CommonUtils'
+import EnhancedTable from 'src/@core/components/enhanced-table-view/EnhancedTable'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -86,63 +87,12 @@ const TabAllUserStatuses = () => {
   const renderDataTable = () => {
     if (allUserStatusesDataResult?.dataArray && allUserStatusesDataResult.dataArray.length > 0) {
       return (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700 }} aria-label='table in dashboard'>
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>ID</StyledTableCell>
-                <StyledTableCell>Status</StyledTableCell>
-                <StyledTableCell>Dates</StyledTableCell>
-                <StyledTableCell>Manage</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {allUserStatusesDataResult.dataArray.map((userStatusData: UserStatusModel) => (
-                <StyledTableRow
-                  hover
-                  key={userStatusData?.status}
-                  sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
-                >
-                  <StyledTableCell>{userStatusData?.id}</StyledTableCell>
-                  <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {userStatusData?.status}
-                      </Typography>
-                    </Box>
-                  </StyledTableCell>
-                  <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`Added On: ${convertDateIntoReadableFormat(userStatusData?.dateAdded)}`}
-                      </Typography>
-                      <Typography variant='caption'>{`Modified On: ${convertDateIntoReadableFormat(
-                        userStatusData?.dateModified
-                      )}`}</Typography>
-                    </Box>
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(userStatusData)}>
-                      <Typography color='error' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        Delete
-                      </Typography>
-                    </ButtonStyled>
-                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(userStatusData)}>
-                      <Typography color='info' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        Edit
-                      </Typography>
-                    </ButtonStyled>
-                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(userStatusData)}>
-                      <Typography color='success' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        View
-                      </Typography>
-                    </ButtonStyled>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <EnhancedTable
+          tableDataArray={allUserStatusesDataResult.dataArray}
+          onDeleteClick={(data: any) => onDeleteClick(data)}
+          onEditClick={(data: any) => onEditClick(data)}
+          deletionResponse={deletedUserStatusResponse}
+        ></EnhancedTable>
       )
     }
   }

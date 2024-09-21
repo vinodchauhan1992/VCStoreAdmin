@@ -44,6 +44,7 @@ const TabAddUserRole = () => {
   // ** State
   const [values, setValues] = useState<UserRoleModel>({
     role: '',
+    userType: '',
     description: ''
   })
   const [alertVaues, setAlertValues] = useState<AlertValuesModel>(defaultAlertValues)
@@ -51,7 +52,7 @@ const TabAddUserRole = () => {
   // @ts-ignore
   const addedUserRoleResponse = useAppSelector(UserRolesReducer.selectAddedUserRoleResponse)
 
-  const handleRoleChange = (prop: keyof UserRoleModel) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleTextFieldChange = (prop: keyof UserRoleModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
@@ -62,6 +63,7 @@ const TabAddUserRole = () => {
   const resetForm = () => {
     setValues({
       role: '',
+      userType: '',
       description: ''
     })
     setAlertValues(defaultAlertValues)
@@ -76,6 +78,14 @@ const TabAddUserRole = () => {
       setAlertValues({
         severity: 'error',
         message: 'Please enter user role.',
+        isVisible: true
+      })
+      return
+    }
+    if (!values?.userType || values.userType === '') {
+      setAlertValues({
+        severity: 'error',
+        message: 'Please enter user type.',
         isVisible: true
       })
       return
@@ -129,13 +139,22 @@ const TabAddUserRole = () => {
         {renderAlert()}
         <form>
           <Grid container spacing={7}>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={6} sm={6}>
               <TextField
                 fullWidth
                 label='User role'
                 placeholder='User role'
                 value={values.role}
-                onChange={handleRoleChange('role')}
+                onChange={handleTextFieldChange('role')}
+              />
+            </Grid>
+            <Grid item xs={6} sm={6}>
+              <TextField
+                fullWidth
+                label='User type'
+                placeholder='User type'
+                value={values.userType}
+                onChange={handleTextFieldChange('userType')}
               />
             </Grid>
             <Grid item xs={12} sm={12}>
@@ -144,7 +163,7 @@ const TabAddUserRole = () => {
                 label='Role description'
                 placeholder='Role description'
                 value={values.description}
-                onChange={handleDescriptionChange('description')}
+                onChange={handleTextFieldChange('description')}
                 multiline
                 minRows={3}
                 sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}

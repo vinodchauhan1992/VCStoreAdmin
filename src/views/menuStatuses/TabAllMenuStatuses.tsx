@@ -20,6 +20,7 @@ import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/
 import { AdminMenuStatusesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 import { AdminMenuStatusesModel } from 'src/models/AdminMenuStatusesModel'
 import { convertDateIntoReadableFormat } from 'src/utils/CommonUtils'
+import EnhancedTable from 'src/@core/components/enhanced-table-view/EnhancedTable'
 
 const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(4.5),
@@ -86,10 +87,6 @@ const TabAllMenuStatuses = () => {
     setSelectedAdminMenuStatus(adminMenuStatusData)
   }
 
-  const onViewClick = async (adminMenuStatusData: AdminMenuStatusesModel) => {
-    setSelectedAdminMenuStatus(adminMenuStatusData)
-  }
-
   const handleDialogOpen = () => {
     setIsDialogOpen(!isDialogOpen)
   }
@@ -97,63 +94,12 @@ const TabAllMenuStatuses = () => {
   const renderDataTable = () => {
     if (allAdminMenuStatusesDataResult?.dataArray && allAdminMenuStatusesDataResult.dataArray.length > 0) {
       return (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700 }} aria-label='table in dashboard'>
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>ID</StyledTableCell>
-                <StyledTableCell>Menu Status Title</StyledTableCell>
-                <StyledTableCell>Dates</StyledTableCell>
-                <StyledTableCell>Manage</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {allAdminMenuStatusesDataResult.dataArray.map((adminMenuStatusData: AdminMenuStatusesModel) => (
-                <StyledTableRow
-                  hover
-                  key={adminMenuStatusData?.id}
-                  sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
-                >
-                  <StyledTableCell>{adminMenuStatusData?.id}</StyledTableCell>
-                  <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`${adminMenuStatusData?.menuStatusTitle ?? 'N/A'}`}
-                      </Typography>
-                    </Box>
-                  </StyledTableCell>
-                  <StyledTableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        {`Added On: ${convertDateIntoReadableFormat(adminMenuStatusData?.dateAdded)}`}
-                      </Typography>
-                      <Typography variant='caption'>{`Modified On: ${convertDateIntoReadableFormat(
-                        adminMenuStatusData?.dateModified
-                      )}`}</Typography>
-                    </Box>
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    <ButtonStyled color='error' variant='outlined' onClick={() => onDeleteClick(adminMenuStatusData)}>
-                      <Typography color='error' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        Delete
-                      </Typography>
-                    </ButtonStyled>
-                    <ButtonStyled color='info' variant='outlined' onClick={() => onEditClick(adminMenuStatusData)}>
-                      <Typography color='info' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        Edit
-                      </Typography>
-                    </ButtonStyled>
-                    <ButtonStyled color='success' variant='outlined' onClick={() => onViewClick(adminMenuStatusData)}>
-                      <Typography color='success' sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                        View
-                      </Typography>
-                    </ButtonStyled>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <EnhancedTable
+          tableDataArray={allAdminMenuStatusesDataResult.dataArray}
+          onDeleteClick={(data: any) => onDeleteClick(data)}
+          onEditClick={(data: any) => onEditClick(data)}
+          deletionResponse={deletedAdminMenuStatusResponse}
+        ></EnhancedTable>
       )
     }
   }
