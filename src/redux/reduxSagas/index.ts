@@ -2,7 +2,7 @@ import { all, fork } from 'redux-saga/effects'
 import { watchLoginUser } from './LoginSaga'
 import { watchAddUser, watchDeleteUser, watchFetchAllUsers } from './UserSaga'
 import { watchAddCategory, watchDeleteCategory, watchFetchAllCategories, watchUpdateCategory } from './CategoriesSaga'
-import { watchAddUserRole, watchDeleteUserRole, watchFetchAllUserRoles } from './UserRolesSaga'
+import { watchAddUserRole, watchDeleteUserRole, watchFetchAllUserRoles, watchUpdateUserRole } from './UserRolesSaga'
 import { watchAddUserStatus, watchDeleteUserStatus, watchFetchAllUserStatuses } from './UserStatusesSaga'
 import { watchAddFileFolder, watchDeleteFileFolder, watchFetchAllFileFolders } from './FileFoldersSaga'
 import {
@@ -63,6 +63,7 @@ export default function* rootSaga(): any {
     fork(watchFetchAllBrands),
     fork(watchAddBrand),
     fork(watchDeleteBrand),
-    fork(watchUpdateBrand)
+    fork(watchUpdateBrand),
+    fork(watchUpdateUserRole)
   ])
 }

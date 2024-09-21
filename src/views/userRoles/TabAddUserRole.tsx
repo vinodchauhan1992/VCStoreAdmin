@@ -56,9 +56,6 @@ const TabAddUserRole = () => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
-  const handleDescriptionChange = (prop: keyof UserRoleModel) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
 
   const resetForm = () => {
     setValues({

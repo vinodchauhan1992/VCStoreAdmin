@@ -57,12 +57,21 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export interface EnhancedTableProps {
   tableDataArray: DataArrayProps
   onDeleteClick?: (data: CommonEnhancedTableDataObjectModel) => void
-  onEditClick?: (data: CommonEnhancedTableDataObjectModel) => void
   deletionResponse?: any
+  renderEditComponent?: ({
+    labelId,
+    row,
+    isItemSelected
+  }: {
+    labelId: string
+    row: CommonEnhancedTableDataObjectModel
+    isItemSelected: boolean
+    resetSelectedState?: () => void
+  }) => React.ReactNode
 }
 
 const EnhancedTable = (props: EnhancedTableProps) => {
-  const { tableDataArray, onDeleteClick, onEditClick, deletionResponse } = props
+  const { tableDataArray, onDeleteClick, deletionResponse, renderEditComponent } = props
 
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<KeysOfProps>('priority')
@@ -80,10 +89,14 @@ const EnhancedTable = (props: EnhancedTableProps) => {
     [order, orderBy, page, rowsPerPage, tableDataArray]
   )
 
+  const resetSelectedState = () => {
+    setSelected([])
+  }
+
   React.useEffect(() => {
     if (deletionResponse?.isCompleted) {
       if (deletionResponse?.succeeded) {
-        setSelected([])
+        resetSelectedState()
       }
     }
   }, [deletionResponse])
@@ -121,7 +134,6 @@ const EnhancedTable = (props: EnhancedTableProps) => {
           onDeleteClick={() => {
             onDeleteClick?.(getSelectedAdminMenuDataArrayById({ selected, tableDataArray })?.[0])
           }}
-          onEditClick={() => onEditClick?.(getSelectedAdminMenuDataArrayById({ selected, tableDataArray })?.[0])}
         />
         <TableContainer>
           <Table
@@ -149,30 +161,41 @@ const EnhancedTable = (props: EnhancedTableProps) => {
                 const labelId = `enhanced-table-checkbox-${index}`
 
                 return (
-                  <StyledTableRow
-                    hover
-                    onClick={(event: React.MouseEvent<unknown>) =>
-                      handleClick({ event, id: row.id, selected, setSelected })
-                    }
-                    role='checkbox'
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <StyledTableCell padding='checkbox'>
-                      <Checkbox
-                        color='primary'
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId
-                        }}
-                      />
-                    </StyledTableCell>
-                    {/*@ts-ignore*/}
-                    {renderTableCells(row)}
-                  </StyledTableRow>
+                  <>
+                    <StyledTableRow
+                      hover
+                      onClick={(event: React.MouseEvent<unknown>) =>
+                        handleClick({ event, id: row.id, selected, setSelected })
+                      }
+                      role='checkbox'
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isItemSelected}
+                      sx={{ cursor: 'pointer' }}
+                    >
+                      <StyledTableCell padding='checkbox'>
+                        <Checkbox
+                          color='primary'
+                          checked={isItemSelected}
+                          inputProps={{
+                            'aria-labelledby': labelId
+                          }}
+                        />
+                      </StyledTableCell>
+                      {/*@ts-ignore*/}
+                      {renderTableCells(row)}
+                    </StyledTableRow>
+                    {isItemSelected
+                      ? renderEditComponent?.({
+                          labelId,
+                          // @ts-ignore
+                          row: row,
+                          isItemSelected,
+                          resetSelectedState
+                        })
+                      : null}
+                  </>
                 )
               })}
               {isEmptyRows({ page, rowsPerPage, tableDataArray }) > 0 && (

@@ -19,6 +19,7 @@ export default {
   /*-------------------- UPDATE API'S TYPES START --------------------*/
   UPDATE_CATEGORY_TYPE: 'updateProductCategory',
   UPDATE_BRAND_TYPE: 'updateProductBrand',
+  UPDATE_USER_ROLE_TYPE: 'updateUserRole',
   /*-------------------- UPDATE API'S TYPES END --------------------*/
 
   /*-------------------- DELETE API'S TYPES START --------------------*/

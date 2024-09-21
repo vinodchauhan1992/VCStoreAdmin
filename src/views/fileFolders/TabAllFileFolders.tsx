@@ -90,7 +90,6 @@ const TabAllFileFolders = () => {
         <EnhancedTable
           tableDataArray={allFileFoldersDataResult.dataArray}
           onDeleteClick={(data: any) => onDeleteClick(data)}
-          onEditClick={(data: any) => onEditClick(data)}
           deletionResponse={deletedFileFolderResponse}
         ></EnhancedTable>
       )

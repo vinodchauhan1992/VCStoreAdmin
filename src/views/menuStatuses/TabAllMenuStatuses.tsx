@@ -97,7 +97,6 @@ const TabAllMenuStatuses = () => {
         <EnhancedTable
           tableDataArray={allAdminMenuStatusesDataResult.dataArray}
           onDeleteClick={(data: any) => onDeleteClick(data)}
-          onEditClick={(data: any) => onEditClick(data)}
           deletionResponse={deletedAdminMenuStatusResponse}
         ></EnhancedTable>
       )

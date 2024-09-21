@@ -107,7 +107,6 @@ const TabAllSubmenus = () => {
         <EnhancedTable
           tableDataArray={allAdminSubmenusDataResult.dataArray}
           onDeleteClick={(data: any) => onDeleteClick(data)}
-          onEditClick={(data: any) => onEditClick(data)}
           deletionResponse={deletedAdminSubmenuResponse}
         ></EnhancedTable>
       )

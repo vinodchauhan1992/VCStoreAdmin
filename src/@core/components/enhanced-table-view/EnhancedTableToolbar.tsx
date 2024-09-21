@@ -6,17 +6,15 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Stack } from '@mui/material'
-import EditIcon from '@mui/icons-material/Edit'
 import { purple } from '@mui/material/colors'
 
 export interface EnhancedTableToolbarProps {
   numSelected: number
   onDeleteClick?: () => void
-  onEditClick?: () => void
 }
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-  const { numSelected, onDeleteClick, onEditClick } = props
+  const { numSelected, onDeleteClick } = props
   return (
     <Toolbar
       sx={{
@@ -39,11 +37,6 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           <Tooltip title='Delete'>
             <IconButton onClick={() => onDeleteClick?.()}>
               <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title='Update'>
-            <IconButton onClick={() => onEditClick?.()}>
-              <EditIcon />
             </IconButton>
           </Tooltip>
         </Stack>

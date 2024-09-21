@@ -2,7 +2,8 @@ import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit'
 import {
   AddDataCommonReducerModel,
   CommonReducerDataArrayModel,
-  DeleteDataCommonReducerModel
+  DeleteDataCommonReducerModel,
+  UpdateDataCommonReducerModel
 } from 'src/models/CommonModel'
 import { ReduxStateModel, UserRolesStateModel } from 'src/models/ReduxStateModel'
 import { UserRoleModel } from 'src/models/UserRoleModel'
@@ -25,6 +26,12 @@ const initialState: UserRolesStateModel = {
     data: null
   },
   addUserRoleResponse: {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
+  },
+  updateUserRoleResponse: {
     message: null,
     succeeded: false,
     isCompleted: false,
@@ -63,6 +70,18 @@ const saveAddUserRoleResponseInfo = (
   }
 }
 
+const saveUpdateUserRoleResponseInfo = (
+  state: UserRolesStateModel,
+  action: PayloadAction<UpdateDataCommonReducerModel<UserRoleModel>>
+): any => {
+  state.updateUserRoleResponse = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
+  }
+}
+
 const resetAllUserRolesDataResultInfo = (state: UserRolesStateModel): any => {
   state.userRolesData = {
     message: null,
@@ -90,6 +109,15 @@ const resetAddedUserRoleResponseInfo = (state: UserRolesStateModel): any => {
   }
 }
 
+const resetUpdatedUserRoleResponseInfo = (state: UserRolesStateModel): any => {
+  state.updateUserRoleResponse = {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
+  }
+}
+
 const userRolesSlice: any = createSlice({
   name: 'userRoles',
   initialState: initialState,
@@ -102,9 +130,11 @@ const userRolesSlice: any = createSlice({
     saveAllUserRolesData: saveAllUserRolesDataInfo,
     saveDeletedUserRoleResponse: saveDeletedUserRoleResponseInfo,
     saveAddUserRoleResponse: saveAddUserRoleResponseInfo,
+    saveUpdateUserRoleResponse: saveUpdateUserRoleResponseInfo,
     resetAllUserRolesDataResult: resetAllUserRolesDataResultInfo,
     resetDeletedUserRoleResponse: resetDeletedUserRoleResponseInfo,
-    resetAddedUserRoleResponse: resetAddedUserRoleResponseInfo
+    resetAddedUserRoleResponse: resetAddedUserRoleResponseInfo,
+    resetUpdatedUserRoleResponse: resetUpdatedUserRoleResponseInfo
   }
 })
 
@@ -113,9 +143,11 @@ const {
   saveAllUserRolesData,
   saveDeletedUserRoleResponse,
   saveAddUserRoleResponse,
+  saveUpdateUserRoleResponse,
   resetAllUserRolesDataResult,
   resetDeletedUserRoleResponse,
-  resetAddedUserRoleResponse
+  resetAddedUserRoleResponse,
+  resetUpdatedUserRoleResponse
 } = userRolesSlice.actions
 
 // SELECTOR
@@ -146,6 +178,15 @@ const selectAddedUserRoleResponse = (state: ReduxStateModel) => {
   }
 }
 
+const selectUpdatedUserRoleResponse = (state: ReduxStateModel) => {
+  return {
+    message: state?.userRoles?.updateUserRoleResponse?.message ?? null,
+    succeeded: state?.userRoles?.updateUserRoleResponse?.succeeded ?? false,
+    isCompleted: state?.userRoles?.updateUserRoleResponse?.isCompleted ?? false,
+    data: state?.userRoles?.updateUserRoleResponse?.data ?? null
+  }
+}
+
 const userRolesSliceReducer = userRolesSlice.reducer
 
 export {
@@ -153,11 +194,14 @@ export {
   saveAllUserRolesData,
   saveDeletedUserRoleResponse,
   saveAddUserRoleResponse,
+  saveUpdateUserRoleResponse,
   resetAllUserRolesDataResult,
   resetDeletedUserRoleResponse,
   resetAddedUserRoleResponse,
+  resetUpdatedUserRoleResponse,
   selectAllUserRolesDataResult,
   selectDeletedUserRoleResponse,
   selectAddedUserRoleResponse,
+  selectUpdatedUserRoleResponse,
   signOutAction
 }

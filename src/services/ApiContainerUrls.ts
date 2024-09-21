@@ -19,6 +19,7 @@ export default {
   /*-------------------- UPDATE API'S START --------------------*/
   UPDATE_CATEGORY_API_PATH: 'categories/updateProductCategory',
   UPDATE_BRAND_API_PATH: 'brands/updateProductBrand',
+  UPDATE_USER_ROLE_API_PATH: 'userRoles/updateUserRole',
   /*-------------------- UPDATE API'S START --------------------*/
 
   /*-------------------- DELETE API'S START --------------------*/

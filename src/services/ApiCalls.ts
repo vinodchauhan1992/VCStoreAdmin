@@ -234,6 +234,12 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       requestUrl = ApiContainerUrls.UPDATE_BRAND_API_PATH
       contentType = 'multipart/form-data'
       break
+
+    case ApiCallTypes.UPDATE_USER_ROLE_TYPE:
+      requestType = 'PUT'
+      requestUrl = ApiContainerUrls.UPDATE_USER_ROLE_API_PATH
+      contentType = 'application/json'
+      break
     /* ---------- UPDATE requests ends ---------------------------- */
   }
 

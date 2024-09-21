@@ -3,7 +3,8 @@ import { takeLatest, call, put } from 'redux-saga/effects'
 import {
   saveAllUserRolesData,
   saveDeletedUserRoleResponse,
-  saveAddUserRoleResponse
+  saveAddUserRoleResponse,
+  saveUpdateUserRoleResponse
 } from '../reducers/UserRolesReducer'
 import { UIReducer } from '../reducers'
 
@@ -108,6 +109,42 @@ export function* addUserRole(action: any): any {
   yield put(UIReducer.showLoader(false))
 }
 
+export function* updateUserRole(action: any): any {
+  yield put(UIReducer.showLoader(true))
+  const data = yield call(
+    ApiService.callApiService,
+    ApiCallTypes.UPDATE_USER_ROLE_TYPE,
+    action?.payload?.jsonData,
+    `/${action?.payload?.roleId}`
+  )
+  if (
+    data.isSucceded &&
+    data?.responseData &&
+    data?.responseData?.status &&
+    data.responseData.status === 'success' &&
+    data?.responseData?.data
+  ) {
+    yield put(
+      saveUpdateUserRoleResponse({
+        message: data.responseData.message,
+        succeeded: true,
+        isCompleted: true,
+        data: data.responseData.data
+      })
+    )
+  } else {
+    yield put(
+      saveUpdateUserRoleResponse({
+        message: data.responseData.message,
+        succeeded: false,
+        isCompleted: true,
+        data: data?.responseData?.data ?? null
+      })
+    )
+  }
+  yield put(UIReducer.showLoader(false))
+}
+
 export function* watchFetchAllUserRoles(): any {
   yield takeLatest('FETCH_ALL_USER_ROLES', fetchAllUserRoles)
 }
@@ -118,4 +155,8 @@ export function* watchDeleteUserRole(): any {
 
 export function* watchAddUserRole(): any {
   yield takeLatest('ADD_USER_ROLE', addUserRole)
+}
+
+export function* watchUpdateUserRole(): any {
+  yield takeLatest('UPDATE_USER_ROLE', updateUserRole)
 }

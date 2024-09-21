@@ -90,7 +90,6 @@ const TabAllUserStatuses = () => {
         <EnhancedTable
           tableDataArray={allUserStatusesDataResult.dataArray}
           onDeleteClick={(data: any) => onDeleteClick(data)}
-          onEditClick={(data: any) => onEditClick(data)}
           deletionResponse={deletedUserStatusResponse}
         ></EnhancedTable>
       )

@@ -44,6 +44,7 @@ export interface UserRolesStateModel {
   userRolesData?: CommonReducerDataArrayModel<UserRoleModel[]>
   deletedUserRoleResponse?: DeleteDataCommonReducerModel<null>
   addUserRoleResponse?: AddDataCommonReducerModel<UserRoleModel>
+  updateUserRoleResponse?: UpdateDataCommonReducerModel<UserRoleModel>
 }
 
 export interface UserStatusesStateModel {

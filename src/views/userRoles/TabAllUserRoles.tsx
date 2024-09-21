@@ -10,6 +10,7 @@ import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/
 import { UserRoleModel } from 'src/models/UserRoleModel'
 import { UserRolesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 import EnhancedTable from 'src/@core/components/enhanced-table-view/EnhancedTable'
+import EditUserRole from './components/editUserRole/EditUserRole'
 
 const TabAllUserRoles = () => {
   // ** State
@@ -57,10 +58,6 @@ const TabAllUserRoles = () => {
     setIsDialogOpen(true)
   }
 
-  const onEditClick = async (userRoleData: UserRoleModel) => {
-    setSelectedUserRole(userRoleData)
-  }
-
   const handleDialogOpen = () => {
     setIsDialogOpen(!isDialogOpen)
   }
@@ -73,8 +70,12 @@ const TabAllUserRoles = () => {
           onDeleteClick={(data: any) => {
             onDeleteClick(data)
           }}
-          onEditClick={(data: any) => onEditClick(data)}
           deletionResponse={deletedUserRoleResponse}
+          renderEditComponent={({ labelId, row, isItemSelected, resetSelectedState }) => {
+            return (
+              <EditUserRole labelId={labelId} row={row} isItemSelected={isItemSelected} resetSelectedState={resetSelectedState} />
+            )
+          }}
         ></EnhancedTable>
       )
     }
