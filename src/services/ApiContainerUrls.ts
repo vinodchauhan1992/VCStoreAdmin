@@ -12,7 +12,7 @@ export default {
   ADD_ADMIN_MENU_STATUS_API_PATH: 'adminMenuStatuses/addNewAdminMenuStatuses',
   ADD_ADMIN_SUBMENU_API_PATH: 'adminSubmenu/addNewAdminSubmenu',
   ADD_PRODUCT_API_PATH: 'products/addProduct',
-  ADD_USER_API_PATH: 'user/addNewUser',
+  ADD_USER_API_PATH: 'users/addNewUser',
   ADD_BRAND_API_PATH: 'brands/addProductBrand',
   /*-------------------- ADD API'S END --------------------*/
 

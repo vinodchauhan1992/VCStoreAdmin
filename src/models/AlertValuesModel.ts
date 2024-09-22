@@ -4,4 +4,5 @@ export interface AlertValuesModel {
   severity: AlertColor
   message?: string
   isVisible: boolean
+  accordionName?: string | null
 }

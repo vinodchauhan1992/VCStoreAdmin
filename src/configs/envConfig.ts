@@ -13,5 +13,7 @@ export default {
   productionHost: {
     v1: 'https://vcstoreapi-production.up.railway.app/v1/',
     v2: 'https://vcstoreapi-production.up.railway.app/v2/'
-  }
+  },
+  dateOfBirthMinYear: 120,
+  dateOfBirthMaxYear: 18
 }

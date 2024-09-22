@@ -5,8 +5,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { CustomisedMenuItemOptionProps } from 'src/models/CustomisedMenuModel'
 import { styled, alpha } from '@mui/material/styles'
 import Menu, { MenuProps } from '@mui/material/Menu'
-import DeleteForeverSharp from '@mui/icons-material/DeleteForeverSharp'
-import { amber, red } from '@mui/material/colors'
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu

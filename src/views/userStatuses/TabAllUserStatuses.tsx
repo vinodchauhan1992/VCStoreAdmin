@@ -3,34 +3,13 @@ import { useState, useEffect } from 'react'
 
 // ** MUI Imports
 import CardContent from '@mui/material/CardContent'
-import Table from '@mui/material/Table'
-import TableHead from '@mui/material/TableHead'
-import TableBody from '@mui/material/TableBody'
-import Typography from '@mui/material/Typography'
-import TableContainer from '@mui/material/TableContainer'
-import Box from '@mui/material/Box'
 import Button, { ButtonProps } from '@mui/material/Button'
-import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
-import { StyledTableCell } from 'src/@core/components/customised-table/styled-table-cell/StyledTableCell'
-import { StyledTableRow } from 'src/@core/components/customised-table/styled-table-row/StyledTableRow'
 import { styled } from '@mui/material/styles'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import CustomisedAlertDialog from 'src/@core/components/customised-alert-dialog/CustomisedAlertDialog'
 import { UserStatusModel } from 'src/models/UserStatusModel'
 import { UserStatusesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
-import { convertDateIntoReadableFormat } from 'src/utils/CommonUtils'
 import EnhancedTable from 'src/@core/components/enhanced-table-view/EnhancedTable'
-
-const ButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
-  marginRight: theme.spacing(4.5),
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    marginLeft: 0,
-    textAlign: 'center',
-    marginTop: theme.spacing(4)
-  }
-}))
 
 const TabAllUserStatuses = () => {
   const dispatch = useAppDispatch()

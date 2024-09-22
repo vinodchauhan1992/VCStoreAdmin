@@ -150,7 +150,7 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
     case ApiCallTypes.ADD_USER_TYPE:
       requestType = 'POST'
       requestUrl = ApiContainerUrls.ADD_USER_API_PATH
-      contentType = 'application/json'
+      contentType = 'multipart/form-data'
       break
 
     case ApiCallTypes.ADD_BRAND_TYPE:

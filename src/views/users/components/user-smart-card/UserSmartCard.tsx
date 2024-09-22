@@ -99,14 +99,11 @@ const UserSmartCard = (props: Props) => {
   } = props
 
   const [expanded, setExpanded] = React.useState(false)
-  const [isAvatarLoading, setIsAvatarLoading] = React.useState(false)
   const [isProductImgLoading, setIsProductImgLoading] = React.useState(false)
 
-  const isProfit = userData?.userStatus === 'Active' ? true : false
   const isUserActive = userData?.userStatusID === '4b2736cc-8424-4faa-91fd-a1eb02926a73' ? true : false
 
   React.useEffect(() => {
-    setIsAvatarLoading(true)
     setIsProductImgLoading(true)
   }, [])
 
@@ -135,59 +132,20 @@ const UserSmartCard = (props: Props) => {
     }
   }
 
-  const isAvatarUrlValid = () => {
-    return userData?.imageData?.imageUrl && userData.imageData.imageUrl !== '' ? true : false
-  }
-
-  const onAvatarLoaded = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    setIsAvatarLoading(false)
-  }
-
-  const onAvatarLoadingError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    if (e?.nativeEvent?.type === 'error') {
-      setIsAvatarLoading(true)
-    }
-  }
-
-  const getSkeleton = (loading: boolean, skeletonSx?: any) => {
-    return loading ? (
-      <Skeleton
-        animation='wave'
-        sx={{
-          blockSize: '80px',
-          inlineSize: '80px',
-          borderRadius: 1,
-          position: 'absolute',
-          backgroundColor: grey[400],
-          ...skeletonSx
-        }}
-        variant='circular'
-      ></Skeleton>
-    ) : null
-  }
-
   const getAvatarComponent = () => {
     return (
       <>
         <Avatar
-          imgProps={{
-            onLoad: e => onAvatarLoaded(e),
-            onError: e => onAvatarLoadingError(e)
-          }}
-          src={isAvatarUrlValid() ? userData?.imageData?.imageUrl : ''}
           sx={{
-            bgcolor: 'white',
-            color: 'white',
-            border: '2px solid orange',
-            blockSize: '80px',
-            inlineSize: '80px'
+            bgcolor: amber[300],
+            color: isUserActive ? 'success.dark' : 'error.dark',
+            border: '1px solid orange'
           }}
           aria-label='user-image'
-          variant='circular'
+          variant='rounded'
         >
-          {!isAvatarUrlValid() ? getAvatarText(`${userData?.name?.firstname} ${userData?.name?.lastname}`) : null}
+          {getAvatarText(`${userData?.name?.firstname} ${userData?.name?.lastname}`)}
         </Avatar>
-        {getSkeleton(isAvatarLoading)}
       </>
     )
   }

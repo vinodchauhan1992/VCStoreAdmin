@@ -45,7 +45,7 @@ const tabsDataArray = ['allUsers', 'userByTitle', 'addUser']
 
 const Users = () => {
   // ** State
-  const [value, setValue] = useState<string>(tabsDataArray[0])
+  const [value, setValue] = useState<string>(tabsDataArray[2])
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue)
