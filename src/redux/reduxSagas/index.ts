@@ -25,6 +25,7 @@ import {
 } from './AdminMenuStatusesSaga'
 import { watchAddProduct, watchDeleteProduct, watchFetchAllProducts } from './ProductsSaga'
 import { watchAddBrand, watchDeleteBrand, watchFetchAllBrands, watchUpdateBrand } from './BrandsSaga'
+import { watchAddCountry, watchDeleteCountry, watchFetchAllCountries, watchUpdateCountry } from './CountriesSaga'
 
 export default function* rootSaga(): any {
   return yield all([
@@ -64,6 +65,10 @@ export default function* rootSaga(): any {
     fork(watchAddBrand),
     fork(watchDeleteBrand),
     fork(watchUpdateBrand),
-    fork(watchUpdateUserRole)
+    fork(watchUpdateUserRole),
+    fork(watchFetchAllCountries),
+    fork(watchAddCountry),
+    fork(watchDeleteCountry),
+    fork(watchUpdateCountry)
   ])
 }

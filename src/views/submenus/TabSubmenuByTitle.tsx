@@ -51,6 +51,7 @@ const TabSubmenuByTitle = () => {
               defaultValue={selectedAdminSubmenuData?.isDeleteable ? 'yes' : 'no'}
               aria-label='Can be deleted?'
               name='account-settings-info-radio'
+              value={selectedAdminSubmenuData?.isDeleteable ? 'yes' : 'no'}
             >
               <FormControlLabel value='no' label='No' control={<Radio disabled />} />
               <FormControlLabel value='yes' label='Yes' control={<Radio disabled />} />
@@ -67,6 +68,7 @@ const TabSubmenuByTitle = () => {
               defaultValue={selectedAdminSubmenuData?.isAdminDeleteable ? 'yes' : 'no'}
               aria-label='Can be deleted by admin?'
               name='account-settings-info-radio'
+              value={selectedAdminSubmenuData?.isAdminDeleteable ? 'yes' : 'no'}
             >
               <FormControlLabel value='yes' label='Yes' control={<Radio disabled />} />
               <FormControlLabel value='no' label='No' control={<Radio disabled />} />

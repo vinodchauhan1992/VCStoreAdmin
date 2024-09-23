@@ -11,6 +11,7 @@ import * as AdminSubmenusReducer from './AdminSubmenusReducer'
 import * as AdminMenuStatusesReducer from './AdminMenuStatusesReducer'
 import * as ProductsReducer from './ProductsReducer'
 import * as BrandsReducer from './BrandsReducer'
+import * as CountriesReducer from './CountriesReducer'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { store } from '../../reduxConfig/reduxStore/store'
 
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
   adminSubmenus: AdminSubmenusReducer.adminSubmenusSliceReducer,
   adminMenuStatuses: AdminMenuStatusesReducer.adminMenuStatusesSliceReducer,
   products: ProductsReducer.productsSliceReducer,
-  brands: BrandsReducer.brandsSliceReducer
+  brands: BrandsReducer.brandsSliceReducer,
+  countries: CountriesReducer.countriesSliceReducer
 })
 
 export {
@@ -42,7 +44,8 @@ export {
   AdminSubmenusReducer,
   AdminMenuStatusesReducer,
   ProductsReducer,
-  BrandsReducer
+  BrandsReducer,
+  CountriesReducer
 }
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

@@ -203,6 +203,7 @@ const TabAddCategory = () => {
                   defaultValue={values?.isActive ? 'yes' : 'no'}
                   aria-label='Is category active?'
                   name='account-settings-info-radio'
+                  value={values?.isActive ? 'yes' : 'no'}
                 >
                   <FormControlLabel
                     value='no'

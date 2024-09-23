@@ -314,6 +314,7 @@ const TabAddSubmenu = () => {
                   defaultValue={values?.isDeleteable ? 'yes' : 'no'}
                   aria-label='Can be deleted?'
                   name='account-settings-info-radio'
+                  value={values?.isDeleteable ? 'yes' : 'no'}
                 >
                   <FormControlLabel
                     value='no'
@@ -336,6 +337,7 @@ const TabAddSubmenu = () => {
                   defaultValue={values?.isAdminDeleteable ? 'yes' : 'no'}
                   aria-label='Can be deleted by admin?'
                   name='account-settings-info-radio'
+                  value={values?.isAdminDeleteable ? 'yes' : 'no'}
                 >
                   <FormControlLabel
                     value='yes'

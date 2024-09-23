@@ -342,6 +342,7 @@ const TabAddProduct = () => {
                   defaultValue={values?.isActive ? 'yes' : 'no'}
                   aria-label='Is product active?'
                   name='account-settings-info-radio'
+                  value={values?.isActive ? 'yes' : 'no'}
                 >
                   <FormControlLabel
                     value='no'

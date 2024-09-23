@@ -216,6 +216,7 @@ const EditCategory = (props: Props) => {
               defaultValue={values?.isActive ? 'yes' : 'no'}
               aria-label='Is brand active?'
               name='account-settings-info-radio'
+              value={values?.isActive ? 'yes' : 'no'}
             >
               <FormControlLabel
                 value='no'

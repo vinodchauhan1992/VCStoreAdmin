@@ -16,9 +16,9 @@ import AccountPlusOutline from 'mdi-material-ui/AccountPlusOutline'
 import AccountWrenchOutline from 'mdi-material-ui/AccountWrenchOutline'
 
 // ** Demo Tabs Imports
-import TabAllUsers from 'src/views/users/TabAllUsers'
-import TabUserByID from 'src/views/users/TabUserByTitle'
-import TabAddUser from 'src/views/users/TabAddUser'
+import TabAllCountries from 'src/views/countries/TabAllCountries'
+import TabCountryByTitle from 'src/views/countries/TabCountryByTitle'
+import TabAddCountry from 'src/views/countries/TabAddCountry'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
@@ -41,9 +41,9 @@ const TabName = styled('span')(({ theme }) => ({
   }
 }))
 
-const tabsDataArray = ['allUsers', 'userByTitle', 'addUser']
+const tabsDataArray = ['allCountries', 'countryByTitle', 'addCountry']
 
-const Users = () => {
+const Countries = () => {
   // ** State
   const [value, setValue] = useState<string>(tabsDataArray[0])
 
@@ -56,7 +56,7 @@ const Users = () => {
       <TabContext value={value}>
         <TabList
           onChange={handleChange}
-          aria-label='users tabs'
+          aria-label='countries tabs'
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
           <Tab
@@ -64,7 +64,7 @@ const Users = () => {
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountWrenchOutline />
-                <TabName>All Users</TabName>
+                <TabName>All Countries</TabName>
               </Box>
             }
           />
@@ -73,7 +73,7 @@ const Users = () => {
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountSearchOutline />
-                <TabName>User By Title</TabName>
+                <TabName>Country By Title</TabName>
               </Box>
             }
           />
@@ -82,24 +82,24 @@ const Users = () => {
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <AccountPlusOutline />
-                <TabName>Add User</TabName>
+                <TabName>Add Country</TabName>
               </Box>
             }
           />
         </TabList>
 
         <TabPanel sx={{ p: 0 }} value={tabsDataArray[0]}>
-          <TabAllUsers />
+          <TabAllCountries />
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value={tabsDataArray[1]}>
-          <TabUserByID />
+          <TabCountryByTitle />
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value={tabsDataArray[2]}>
-          <TabAddUser />
+          <TabAddCountry />
         </TabPanel>
       </TabContext>
     </Card>
   )
 }
 
-export default Users
+export default Countries

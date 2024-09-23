@@ -8,122 +8,113 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Grid from '@mui/material/Grid'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
-import { AdminMenusReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
-import { AdminMenusModel } from 'src/models/AdminMenusModel'
-
+import { CountriesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { CountriesModel } from 'src/models/CountriesModel'
+import Radio from '@mui/material/Radio'
 import FormLabel from '@mui/material/FormLabel'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import Radio from '@mui/material/Radio'
+import { convertDateIntoReadableFormat } from 'src/utils/CommonUtils'
 
-const TabMenuByMenuName = () => {
+const TabCountryByTitle = () => {
   const dispatch = useAppDispatch()
 
   // ** States
-  const [selectedAdminMenuData, setSelectedUserRoleData] = useState<AdminMenusModel | null>(null)
+  const [selectedCountryData, setSelectedCountryData] = useState<CountriesModel | null>(null)
 
   // @ts-ignore
-  const allAdminMenusDataResult = useAppSelector(AdminMenusReducer.selectAllAdminMenusDataResult)
+  const allCountriesDataResult = useAppSelector(CountriesReducer.selectAllCountriesDataResult)
 
   useEffect(() => {
-    dispatch({ type: 'FETCH_ALL_ADMIN_MENUS' })
+    dispatch({ type: 'FETCH_ALL_COUNTRIES' })
   }, [])
 
   const renderDetailsFields = () => {
     return (
       <>
-        <Grid item xs={12} sm={6}>
-          <TextField disabled fullWidth label='Menu ID' placeholder='Menu ID' value={selectedAdminMenuData?.id ?? ''} />
-        </Grid>
         <Grid item xs={6} sm={6}>
           <TextField
             disabled
             fullWidth
-            label='Menu Path'
-            placeholder='Menu Path'
-            value={selectedAdminMenuData?.menuPath ?? ''}
+            label='Country ID'
+            placeholder='Country ID'
+            value={selectedCountryData?.id ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={6} sm={6}>
           <TextField
             disabled
             fullWidth
-            label='Priority'
-            placeholder='Priority'
-            value={selectedAdminMenuData?.priority ?? ''}
+            label='Country title'
+            placeholder='Country title'
+            value={selectedCountryData?.title ?? 'N/A'}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6} sm={6}>
+          <TextField
+            disabled
+            fullWidth
+            label='Country code'
+            placeholder='Country code'
+            value={selectedCountryData?.code ?? 'N/A'}
+          />
+        </Grid>
+        <Grid item xs={6} sm={6}>
           <FormControl>
             <FormLabel disabled sx={{ fontSize: '0.875rem' }}>
               Can be deleted?
             </FormLabel>
             <RadioGroup
               row
-              defaultValue={selectedAdminMenuData?.isDeleteable ? 'yes' : 'no'}
+              defaultValue={selectedCountryData?.isDeleteable ? 'yes' : 'no'}
               aria-label='Can be deleted?'
               name='account-settings-info-radio'
-              value={selectedAdminMenuData?.isDeleteable ? 'yes' : 'no'}
+              value={selectedCountryData?.isDeleteable ? 'yes' : 'no'}
             >
               <FormControlLabel value='no' label='No' control={<Radio disabled />} />
               <FormControlLabel value='yes' label='Yes' control={<Radio disabled />} />
             </RadioGroup>
           </FormControl>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6} sm={6}>
           <FormControl>
             <FormLabel disabled sx={{ fontSize: '0.875rem' }}>
               Can be deleted by admin?
             </FormLabel>
             <RadioGroup
               row
-              defaultValue={selectedAdminMenuData?.isAdminDeleteable ? 'yes' : 'no'}
+              defaultValue={selectedCountryData?.isAdminDeleteable ? 'yes' : 'no'}
               aria-label='Can be deleted by admin?'
               name='account-settings-info-radio'
-              value={selectedAdminMenuData?.isAdminDeleteable ? 'yes' : 'no'}
+              value={selectedCountryData?.isAdminDeleteable ? 'yes' : 'no'}
             >
               <FormControlLabel value='yes' label='Yes' control={<Radio disabled />} />
               <FormControlLabel value='no' label='No' control={<Radio disabled />} />
             </RadioGroup>
           </FormControl>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6} sm={6}>
           <TextField
             disabled
             fullWidth
-            label='Menu added on'
-            placeholder='Menu added on'
-            value={selectedAdminMenuData?.dateAdded ?? 'N/A'}
+            label='Country added on'
+            placeholder='Country added on'
+            value={
+              selectedCountryData?.dateAdded ? convertDateIntoReadableFormat(selectedCountryData.dateAdded) : 'N/A'
+            }
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6} sm={6}>
           <TextField
             disabled
             fullWidth
-            label='Menu updated on'
-            placeholder='Menu updated on'
-            value={selectedAdminMenuData?.dateModified ?? 'N/A'}
-          />
-        </Grid>
-        <Grid item xs={12} sm={12}>
-          <TextField
-            disabled
-            fullWidth
-            label='Menu status'
-            placeholder='Menu status'
-            value={selectedAdminMenuData?.adminMenuStatus ?? 'N/A'}
-          />
-        </Grid>
-        <Grid item xs={12} sm={12}>
-          <TextField
-            disabled
-            fullWidth
-            label='Menu description'
-            placeholder='Menu description'
-            value={selectedAdminMenuData?.description ?? 'N/A'}
-            multiline
-            minRows={3}
-            sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}
+            label='Country updated on'
+            placeholder='Country updated on'
+            value={
+              selectedCountryData?.dateModified
+                ? convertDateIntoReadableFormat(selectedCountryData?.dateModified)
+                : 'N/A'
+            }
           />
         </Grid>
       </>
@@ -133,9 +124,9 @@ const TabMenuByMenuName = () => {
   const renderEmpty = () => {
     return (
       <CustomisedErrorEmpty
-        title='Select user role!'
+        title='Select country!'
         type='empty'
-        message='Please select a user role from above drop down.'
+        message='Please select a country from above drop down.'
       ></CustomisedErrorEmpty>
     )
   }
@@ -145,16 +136,16 @@ const TabMenuByMenuName = () => {
       <CustomisedErrorEmpty
         title='Error!'
         type='empty'
-        message={allAdminMenusDataResult?.message ?? ''}
+        message={allCountriesDataResult?.message ?? ''}
       ></CustomisedErrorEmpty>
     )
   }
 
   const renderData = () => {
-    if (allAdminMenusDataResult?.isCompleted && !allAdminMenusDataResult?.succeeded) {
+    if (allCountriesDataResult?.isCompleted && !allCountriesDataResult?.succeeded) {
       return renderError()
     }
-    if (!selectedAdminMenuData) {
+    if (!selectedCountryData) {
       return renderEmpty()
     }
 
@@ -166,20 +157,20 @@ const TabMenuByMenuName = () => {
       <CardContent>
         <form>
           <Grid container spacing={7}>
-            <Grid item xs={12} sm={selectedAdminMenuData ? 6 : 12}>
+            <Grid item xs={12} sm={selectedCountryData ? 6 : 12}>
               <FormControl fullWidth>
-                <InputLabel>Menu title</InputLabel>
-                <Select label='Menu title'>
-                  {allAdminMenusDataResult?.dataArray?.map(adminMenu => {
+                <InputLabel>User role</InputLabel>
+                <Select label='User role'>
+                  {allCountriesDataResult?.dataArray?.map(country => {
                     return (
                       <MenuItem
-                        value={adminMenu?.menuTitle ?? ''}
-                        key={`${adminMenu.id}`}
+                        value={country?.title ?? ''}
+                        key={`${country.id}`}
                         onClick={() => {
-                          setSelectedUserRoleData(adminMenu)
+                          setSelectedCountryData(country)
                         }}
                       >
-                        {adminMenu.menuTitle}
+                        {country.title}
                       </MenuItem>
                     )
                   })}
@@ -194,4 +185,4 @@ const TabMenuByMenuName = () => {
     </div>
   )
 }
-export default TabMenuByMenuName
+export default TabCountryByTitle

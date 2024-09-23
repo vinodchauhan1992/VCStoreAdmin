@@ -14,12 +14,14 @@ export default {
   ADD_PRODUCT_TYPE: 'addProduct',
   ADD_USER_TYPE: 'addNewUser',
   ADD_BRAND_TYPE: 'addProductBrand',
+  ADD_COUNTRY_TYPE: 'addNewCountry',
   /*-------------------- ADD API'S TYPES END --------------------*/
 
   /*-------------------- UPDATE API'S TYPES START --------------------*/
   UPDATE_CATEGORY_TYPE: 'updateProductCategory',
   UPDATE_BRAND_TYPE: 'updateProductBrand',
   UPDATE_USER_ROLE_TYPE: 'updateUserRole',
+  UPDATE_COUNTRY_TYPE: 'updateCountry',
   /*-------------------- UPDATE API'S TYPES END --------------------*/
 
   /*-------------------- DELETE API'S TYPES START --------------------*/
@@ -33,6 +35,7 @@ export default {
   DELETE_PRODUCT_TYPE: 'deleteProduct',
   DELETE_USER_TYPE: 'deleteUser',
   DELETE_BRAND_TYPE: 'deleteProductBrand',
+  DELETE_COUNTRY_TYPE: 'deleteCountry',
   /*-------------------- DELETE API'S TYPES END --------------------*/
 
   /*-------------------- GET API'S TYPES START --------------------*/
@@ -48,6 +51,7 @@ export default {
   GET_MENUS_MAX_PRIORITY_TYPE: 'adminMenusHighestPriority',
   GET_SUBMENUS_MAX_PRIORITY_TYPE: 'adminSubmenusHighestPriority',
   GET_SUBMENU_BY_MENU_ID_TYPE: 'submenuByMenuID',
-  GET_ALL_BRANDS_TYPE: 'allProductBrands'
+  GET_ALL_BRANDS_TYPE: 'allProductBrands',
+  GET_ALL_COUNTRIES_TYPE: 'allCountries'
   /*-------------------- GET API'S TYPES END --------------------*/
 }

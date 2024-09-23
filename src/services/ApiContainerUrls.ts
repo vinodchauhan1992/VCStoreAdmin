@@ -14,12 +14,14 @@ export default {
   ADD_PRODUCT_API_PATH: 'products/addProduct',
   ADD_USER_API_PATH: 'users/addNewUser',
   ADD_BRAND_API_PATH: 'brands/addProductBrand',
+  ADD_COUNTRY_API_PATH: 'countries/addNewCountry',
   /*-------------------- ADD API'S END --------------------*/
 
   /*-------------------- UPDATE API'S START --------------------*/
   UPDATE_CATEGORY_API_PATH: 'categories/updateProductCategory',
   UPDATE_BRAND_API_PATH: 'brands/updateProductBrand',
   UPDATE_USER_ROLE_API_PATH: 'userRoles/updateUserRole',
+  UPDATE_COUNTRY_API_PATH: 'countries/updateCountry',
   /*-------------------- UPDATE API'S START --------------------*/
 
   /*-------------------- DELETE API'S START --------------------*/
@@ -33,6 +35,7 @@ export default {
   DELETE_PRODUCT_API_PATH: 'products/deleteProduct',
   DELETE_USER_API_PATH: 'user/deleteUser',
   DELETE_BRAND_API_PATH: 'brands/deleteProductBrand',
+  DELETE_COUNTRY_API_PATH: 'countries/deleteCountry',
   /*-------------------- DELETE API'S START --------------------*/
 
   /*-------------------- GET API'S START --------------------*/
@@ -48,6 +51,7 @@ export default {
   GET_MENUS_MAX_PRIORITY_API_PATH: 'adminMenu/adminMenusHighestPriority',
   GET_SUBMENUS_MAX_PRIORITY_API_PATH: 'adminSubmenu/adminSubmenusHighestPriority',
   GET_SUBMENU_BY_MENU_ID_API_PATH: 'adminSubmenu/submenuByMenuID',
-  GET_ALL_BRANDS_API_PATH: 'brands/allProductBrands'
+  GET_ALL_BRANDS_API_PATH: 'brands/allProductBrands',
+  GET_ALL_COUNTRIES_API_PATH: 'countries/allCountries'
   /*-------------------- GET API'S END --------------------*/
 }

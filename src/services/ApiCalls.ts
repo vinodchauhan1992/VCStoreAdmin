@@ -90,6 +90,12 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       requestUrl = ApiContainerUrls.GET_ALL_BRANDS_API_PATH
       contentType = 'application/json'
       break
+
+    case ApiCallTypes.GET_ALL_COUNTRIES_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_ALL_COUNTRIES_API_PATH
+      contentType = 'application/json'
+      break
     /* ---------- GET requests ends ---------------------------- */
 
     /* ---------- POST requests starts ---------------------------- */
@@ -158,6 +164,12 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       requestUrl = ApiContainerUrls.ADD_BRAND_API_PATH
       contentType = 'multipart/form-data'
       break
+
+    case ApiCallTypes.ADD_COUNTRY_TYPE:
+      requestType = 'POST'
+      requestUrl = ApiContainerUrls.ADD_COUNTRY_API_PATH
+      contentType = 'application/json'
+      break
     /* ---------- POST requests ends ---------------------------- */
 
     /* ---------- DELETE requests starts ---------------------------- */
@@ -220,6 +232,12 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       requestUrl = ApiContainerUrls.DELETE_BRAND_API_PATH
       contentType = 'application/json'
       break
+
+    case ApiCallTypes.DELETE_COUNTRY_TYPE:
+      requestType = 'DELETE'
+      requestUrl = ApiContainerUrls.DELETE_COUNTRY_API_PATH
+      contentType = 'application/json'
+      break
     /* ---------- DELETE requests ends ---------------------------- */
 
     /* ---------- UPDATE requests starts ---------------------------- */
@@ -238,6 +256,12 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
     case ApiCallTypes.UPDATE_USER_ROLE_TYPE:
       requestType = 'PUT'
       requestUrl = ApiContainerUrls.UPDATE_USER_ROLE_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.UPDATE_COUNTRY_TYPE:
+      requestType = 'PUT'
+      requestUrl = ApiContainerUrls.UPDATE_COUNTRY_API_PATH
       contentType = 'application/json'
       break
     /* ---------- UPDATE requests ends ---------------------------- */
