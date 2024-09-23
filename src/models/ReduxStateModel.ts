@@ -19,6 +19,8 @@ import { UserRoleModel } from './UserRoleModel'
 import { UserStatusModel } from './UserStatusModel'
 import { BrandsModel } from './BrandsModel'
 import { CountriesModel } from './CountriesModel'
+import { StatesModel } from './StatesModel'
+import { CitiesModel } from './CitiesModel'
 
 export interface LoggedInUserStateModel {
   loggedInUserData?: LoggedInUserModel | null
@@ -102,6 +104,22 @@ export interface CountriesStateModel {
   updateCountryResponse?: UpdateDataCommonReducerModel<CountriesModel>
 }
 
+export interface StatesStateModel {
+  statesData?: CommonReducerDataArrayModel<StatesModel[]>
+  deletedStateResponse?: DeleteDataCommonReducerModel<null>
+  addStateResponse?: AddDataCommonReducerModel<StatesModel>
+  updateStateResponse?: UpdateDataCommonReducerModel<StatesModel>
+  statesDataByCountryId?: CommonReducerDataArrayModel<StatesModel[]>
+}
+
+export interface CitiesStateModel {
+  citiesData?: CommonReducerDataArrayModel<CitiesModel[]>
+  deletedCityResponse?: DeleteDataCommonReducerModel<null>
+  addCityResponse?: AddDataCommonReducerModel<CitiesModel>
+  updateCityResponse?: UpdateDataCommonReducerModel<CitiesModel>
+  citiesDataByStateId?: CommonReducerDataArrayModel<CitiesModel[]>
+}
+
 export interface ReduxStateModel {
   loggedInUser?: LoggedInUserStateModel | null
   ui: UIStateModel | null
@@ -116,6 +134,8 @@ export interface ReduxStateModel {
   products: ProductsStateModel | null
   brands: BrandsStateModel | null
   countries: CountriesStateModel | null
+  states: StatesStateModel | null
+  cities: CitiesStateModel | null
   _persist?: {
     version?: number
     rehydrated?: boolean

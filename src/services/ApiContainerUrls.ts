@@ -15,6 +15,8 @@ export default {
   ADD_USER_API_PATH: 'users/addNewUser',
   ADD_BRAND_API_PATH: 'brands/addProductBrand',
   ADD_COUNTRY_API_PATH: 'countries/addNewCountry',
+  ADD_STATE_API_PATH: 'states/addNewState',
+  ADD_CITY_API_PATH: 'cities/addNewCity',
   /*-------------------- ADD API'S END --------------------*/
 
   /*-------------------- UPDATE API'S START --------------------*/
@@ -22,6 +24,8 @@ export default {
   UPDATE_BRAND_API_PATH: 'brands/updateProductBrand',
   UPDATE_USER_ROLE_API_PATH: 'userRoles/updateUserRole',
   UPDATE_COUNTRY_API_PATH: 'countries/updateCountry',
+  UPDATE_STATE_API_PATH: 'states/updateState',
+  UPDATE_CITY_API_PATH: 'cities/updateCity',
   /*-------------------- UPDATE API'S START --------------------*/
 
   /*-------------------- DELETE API'S START --------------------*/
@@ -36,6 +40,8 @@ export default {
   DELETE_USER_API_PATH: 'user/deleteUser',
   DELETE_BRAND_API_PATH: 'brands/deleteProductBrand',
   DELETE_COUNTRY_API_PATH: 'countries/deleteCountry',
+  DELETE_STATE_API_PATH: 'states/deleteState',
+  DELETE_CITY_API_PATH: 'cities/deleteCity',
   /*-------------------- DELETE API'S START --------------------*/
 
   /*-------------------- GET API'S START --------------------*/
@@ -52,6 +58,10 @@ export default {
   GET_SUBMENUS_MAX_PRIORITY_API_PATH: 'adminSubmenu/adminSubmenusHighestPriority',
   GET_SUBMENU_BY_MENU_ID_API_PATH: 'adminSubmenu/submenuByMenuID',
   GET_ALL_BRANDS_API_PATH: 'brands/allProductBrands',
-  GET_ALL_COUNTRIES_API_PATH: 'countries/allCountries'
+  GET_ALL_COUNTRIES_API_PATH: 'countries/allCountries',
+  GET_ALL_STATES_API_PATH: 'states/allStates',
+  GET_ALL_CITIES_API_PATH: 'cities/allCities',
+  GET_STATES_BY_COUNTRY_ID_API_PATH: 'states/statesByCountryID',
+  GET_CITIES_BY_STATE_ID_API_PATH: 'states/citiesByStateID'
   /*-------------------- GET API'S END --------------------*/
 }

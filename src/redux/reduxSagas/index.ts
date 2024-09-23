@@ -26,6 +26,20 @@ import {
 import { watchAddProduct, watchDeleteProduct, watchFetchAllProducts } from './ProductsSaga'
 import { watchAddBrand, watchDeleteBrand, watchFetchAllBrands, watchUpdateBrand } from './BrandsSaga'
 import { watchAddCountry, watchDeleteCountry, watchFetchAllCountries, watchUpdateCountry } from './CountriesSaga'
+import {
+  watchAddState,
+  watchDeleteState,
+  watchFetchAllStates,
+  watchFetchStatesByCountryId,
+  watchUpdateState
+} from './StatesSaga'
+import {
+  watchAddCity,
+  watchDeleteCity,
+  watchFetchAllCities,
+  watchFetchCitiesByStateId,
+  watchUpdateCity
+} from './CitiesSaga'
 
 export default function* rootSaga(): any {
   return yield all([
@@ -69,6 +83,16 @@ export default function* rootSaga(): any {
     fork(watchFetchAllCountries),
     fork(watchAddCountry),
     fork(watchDeleteCountry),
-    fork(watchUpdateCountry)
+    fork(watchUpdateCountry),
+    fork(watchFetchAllStates),
+    fork(watchAddState),
+    fork(watchDeleteState),
+    fork(watchUpdateState),
+    fork(watchFetchStatesByCountryId),
+    fork(watchFetchAllCities),
+    fork(watchAddCity),
+    fork(watchDeleteCity),
+    fork(watchUpdateCity),
+    fork(watchFetchCitiesByStateId)
   ])
 }

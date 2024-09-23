@@ -12,6 +12,8 @@ import * as AdminMenuStatusesReducer from './AdminMenuStatusesReducer'
 import * as ProductsReducer from './ProductsReducer'
 import * as BrandsReducer from './BrandsReducer'
 import * as CountriesReducer from './CountriesReducer'
+import * as StatesReducer from './StatesReducer'
+import * as CitiesReducer from './CitiesReducer'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { store } from '../../reduxConfig/reduxStore/store'
 
@@ -28,7 +30,9 @@ const rootReducer = combineReducers({
   adminMenuStatuses: AdminMenuStatusesReducer.adminMenuStatusesSliceReducer,
   products: ProductsReducer.productsSliceReducer,
   brands: BrandsReducer.brandsSliceReducer,
-  countries: CountriesReducer.countriesSliceReducer
+  countries: CountriesReducer.countriesSliceReducer,
+  states: StatesReducer.statesSliceReducer,
+  cities: CitiesReducer.citiesSliceReducer
 })
 
 export {
@@ -45,7 +49,9 @@ export {
   AdminMenuStatusesReducer,
   ProductsReducer,
   BrandsReducer,
-  CountriesReducer
+  CountriesReducer,
+  StatesReducer,
+  CitiesReducer
 }
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

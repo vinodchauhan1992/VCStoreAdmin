@@ -15,6 +15,8 @@ export default {
   ADD_USER_TYPE: 'addNewUser',
   ADD_BRAND_TYPE: 'addProductBrand',
   ADD_COUNTRY_TYPE: 'addNewCountry',
+  ADD_STATE_TYPE: 'addNewState',
+  ADD_CITY_TYPE: 'addNewCity',
   /*-------------------- ADD API'S TYPES END --------------------*/
 
   /*-------------------- UPDATE API'S TYPES START --------------------*/
@@ -22,6 +24,8 @@ export default {
   UPDATE_BRAND_TYPE: 'updateProductBrand',
   UPDATE_USER_ROLE_TYPE: 'updateUserRole',
   UPDATE_COUNTRY_TYPE: 'updateCountry',
+  UPDATE_STATE_TYPE: 'updateState',
+  UPDATE_CITY_TYPE: 'updateCity',
   /*-------------------- UPDATE API'S TYPES END --------------------*/
 
   /*-------------------- DELETE API'S TYPES START --------------------*/
@@ -36,6 +40,8 @@ export default {
   DELETE_USER_TYPE: 'deleteUser',
   DELETE_BRAND_TYPE: 'deleteProductBrand',
   DELETE_COUNTRY_TYPE: 'deleteCountry',
+  DELETE_STATE_TYPE: 'deleteState',
+  DELETE_CITY_TYPE: 'deleteCity',
   /*-------------------- DELETE API'S TYPES END --------------------*/
 
   /*-------------------- GET API'S TYPES START --------------------*/
@@ -52,6 +58,10 @@ export default {
   GET_SUBMENUS_MAX_PRIORITY_TYPE: 'adminSubmenusHighestPriority',
   GET_SUBMENU_BY_MENU_ID_TYPE: 'submenuByMenuID',
   GET_ALL_BRANDS_TYPE: 'allProductBrands',
-  GET_ALL_COUNTRIES_TYPE: 'allCountries'
+  GET_ALL_COUNTRIES_TYPE: 'allCountries',
+  GET_ALL_STATES_TYPE: 'allStates',
+  GET_ALL_CITIES_TYPE: 'allCities',
+  GET_STATES_BY_COUNTRY_ID_TYPE: 'statesByCountryID',
+  GET_CITIES_BY_STATE_ID_TYPE: 'citiesByStateID'
   /*-------------------- GET API'S TYPES END --------------------*/
 }

@@ -96,6 +96,30 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       requestUrl = ApiContainerUrls.GET_ALL_COUNTRIES_API_PATH
       contentType = 'application/json'
       break
+
+    case ApiCallTypes.GET_ALL_STATES_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_ALL_STATES_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_ALL_CITIES_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_ALL_CITIES_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_STATES_BY_COUNTRY_ID_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_STATES_BY_COUNTRY_ID_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_CITIES_BY_STATE_ID_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_CITIES_BY_STATE_ID_API_PATH
+      contentType = 'application/json'
+      break
     /* ---------- GET requests ends ---------------------------- */
 
     /* ---------- POST requests starts ---------------------------- */
@@ -170,6 +194,18 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       requestUrl = ApiContainerUrls.ADD_COUNTRY_API_PATH
       contentType = 'application/json'
       break
+
+    case ApiCallTypes.ADD_STATE_TYPE:
+      requestType = 'POST'
+      requestUrl = ApiContainerUrls.ADD_STATE_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.ADD_CITY_TYPE:
+      requestType = 'POST'
+      requestUrl = ApiContainerUrls.ADD_CITY_API_PATH
+      contentType = 'application/json'
+      break
     /* ---------- POST requests ends ---------------------------- */
 
     /* ---------- DELETE requests starts ---------------------------- */
@@ -238,6 +274,18 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       requestUrl = ApiContainerUrls.DELETE_COUNTRY_API_PATH
       contentType = 'application/json'
       break
+
+    case ApiCallTypes.DELETE_STATE_TYPE:
+      requestType = 'DELETE'
+      requestUrl = ApiContainerUrls.DELETE_STATE_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.DELETE_CITY_TYPE:
+      requestType = 'DELETE'
+      requestUrl = ApiContainerUrls.DELETE_CITY_API_PATH
+      contentType = 'application/json'
+      break
     /* ---------- DELETE requests ends ---------------------------- */
 
     /* ---------- UPDATE requests starts ---------------------------- */
@@ -262,6 +310,18 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
     case ApiCallTypes.UPDATE_COUNTRY_TYPE:
       requestType = 'PUT'
       requestUrl = ApiContainerUrls.UPDATE_COUNTRY_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.UPDATE_STATE_TYPE:
+      requestType = 'PUT'
+      requestUrl = ApiContainerUrls.UPDATE_STATE_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.UPDATE_CITY_TYPE:
+      requestType = 'PUT'
+      requestUrl = ApiContainerUrls.UPDATE_CITY_API_PATH
       contentType = 'application/json'
       break
     /* ---------- UPDATE requests ends ---------------------------- */
