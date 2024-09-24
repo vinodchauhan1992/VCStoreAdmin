@@ -23,6 +23,7 @@ import { BrandsModel } from './BrandsModel'
 import { CountriesModel } from './CountriesModel'
 import { StatesModel } from './StatesModel'
 import { CitiesModel } from './CitiesModel'
+import { UDMSMaxPriorityDataModel, UDMSModel } from './UserDropdownMenusModel'
 
 export interface LoggedInUserStateModel {
   loggedInUserData?: CommonReducerDataObjectModel<LoggedInUserModel | null>
@@ -125,6 +126,17 @@ export interface CitiesStateModel {
   cityDataByCityId?: CommonReducerByIdDataObjectModel<CitiesModel>
 }
 
+export interface UserDropdownMenusStateModel {
+  allUDMSData?: CommonReducerDataArrayModel<UDMSModel[]>
+  deletedUDMResponse?: DeleteDataCommonReducerModel<null>
+  addUDMResponse?: AddDataCommonReducerModel<UDMSModel>
+  updateUDMResponse?: UpdateDataCommonReducerModel<UDMSModel>
+  udmsMaxPriorityData?: UDMSMaxPriorityDataModel
+  udmById?: CommonReducerByIdDataObjectModel<UDMSModel>
+  udmByPriority?: CommonReducerDataObjectModel<UDMSModel>
+  udmsRegisteredPriorities?: CommonReducerByIdDataArrayModel<number[]>
+}
+
 export interface ReduxStateModel {
   loggedInUser?: LoggedInUserStateModel | null
   ui: UIStateModel | null
@@ -141,6 +153,7 @@ export interface ReduxStateModel {
   countries: CountriesStateModel | null
   states: StatesStateModel | null
   cities: CitiesStateModel | null
+  userDropdownMenus: UserDropdownMenusStateModel | null
   _persist?: {
     version?: number
     rehydrated?: boolean

@@ -138,6 +138,30 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       requestUrl = ApiContainerUrls.GET_CITY_BY_CITY_ID_API_PATH
       contentType = 'application/json'
       break
+
+    case ApiCallTypes.GET_ALL_USER_DROPDOWN_MENUS_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_ALL_USER_DROPDOWN_MENUS_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_USER_DROPDOWN_MENU_BY_ID_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_USER_DROPDOWN_MENU_BY_ID_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_USER_DROPDOWN_MENUS_ALL_REGISTERED_PRIORITIES_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_USER_DROPDOWN_MENUS_ALL_REGISTERED_PRIORITIES_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_USER_DROPDOWN_MENUS_HIGHEST_PRIORITY_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_USER_DROPDOWN_MENUS_HIGHEST_PRIORITY_API_PATH
+      contentType = 'application/json'
+      break
     /* ---------- GET requests ends ---------------------------- */
 
     /* ---------- POST requests starts ---------------------------- */
@@ -224,6 +248,12 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       requestUrl = ApiContainerUrls.ADD_CITY_API_PATH
       contentType = 'application/json'
       break
+
+    case ApiCallTypes.ADD_USER_DROPDOWN_MENU_TYPE:
+      requestType = 'POST'
+      requestUrl = ApiContainerUrls.ADD_USER_DROPDOWN_MENU_API_PATH
+      contentType = 'application/json'
+      break
     /* ---------- POST requests ends ---------------------------- */
 
     /* ---------- DELETE requests starts ---------------------------- */
@@ -304,6 +334,12 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       requestUrl = ApiContainerUrls.DELETE_CITY_API_PATH
       contentType = 'application/json'
       break
+
+    case ApiCallTypes.DELETE_USER_DROPDOWN_MENU_TYPE:
+      requestType = 'DELETE'
+      requestUrl = ApiContainerUrls.DELETE_USER_DROPDOWN_MENU_API_PATH
+      contentType = 'application/json'
+      break
     /* ---------- DELETE requests ends ---------------------------- */
 
     /* ---------- UPDATE requests starts ---------------------------- */
@@ -340,6 +376,12 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
     case ApiCallTypes.UPDATE_CITY_TYPE:
       requestType = 'PUT'
       requestUrl = ApiContainerUrls.UPDATE_CITY_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.UPDATE_USER_DROPDOWN_MENU_TYPE:
+      requestType = 'PUT'
+      requestUrl = ApiContainerUrls.UPDATE_USER_DROPDOWN_MENU_API_PATH
       contentType = 'application/json'
       break
     /* ---------- UPDATE requests ends ---------------------------- */

@@ -14,6 +14,7 @@ import * as BrandsReducer from './BrandsReducer'
 import * as CountriesReducer from './CountriesReducer'
 import * as StatesReducer from './StatesReducer'
 import * as CitiesReducer from './CitiesReducer'
+import * as UserDropdownMenusReducer from './UserDropdownMenusReducer'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { store } from '../../reduxConfig/reduxStore/store'
 
@@ -32,7 +33,8 @@ const rootReducer = combineReducers({
   brands: BrandsReducer.brandsSliceReducer,
   countries: CountriesReducer.countriesSliceReducer,
   states: StatesReducer.statesSliceReducer,
-  cities: CitiesReducer.citiesSliceReducer
+  cities: CitiesReducer.citiesSliceReducer,
+  userDropdownMenus: UserDropdownMenusReducer.userDropdownMenusSliceReducer
 })
 
 export {
@@ -51,7 +53,8 @@ export {
   BrandsReducer,
   CountriesReducer,
   StatesReducer,
-  CitiesReducer
+  CitiesReducer,
+  UserDropdownMenusReducer
 }
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

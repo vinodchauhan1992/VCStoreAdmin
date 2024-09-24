@@ -17,6 +17,7 @@ export default {
   ADD_COUNTRY_TYPE: 'addNewCountry',
   ADD_STATE_TYPE: 'addNewState',
   ADD_CITY_TYPE: 'addNewCity',
+  ADD_USER_DROPDOWN_MENU_TYPE: 'addNewUserDropdownMenu',
   /*-------------------- ADD API'S TYPES END --------------------*/
 
   /*-------------------- UPDATE API'S TYPES START --------------------*/
@@ -26,6 +27,7 @@ export default {
   UPDATE_COUNTRY_TYPE: 'updateCountry',
   UPDATE_STATE_TYPE: 'updateState',
   UPDATE_CITY_TYPE: 'updateCity',
+  UPDATE_USER_DROPDOWN_MENU_TYPE: 'updateUserDropdownMenu',
   /*-------------------- UPDATE API'S TYPES END --------------------*/
 
   /*-------------------- DELETE API'S TYPES START --------------------*/
@@ -42,6 +44,7 @@ export default {
   DELETE_COUNTRY_TYPE: 'deleteCountry',
   DELETE_STATE_TYPE: 'deleteState',
   DELETE_CITY_TYPE: 'deleteCity',
+  DELETE_USER_DROPDOWN_MENU_TYPE: 'deleteUserDropdownMenu',
   /*-------------------- DELETE API'S TYPES END --------------------*/
 
   /*-------------------- GET API'S TYPES START --------------------*/
@@ -65,6 +68,11 @@ export default {
   GET_CITIES_BY_STATE_ID_TYPE: 'citiesByStateID',
   GET_COUNTRY_BY_COUNTRY_ID_TYPE: 'countryByID',
   GET_STATE_BY_STATE_ID_TYPE: 'stateByID',
-  GET_CITY_BY_CITY_ID_TYPE: 'cityByID'
+  GET_CITY_BY_CITY_ID_TYPE: 'cityByID',
+  GET_ALL_USER_DROPDOWN_MENUS_TYPE: 'allUserDropdownMenus',
+  GET_USER_DROPDOWN_MENU_BY_ID_TYPE: 'userDropdownMenuByID',
+  GET_USER_DROPDOWN_MENUS_HIGHEST_PRIORITY_TYPE: 'userDropdownMenusHighestPriority',
+  GET_USER_DROPDOWN_MENUS_ALL_REGISTERED_PRIORITIES_TYPE: 'allUserDropdownMenusRegisteredPriorities',
+  GET_USER_DROPDOWN_MENU_BY_PRIORITY_TYPE: 'userDropdownMenuByPriority'
   /*-------------------- GET API'S TYPES END --------------------*/
 }

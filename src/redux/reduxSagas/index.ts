@@ -48,6 +48,7 @@ import {
   watchUpdateCity,
   watchFetchCityByCityId
 } from './CitiesSaga'
+import { watchAddUDM, watchDeleteUDM, watchFetchAllUDMS, watchFetchAllUDMSRegisteredPriorities, watchFetchUDMByPriority, watchFetchUDMByUDMId, watchFetchUDMSMaxPriority, watchUpdateUDM } from './UserDropdownMenusSaga'
 
 export default function* rootSaga(): any {
   return yield all([
@@ -104,6 +105,14 @@ export default function* rootSaga(): any {
     fork(watchFetchCitiesByStateId),
     fork(watchFetchCountryByCountryId),
     fork(watchFetchStateByStateId),
-    fork(watchFetchCityByCityId)
+    fork(watchFetchCityByCityId),
+    fork(watchFetchAllUDMS),
+    fork(watchDeleteUDM),
+    fork(watchAddUDM),
+    fork(watchUpdateUDM),
+    fork(watchFetchUDMSMaxPriority),
+    fork(watchFetchUDMByUDMId),
+    fork(watchFetchUDMByPriority),
+    fork(watchFetchAllUDMSRegisteredPriorities)
   ])
 }

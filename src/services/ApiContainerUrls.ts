@@ -17,6 +17,7 @@ export default {
   ADD_COUNTRY_API_PATH: 'countries/addNewCountry',
   ADD_STATE_API_PATH: 'states/addNewState',
   ADD_CITY_API_PATH: 'cities/addNewCity',
+  ADD_USER_DROPDOWN_MENU_API_PATH: 'userDropdownMenu/addNewUserDropdownMenu',
   /*-------------------- ADD API'S END --------------------*/
 
   /*-------------------- UPDATE API'S START --------------------*/
@@ -26,6 +27,7 @@ export default {
   UPDATE_COUNTRY_API_PATH: 'countries/updateCountry',
   UPDATE_STATE_API_PATH: 'states/updateState',
   UPDATE_CITY_API_PATH: 'cities/updateCity',
+  UPDATE_USER_DROPDOWN_MENU_API_PATH: 'userDropdownMenu/updateUserDropdownMenu',
   /*-------------------- UPDATE API'S START --------------------*/
 
   /*-------------------- DELETE API'S START --------------------*/
@@ -42,6 +44,7 @@ export default {
   DELETE_COUNTRY_API_PATH: 'countries/deleteCountry',
   DELETE_STATE_API_PATH: 'states/deleteState',
   DELETE_CITY_API_PATH: 'cities/deleteCity',
+  DELETE_USER_DROPDOWN_MENU_API_PATH: 'userDropdownMenu/deleteUserDropdownMenu',
   /*-------------------- DELETE API'S START --------------------*/
 
   /*-------------------- GET API'S START --------------------*/
@@ -65,6 +68,12 @@ export default {
   GET_CITIES_BY_STATE_ID_API_PATH: 'states/citiesByStateID',
   GET_COUNTRY_BY_COUNTRY_ID_API_PATH: 'countries/countryByID',
   GET_STATE_BY_STATE_ID_API_PATH: 'states/stateByID',
-  GET_CITY_BY_CITY_ID_API_PATH: 'cities/cityByID'
+  GET_CITY_BY_CITY_ID_API_PATH: 'cities/cityByID',
+  GET_ALL_USER_DROPDOWN_MENUS_API_PATH: 'userDropdownMenu/allUserDropdownMenus',
+  GET_USER_DROPDOWN_MENU_BY_ID_API_PATH: 'userDropdownMenu/userDropdownMenuByID',
+  GET_USER_DROPDOWN_MENUS_HIGHEST_PRIORITY_API_PATH: 'userDropdownMenu/userDropdownMenusHighestPriority',
+  GET_USER_DROPDOWN_MENUS_ALL_REGISTERED_PRIORITIES_API_PATH:
+    'userDropdownMenu/allUserDropdownMenusRegisteredPriorities',
+  GET_USER_DROPDOWN_MENU_BY_PRIORITY_API_PATH: 'userDropdownMenu/userDropdownMenuByPriority'
   /*-------------------- GET API'S END --------------------*/
 }
