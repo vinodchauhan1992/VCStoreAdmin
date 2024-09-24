@@ -2,6 +2,7 @@ import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit'
 import { CountriesModel } from 'src/models/CountriesModel'
 import {
   AddDataCommonReducerModel,
+  CommonReducerByIdDataObjectModel,
   CommonReducerDataArrayModel,
   DeleteDataCommonReducerModel,
   UpdateDataCommonReducerModel
@@ -36,6 +37,12 @@ const initialState: CountriesStateModel = {
     succeeded: false,
     isCompleted: false,
     data: null
+  },
+  countryDataByCountryId: {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
   }
 }
 
@@ -43,7 +50,12 @@ const saveAllCountriesDataInfo = (
   state: CountriesStateModel,
   action: PayloadAction<CommonReducerDataArrayModel<CountriesModel[]>>
 ): any => {
-  state.countriesData = action?.payload ?? []
+  state.countriesData = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
 const saveDeletedCountryResponseInfo = (
@@ -75,6 +87,18 @@ const saveUpdateCountryResponseInfo = (
   action: PayloadAction<UpdateDataCommonReducerModel<CountriesModel>>
 ): any => {
   state.updateCountryResponse = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
+  }
+}
+
+const saveCountryDataByCountryIdInfo = (
+  state: CountriesStateModel,
+  action: PayloadAction<CommonReducerByIdDataObjectModel<CountriesModel>>
+): any => {
+  state.countryDataByCountryId = action?.payload ?? {
     message: null,
     succeeded: false,
     isCompleted: false,
@@ -118,6 +142,15 @@ const resetUpdatedCountryResponseInfo = (state: CountriesStateModel): any => {
   }
 }
 
+const resetCountryDataByCountryIdInfo = (state: CountriesStateModel): any => {
+  state.countryDataByCountryId = {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
+  }
+}
+
 const countriesSlice: any = createSlice({
   name: 'countries',
   initialState: initialState,
@@ -131,10 +164,12 @@ const countriesSlice: any = createSlice({
     saveDeletedCountryResponse: saveDeletedCountryResponseInfo,
     saveAddCountryResponse: saveAddCountryResponseInfo,
     saveUpdateCountryResponse: saveUpdateCountryResponseInfo,
+    saveCountryDataByCountryId: saveCountryDataByCountryIdInfo,
     resetAllCountriesDataResult: resetAllCountriesDataResultInfo,
     resetDeletedCountryResponse: resetDeletedCountryResponseInfo,
     resetAddedCountryResponse: resetAddedCountryResponseInfo,
-    resetUpdatedCountryResponse: resetUpdatedCountryResponseInfo
+    resetUpdatedCountryResponse: resetUpdatedCountryResponseInfo,
+    resetCountryDataByCountryId: resetCountryDataByCountryIdInfo
   }
 })
 
@@ -144,10 +179,12 @@ const {
   saveDeletedCountryResponse,
   saveAddCountryResponse,
   saveUpdateCountryResponse,
+  saveCountryDataByCountryId,
   resetAllCountriesDataResult,
   resetDeletedCountryResponse,
   resetAddedCountryResponse,
-  resetUpdatedCountryResponse
+  resetUpdatedCountryResponse,
+  resetCountryDataByCountryId
 } = countriesSlice.actions
 
 // SELECTOR
@@ -187,6 +224,15 @@ const selectUpdatedCountryResponse = (state: ReduxStateModel) => {
   }
 }
 
+const selectCountryDataByCountryId = (state: ReduxStateModel) => {
+  return {
+    message: state?.countries?.countryDataByCountryId?.message ?? null,
+    succeeded: state?.countries?.countryDataByCountryId?.succeeded ?? false,
+    isCompleted: state?.countries?.countryDataByCountryId?.isCompleted ?? false,
+    data: state?.countries?.countryDataByCountryId?.data ?? null
+  }
+}
+
 const countriesSliceReducer = countriesSlice.reducer
 
 export {
@@ -195,13 +241,16 @@ export {
   saveDeletedCountryResponse,
   saveAddCountryResponse,
   saveUpdateCountryResponse,
+  saveCountryDataByCountryId,
   resetAllCountriesDataResult,
   resetDeletedCountryResponse,
   resetAddedCountryResponse,
   resetUpdatedCountryResponse,
+  resetCountryDataByCountryId,
   selectAllCountriesDataResult,
   selectDeletedCountryResponse,
   selectAddedCountryResponse,
   selectUpdatedCountryResponse,
+  selectCountryDataByCountryId,
   signOutAction
 }

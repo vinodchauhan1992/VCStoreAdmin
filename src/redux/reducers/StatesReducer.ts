@@ -1,6 +1,8 @@
 import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit'
 import {
   AddDataCommonReducerModel,
+  CommonReducerByIdDataArrayModel,
+  CommonReducerByIdDataObjectModel,
   CommonReducerDataArrayModel,
   DeleteDataCommonReducerModel,
   UpdateDataCommonReducerModel
@@ -41,7 +43,13 @@ const initialState: StatesStateModel = {
     message: null,
     succeeded: false,
     isCompleted: false,
-    dataArray: []
+    data: []
+  },
+  stateDataByStateId: {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
   }
 }
 
@@ -49,7 +57,12 @@ const saveAllStatesDataInfo = (
   state: StatesStateModel,
   action: PayloadAction<CommonReducerDataArrayModel<StatesModel[]>>
 ): any => {
-  state.statesData = action?.payload ?? []
+  state.statesData = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
 const saveDeletedStateResponseInfo = (
@@ -90,9 +103,26 @@ const saveUpdateStateResponseInfo = (
 
 const saveStatesDataByCountryIdInfo = (
   state: StatesStateModel,
-  action: PayloadAction<CommonReducerDataArrayModel<StatesModel[]>>
+  action: PayloadAction<CommonReducerByIdDataArrayModel<StatesModel[]>>
 ): any => {
-  state.statesDataByCountryId = action?.payload ?? []
+  state.statesDataByCountryId = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: []
+  }
+}
+
+const saveStateDataByStateIdInfo = (
+  state: StatesStateModel,
+  action: PayloadAction<CommonReducerByIdDataObjectModel<StatesModel>>
+): any => {
+  state.stateDataByStateId = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
+  }
 }
 
 const resetAllStatesDataResultInfo = (state: StatesStateModel): any => {
@@ -136,7 +166,25 @@ const resetStatesDataByCountryIdResultInfo = (state: StatesStateModel): any => {
     message: null,
     succeeded: false,
     isCompleted: false,
-    dataArray: state?.statesDataByCountryId?.dataArray ?? []
+    data: state?.statesDataByCountryId?.data ?? []
+  }
+}
+
+const resetAllStatesDataByCountryIdResultInfo = (state: StatesStateModel): any => {
+  state.statesDataByCountryId = {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: []
+  }
+}
+
+const resetStateDataByStateIdInfo = (state: StatesStateModel): any => {
+  state.stateDataByStateId = {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
   }
 }
 
@@ -154,11 +202,14 @@ const statesSlice: any = createSlice({
     saveAddStateResponse: saveAddStateResponseInfo,
     saveUpdateStateResponse: saveUpdateStateResponseInfo,
     saveStatesDataByCountryId: saveStatesDataByCountryIdInfo,
+    saveStateDataByStateId: saveStateDataByStateIdInfo,
     resetAllStatesDataResult: resetAllStatesDataResultInfo,
     resetDeletedStateResponse: resetDeletedStateResponseInfo,
     resetAddedStateResponse: resetAddedStateResponseInfo,
     resetUpdatedStateResponse: resetUpdatedStateResponseInfo,
-    resetStatesDataByCountryIdResult: resetStatesDataByCountryIdResultInfo
+    resetStatesDataByCountryIdResult: resetStatesDataByCountryIdResultInfo,
+    resetAllStatesDataByCountryIdResult: resetAllStatesDataByCountryIdResultInfo,
+    resetStateDataByStateId: resetStateDataByStateIdInfo
   }
 })
 
@@ -169,11 +220,14 @@ const {
   saveAddStateResponse,
   saveUpdateStateResponse,
   saveStatesDataByCountryId,
+  saveStateDataByStateId,
   resetAllStatesDataResult,
   resetDeletedStateResponse,
   resetAddedStateResponse,
   resetUpdatedStateResponse,
-  resetStatesDataByCountryIdResult
+  resetStatesDataByCountryIdResult,
+  resetAllStatesDataByCountryIdResult,
+  resetStateDataByStateId
 } = statesSlice.actions
 
 // SELECTOR
@@ -218,7 +272,16 @@ const selectStatesDataByCountryIdResult = (state: ReduxStateModel) => {
     message: state?.states?.statesDataByCountryId?.message ?? null,
     succeeded: state?.states?.statesDataByCountryId?.succeeded ?? false,
     isCompleted: state?.states?.statesDataByCountryId?.isCompleted ?? false,
-    dataArray: state?.states?.statesDataByCountryId?.dataArray ?? []
+    data: state?.states?.statesDataByCountryId?.data ?? []
+  }
+}
+
+const selectStateDataByStateIdResult = (state: ReduxStateModel) => {
+  return {
+    message: state?.states?.stateDataByStateId?.message ?? null,
+    succeeded: state?.states?.stateDataByStateId?.succeeded ?? false,
+    isCompleted: state?.states?.stateDataByStateId?.isCompleted ?? false,
+    data: state?.states?.stateDataByStateId?.data ?? null
   }
 }
 
@@ -231,15 +294,19 @@ export {
   saveAddStateResponse,
   saveUpdateStateResponse,
   saveStatesDataByCountryId,
+  saveStateDataByStateId,
   resetAllStatesDataResult,
   resetDeletedStateResponse,
   resetAddedStateResponse,
   resetUpdatedStateResponse,
   resetStatesDataByCountryIdResult,
+  resetAllStatesDataByCountryIdResult,
+  resetStateDataByStateId,
   selectAllStatesDataResult,
   selectDeletedStateResponse,
   selectAddedStateResponse,
   selectUpdatedStateResponse,
   selectStatesDataByCountryIdResult,
+  selectStateDataByStateIdResult,
   signOutAction
 }

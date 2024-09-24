@@ -1,6 +1,8 @@
 import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit'
 import {
   AddDataCommonReducerModel,
+  CommonReducerByIdDataArrayModel,
+  CommonReducerByIdDataObjectModel,
   CommonReducerDataArrayModel,
   DeleteDataCommonReducerModel,
   UpdateDataCommonReducerModel
@@ -41,7 +43,13 @@ const initialState: CitiesStateModel = {
     message: null,
     succeeded: false,
     isCompleted: false,
-    dataArray: []
+    data: []
+  },
+  cityDataByCityId: {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
   }
 }
 
@@ -49,7 +57,12 @@ const saveAllCitiesDataInfo = (
   state: CitiesStateModel,
   action: PayloadAction<CommonReducerDataArrayModel<CitiesModel[]>>
 ): any => {
-  state.citiesData = action?.payload ?? []
+  state.citiesData = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
 const saveDeletedCityResponseInfo = (
@@ -88,11 +101,28 @@ const saveUpdateCityResponseInfo = (
   }
 }
 
+const saveCityDataByCityIdInfo = (
+  state: CitiesStateModel,
+  action: PayloadAction<CommonReducerByIdDataObjectModel<CitiesModel>>
+): any => {
+  state.cityDataByCityId = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
+  }
+}
+
 const saveCitiesDataByStateIdInfo = (
   state: CitiesStateModel,
-  action: PayloadAction<CommonReducerDataArrayModel<CitiesModel[]>>
+  action: PayloadAction<CommonReducerByIdDataArrayModel<CitiesModel[]>>
 ): any => {
-  state.citiesDataByStateId = action?.payload ?? []
+  state.citiesDataByStateId = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: []
+  }
 }
 
 const resetAllCitiesDataResultInfo = (state: CitiesStateModel): any => {
@@ -136,7 +166,16 @@ const resetCitiesDataByStateIdResultInfo = (state: CitiesStateModel): any => {
     message: null,
     succeeded: false,
     isCompleted: false,
-    dataArray: state?.citiesDataByStateId?.dataArray ?? []
+    data: state?.citiesDataByStateId?.data ?? []
+  }
+}
+
+const resetCityDataByCityIdInfo = (state: CitiesStateModel): any => {
+  state.cityDataByCityId = {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    data: null
   }
 }
 
@@ -154,11 +193,13 @@ const citiesSlice: any = createSlice({
     saveAddCityResponse: saveAddCityResponseInfo,
     saveUpdateCityResponse: saveUpdateCityResponseInfo,
     saveCitiesDataByStateId: saveCitiesDataByStateIdInfo,
+    saveCityDataByCityId: saveCityDataByCityIdInfo,
     resetAllCitiesDataResult: resetAllCitiesDataResultInfo,
     resetDeletedCityResponse: resetDeletedCityResponseInfo,
     resetAddedCityResponse: resetAddedCityResponseInfo,
     resetUpdatedCityResponse: resetUpdatedCityResponseInfo,
-    resetCitiesDataByStateIdResult: resetCitiesDataByStateIdResultInfo
+    resetCitiesDataByStateIdResult: resetCitiesDataByStateIdResultInfo,
+    resetCityDataByCityId: resetCityDataByCityIdInfo
   }
 })
 
@@ -169,11 +210,13 @@ const {
   saveAddCityResponse,
   saveUpdateCityResponse,
   saveCitiesDataByStateId,
+  saveCityDataByCityId,
   resetAllCitiesDataResult,
   resetDeletedCityResponse,
   resetAddedCityResponse,
   resetUpdatedCityResponse,
-  resetCitiesDataByStateIdResult
+  resetCitiesDataByStateIdResult,
+  resetCityDataByCityId
 } = citiesSlice.actions
 
 // SELECTOR
@@ -218,7 +261,16 @@ const selectCitiesDataByStateIdResult = (state: ReduxStateModel) => {
     message: state?.cities?.citiesDataByStateId?.message ?? null,
     succeeded: state?.cities?.citiesDataByStateId?.succeeded ?? false,
     isCompleted: state?.cities?.citiesDataByStateId?.isCompleted ?? false,
-    dataArray: state?.cities?.citiesDataByStateId?.dataArray ?? []
+    dataArray: state?.cities?.citiesDataByStateId?.data ?? []
+  }
+}
+
+const selectCityDataByCityIdResult = (state: ReduxStateModel) => {
+  return {
+    message: state?.cities?.cityDataByCityId?.message ?? null,
+    succeeded: state?.cities?.cityDataByCityId?.succeeded ?? false,
+    isCompleted: state?.cities?.cityDataByCityId?.isCompleted ?? false,
+    data: state?.cities?.cityDataByCityId?.data ?? null
   }
 }
 
@@ -231,15 +283,18 @@ export {
   saveAddCityResponse,
   saveUpdateCityResponse,
   saveCitiesDataByStateId,
+  saveCityDataByCityId,
   resetAllCitiesDataResult,
   resetDeletedCityResponse,
   resetAddedCityResponse,
   resetUpdatedCityResponse,
   resetCitiesDataByStateIdResult,
+  resetCityDataByCityId,
   selectAllCitiesDataResult,
   selectDeletedCityResponse,
   selectAddedCityResponse,
   selectUpdatedCityResponse,
   selectCitiesDataByStateIdResult,
+  selectCityDataByCityIdResult,
   signOutAction
 }

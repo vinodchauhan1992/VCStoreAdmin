@@ -43,7 +43,12 @@ const saveAllBrandsDataInfo = (
   state: BrandsStateModel,
   action: PayloadAction<CommonReducerDataArrayModel<BrandsModel[]>>
 ): any => {
-  state.brandsData = action?.payload ?? []
+  state.brandsData = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
 const saveDeletedBrandResponseInfo = (

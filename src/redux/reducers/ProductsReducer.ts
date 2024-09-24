@@ -36,7 +36,12 @@ const saveAllProductsDataInfo = (
   state: ProductsStateModel,
   action: PayloadAction<CommonReducerDataArrayModel<ProductsDataModel[]>>
 ): any => {
-  state.productsData = action?.payload ?? []
+  state.productsData = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
 const saveDeletedProductResponseInfo = (

@@ -120,6 +120,24 @@ export const apiCalls = ({ apiType }: ApiCallsModel): ApiCallsReturnModel => {
       requestUrl = ApiContainerUrls.GET_CITIES_BY_STATE_ID_API_PATH
       contentType = 'application/json'
       break
+
+    case ApiCallTypes.GET_COUNTRY_BY_COUNTRY_ID_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_COUNTRY_BY_COUNTRY_ID_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_STATE_BY_STATE_ID_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_STATE_BY_STATE_ID_API_PATH
+      contentType = 'application/json'
+      break
+
+    case ApiCallTypes.GET_CITY_BY_CITY_ID_TYPE:
+      requestType = 'GET'
+      requestUrl = ApiContainerUrls.GET_CITY_BY_CITY_ID_API_PATH
+      contentType = 'application/json'
+      break
     /* ---------- GET requests ends ---------------------------- */
 
     /* ---------- POST requests starts ---------------------------- */

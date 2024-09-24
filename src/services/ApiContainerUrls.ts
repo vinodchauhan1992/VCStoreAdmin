@@ -62,6 +62,9 @@ export default {
   GET_ALL_STATES_API_PATH: 'states/allStates',
   GET_ALL_CITIES_API_PATH: 'cities/allCities',
   GET_STATES_BY_COUNTRY_ID_API_PATH: 'states/statesByCountryID',
-  GET_CITIES_BY_STATE_ID_API_PATH: 'states/citiesByStateID'
+  GET_CITIES_BY_STATE_ID_API_PATH: 'states/citiesByStateID',
+  GET_COUNTRY_BY_COUNTRY_ID_API_PATH: 'countries/countryByID',
+  GET_STATE_BY_STATE_ID_API_PATH: 'states/stateByID',
+  GET_CITY_BY_CITY_ID_API_PATH: 'cities/cityByID'
   /*-------------------- GET API'S END --------------------*/
 }

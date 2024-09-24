@@ -43,7 +43,12 @@ const saveAllCategoriesDataInfo = (
   state: CategoriesStateModel,
   action: PayloadAction<CommonReducerDataArrayModel<CategoryModel[]>>
 ): any => {
-  state.categoriesData = action?.payload ?? []
+  state.categoriesData = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
 const saveDeletedCategoryResponseInfo = (

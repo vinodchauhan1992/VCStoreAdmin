@@ -43,7 +43,12 @@ const saveAllUserRolesDataInfo = (
   state: UserRolesStateModel,
   action: PayloadAction<CommonReducerDataArrayModel<UserRoleModel[]>>
 ): any => {
-  state.userRolesData = action?.payload ?? []
+  state.userRolesData = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
 const saveDeletedUserRoleResponseInfo = (

@@ -23,7 +23,7 @@ import { UserStatusModel } from 'src/models/UserStatusModel'
 import { addNewUserValidationInfo, getPastDateFromNow } from 'src/utils/UserUtils'
 import Divider from '@mui/material/Divider'
 import Chip from '@mui/material/Chip'
-import { grey } from '@mui/material/colors'
+import { amber, grey } from '@mui/material/colors'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import InputLabel from '@mui/material/InputLabel'
@@ -31,6 +31,7 @@ import CustomisedAccordion from 'src/@core/components/customised-accordion/Custo
 import { CustomisedAccordionsObjectProps } from 'src/models/CustomisedAccordionModel'
 import moment from 'moment'
 import envConfig from 'src/configs/envConfig'
+import { convertDateIntoReadableFormat, convertFileSizeToReadableFormat } from 'src/utils/CommonUtils'
 
 const defaultImage = '/images/avatars/9.jpeg'
 
@@ -233,28 +234,69 @@ const TabAddUser = () => {
     )
   }
 
+  const renderUserImageDetailsChips = () => {
+    if (!values?.file) {
+      return null
+    }
+    return (
+      <>
+        <Chip variant='outlined' style={{ marginRight: 15 }} color='info' label={values?.file?.name}></Chip>
+        <Chip variant='outlined' style={{ marginRight: 15 }} color='success' label={values?.file?.type}></Chip>
+        <Chip
+          variant='outlined'
+          style={{ marginRight: 15 }}
+          color='warning'
+          label={`Size: ${convertFileSizeToReadableFormat(values?.file?.size)}`}
+        ></Chip>
+        <Chip
+          variant='outlined'
+          color='primary'
+          label={`Last modified: ${convertDateIntoReadableFormat(values?.file?.lastModifiedDate.toISOString())}`}
+        ></Chip>
+      </>
+    )
+  }
+
   const userImageDetailsChildren = () => {
     return (
-      <Grid item xs={12} style={{ padding: 30 }}>
-        {renderAlert('upload user image')}
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Card sx={{ maxWidth: 120, border: '2px solid ActiveBorder', marginRight: 6.25 }}>
-            <CardMedia component='img' image={imageFileData} alt='User image' />
-          </Card>
-          <Box>
-            <ButtonStyled component='label' variant='contained' htmlFor='user-upload-image'>
-              Upload New user image
-              <input hidden type='file' onChange={onChange} accept='image/png, image/jpeg' id='user-upload-image' />
-            </ButtonStyled>
-            <ResetButtonStyled color='error' variant='outlined' onClick={() => setImageFileData(defaultImage)}>
-              Reset
-            </ResetButtonStyled>
-            <Typography variant='body2' sx={{ marginTop: 5 }}>
-              Allowed PNG or JPEG. Max size of 800K.
-            </Typography>
+      <div style={{ marginBottom: 20 }}>
+        <Grid item xs={12} style={{ padding: 30 }}>
+          {renderAlert('upload user image')}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Card sx={{ maxWidth: 120, border: '2px solid ActiveBorder', marginRight: 6.25 }}>
+              <CardMedia component='img' image={imageFileData} alt='User image' />
+            </Card>
+            <Box>
+              <ButtonStyled component='label' variant='contained' htmlFor='user-upload-image'>
+                Upload New user image
+                <input
+                  hidden
+                  type='file'
+                  onChange={(file: ChangeEvent) => onChange(file)}
+                  accept='image/png, image/jpeg'
+                  id='user-upload-image'
+                />
+              </ButtonStyled>
+              <ResetButtonStyled
+                color='error'
+                variant='outlined'
+                onClick={() => {
+                  setImageFileData(defaultImage)
+                  setValues({ ...values, file: null })
+                }}
+              >
+                Reset
+              </ResetButtonStyled>
+              <Typography variant='body2' sx={{ marginTop: 5 }}>
+                Allowed PNG or JPEG. Max size of 20Mb.
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-      </Grid>
+        </Grid>
+        <Grid item xs={12} sm={12}>
+          {renderUserImageDetailsChips()}
+        </Grid>
+      </div>
     )
   }
 

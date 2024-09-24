@@ -62,6 +62,9 @@ export default {
   GET_ALL_STATES_TYPE: 'allStates',
   GET_ALL_CITIES_TYPE: 'allCities',
   GET_STATES_BY_COUNTRY_ID_TYPE: 'statesByCountryID',
-  GET_CITIES_BY_STATE_ID_TYPE: 'citiesByStateID'
+  GET_CITIES_BY_STATE_ID_TYPE: 'citiesByStateID',
+  GET_COUNTRY_BY_COUNTRY_ID_TYPE: 'countryByID',
+  GET_STATE_BY_STATE_ID_TYPE: 'stateByID',
+  GET_CITY_BY_CITY_ID_TYPE: 'cityByID'
   /*-------------------- GET API'S TYPES END --------------------*/
 }

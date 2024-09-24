@@ -36,7 +36,12 @@ const saveAllFileFoldersDataInfo = (
   state: FileFoldersStateModel,
   action: PayloadAction<CommonReducerDataArrayModel<FileFoldersModel[]>>
 ): any => {
-  state.fileFoldersData = action?.payload ?? []
+  state.fileFoldersData = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
 const saveDeletedFileFolderResponseInfo = (

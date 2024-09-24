@@ -65,7 +65,7 @@ const EnhancedTableHead = (props: EnhancedTableHeadProps) => {
         </StyledTableCell>
         {getHeadCellsDataArray(tableDataArray).map((headCell, index) => (
           <StyledTableCell
-            key={headCell.id}
+            key={`${index.toString()}`}
             align='left'
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}

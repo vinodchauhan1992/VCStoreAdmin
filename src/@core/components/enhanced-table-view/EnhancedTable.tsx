@@ -102,24 +102,24 @@ const EnhancedTable = (props: EnhancedTableProps) => {
   }, [deletionResponse])
 
   const renderTableCells = (row: CommonEnhancedTableDataObjectModel) => {
-    return Object.entries(row).map(([key, value]) => {
+    return Object.entries(row).map(([key, value], index) => {
       if (key?.toLowerCase() === 'dateadded' || key?.toLowerCase() === 'datemodified') {
         return (
-          <StyledTableCell key={key} align='left'>
+          <StyledTableCell key={`${index.toString()}`} align='left'>
             {convertDateIntoReadableFormat(value)}
           </StyledTableCell>
         )
       }
       if (typeof value === 'boolean') {
         return (
-          <StyledTableCell key={key} align='left'>
+          <StyledTableCell key={`${index.toString()}`} align='left'>
             {value === true ? 'Yes' : 'No'}
           </StyledTableCell>
         )
       }
 
       return (
-        <StyledTableCell key={key} align='left'>
+        <StyledTableCell key={`${index.toString()}`} align='left'>
           {value}
         </StyledTableCell>
       )
@@ -170,7 +170,7 @@ const EnhancedTable = (props: EnhancedTableProps) => {
                       role='checkbox'
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.id}
+                      key={`${row.id}`}
                       selected={isItemSelected}
                       sx={{ cursor: 'pointer' }}
                     >
@@ -186,15 +186,17 @@ const EnhancedTable = (props: EnhancedTableProps) => {
                       {/*@ts-ignore*/}
                       {renderTableCells(row)}
                     </StyledTableRow>
-                    {isItemSelected
-                      ? renderEditComponent?.({
+                    {isItemSelected ? (
+                      <React.Fragment key={labelId}>
+                        {renderEditComponent?.({
                           labelId,
                           // @ts-ignore
                           row: row,
                           isItemSelected,
                           resetSelectedState
-                        })
-                      : null}
+                        })}
+                      </React.Fragment>
+                    ) : null}
                   </>
                 )
               })}

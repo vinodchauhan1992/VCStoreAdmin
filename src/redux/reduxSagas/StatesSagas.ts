@@ -1,19 +1,20 @@
 import * as Api from '../../services'
 import { takeLatest, call, put } from 'redux-saga/effects'
 import {
-  saveAllCitiesData,
-  saveDeletedCityResponse,
-  saveAddCityResponse,
-  saveUpdateCityResponse,
-  saveCitiesDataByStateId
-} from '../reducers/CitiesReducer'
+  saveAllStatesData,
+  saveDeletedStateResponse,
+  saveAddStateResponse,
+  saveUpdateStateResponse,
+  saveStatesDataByCountryId,
+  saveStateDataByStateId
+} from '../reducers/StatesReducer'
 import { UIReducer } from '../reducers'
 
 const { ApiService, ApiCallTypes } = Api
 
-export function* fetchAllCities(): any {
+export function* fetchAllStates(): any {
   yield put(UIReducer.showLoader(true))
-  const data = yield call(ApiService.callApiService, ApiCallTypes.GET_ALL_CITIES_TYPE, null)
+  const data = yield call(ApiService.callApiService, ApiCallTypes.GET_ALL_STATES_TYPE, null)
 
   if (
     data.isSucceded &&
@@ -23,8 +24,8 @@ export function* fetchAllCities(): any {
     data?.responseData?.data
   ) {
     yield put(
-      saveAllCitiesData({
-        message: data.responseData.data.length <= 0 ? 'Cities data not found. Please add some cities data' : null,
+      saveAllStatesData({
+        message: data.responseData.data.length <= 0 ? 'States data not found. Please add some states data' : null,
         succeeded: true,
         isCompleted: true,
         dataArray: data.responseData.data
@@ -32,7 +33,7 @@ export function* fetchAllCities(): any {
     )
   } else {
     yield put(
-      saveAllCitiesData({
+      saveAllStatesData({
         message: data.responseData.message,
         succeeded: false,
         isCompleted: true,
@@ -43,114 +44,11 @@ export function* fetchAllCities(): any {
   yield put(UIReducer.showLoader(false))
 }
 
-export function* deleteCity(action: any): any {
+export function* deleteState(action: any): any {
   yield put(UIReducer.showLoader(true))
   const data = yield call(
     ApiService.callApiService,
-    ApiCallTypes.DELETE_COUNTRY_TYPE,
-    null,
-    `/${action?.payload?.cityId}`
-  )
-  if (
-    data.isSucceded &&
-    data?.responseData &&
-    data?.responseData?.status &&
-    data.responseData.status === 'success' &&
-    data?.responseData?.data
-  ) {
-    yield put(
-      saveDeletedCityResponse({
-        message: data.responseData.message,
-        succeeded: true,
-        isCompleted: true,
-        data: data.responseData.data
-      })
-    )
-  } else {
-    yield put(
-      saveDeletedCityResponse({
-        message: data.responseData.message,
-        succeeded: false,
-        isCompleted: true,
-        data: null
-      })
-    )
-  }
-  yield put(UIReducer.showLoader(false))
-}
-
-export function* addCity(action: any): any {
-  yield put(UIReducer.showLoader(true))
-  const data = yield call(ApiService.callApiService, ApiCallTypes.ADD_COUNTRY_TYPE, action?.payload)
-  if (
-    data.isSucceded &&
-    data?.responseData &&
-    data?.responseData?.status &&
-    data.responseData.status === 'success' &&
-    data?.responseData?.data
-  ) {
-    yield put(
-      saveAddCityResponse({
-        message: data.responseData.message,
-        succeeded: true,
-        isCompleted: true,
-        data: data.responseData.data
-      })
-    )
-  } else {
-    yield put(
-      saveAddCityResponse({
-        message: data.responseData.message,
-        succeeded: false,
-        isCompleted: true,
-        data: data?.responseData?.data ?? null
-      })
-    )
-  }
-  yield put(UIReducer.showLoader(false))
-}
-
-export function* updateCity(action: any): any {
-  yield put(UIReducer.showLoader(true))
-  const data = yield call(
-    ApiService.callApiService,
-    ApiCallTypes.UPDATE_COUNTRY_TYPE,
-    action?.payload?.jsonData,
-    `/${action?.payload?.cityId}`
-  )
-  if (
-    data.isSucceded &&
-    data?.responseData &&
-    data?.responseData?.status &&
-    data.responseData.status === 'success' &&
-    data?.responseData?.data
-  ) {
-    yield put(
-      saveUpdateCityResponse({
-        message: data.responseData.message,
-        succeeded: true,
-        isCompleted: true,
-        data: data.responseData.data
-      })
-    )
-  } else {
-    yield put(
-      saveUpdateCityResponse({
-        message: data.responseData.message,
-        succeeded: false,
-        isCompleted: true,
-        data: data?.responseData?.data ?? null
-      })
-    )
-  }
-  yield put(UIReducer.showLoader(false))
-}
-
-export function* fetchCitiesByStateId(action: any): any {
-  yield put(UIReducer.showLoader(true))
-  const data = yield call(
-    ApiService.callApiService,
-    ApiCallTypes.GET_CITIES_BY_STATE_ID_TYPE,
+    ApiCallTypes.DELETE_STATE_TYPE,
     null,
     `/${action?.payload?.stateId}`
   )
@@ -162,7 +60,7 @@ export function* fetchCitiesByStateId(action: any): any {
     data?.responseData?.data
   ) {
     yield put(
-      saveCitiesDataByStateId({
+      saveDeletedStateResponse({
         message: data.responseData.message,
         succeeded: true,
         isCompleted: true,
@@ -171,7 +69,7 @@ export function* fetchCitiesByStateId(action: any): any {
     )
   } else {
     yield put(
-      saveCitiesDataByStateId({
+      saveDeletedStateResponse({
         message: data.responseData.message,
         succeeded: false,
         isCompleted: true,
@@ -182,22 +80,165 @@ export function* fetchCitiesByStateId(action: any): any {
   yield put(UIReducer.showLoader(false))
 }
 
-export function* watchFetchAllCities(): any {
-  yield takeLatest('FETCH_ALL_CITIES', fetchAllCities)
+export function* addState(action: any): any {
+  yield put(UIReducer.showLoader(true))
+  const data = yield call(ApiService.callApiService, ApiCallTypes.ADD_STATE_TYPE, action?.payload)
+  if (
+    data.isSucceded &&
+    data?.responseData &&
+    data?.responseData?.status &&
+    data.responseData.status === 'success' &&
+    data?.responseData?.data
+  ) {
+    yield put(
+      saveAddStateResponse({
+        message: data.responseData.message,
+        succeeded: true,
+        isCompleted: true,
+        data: data.responseData.data
+      })
+    )
+  } else {
+    yield put(
+      saveAddStateResponse({
+        message: data.responseData.message,
+        succeeded: false,
+        isCompleted: true,
+        data: data?.responseData?.data ?? null
+      })
+    )
+  }
+  yield put(UIReducer.showLoader(false))
 }
 
-export function* watchDeleteCity(): any {
-  yield takeLatest('DELETE_COUNTRY', deleteCity)
+export function* updateState(action: any): any {
+  yield put(UIReducer.showLoader(true))
+  const data = yield call(
+    ApiService.callApiService,
+    ApiCallTypes.UPDATE_STATE_TYPE,
+    action?.payload?.jsonData,
+    `/${action?.payload?.stateId}`
+  )
+  if (
+    data.isSucceded &&
+    data?.responseData &&
+    data?.responseData?.status &&
+    data.responseData.status === 'success' &&
+    data?.responseData?.data
+  ) {
+    yield put(
+      saveUpdateStateResponse({
+        message: data.responseData.message,
+        succeeded: true,
+        isCompleted: true,
+        data: data.responseData.data
+      })
+    )
+  } else {
+    yield put(
+      saveUpdateStateResponse({
+        message: data.responseData.message,
+        succeeded: false,
+        isCompleted: true,
+        data: data?.responseData?.data ?? null
+      })
+    )
+  }
+  yield put(UIReducer.showLoader(false))
 }
 
-export function* watchAddCity(): any {
-  yield takeLatest('ADD_COUNTRY', addCity)
+export function* fetchStatesByCountryId(action: any): any {
+  yield put(UIReducer.showLoader(true))
+  const data = yield call(
+    ApiService.callApiService,
+    ApiCallTypes.GET_STATES_BY_COUNTRY_ID_TYPE,
+    null,
+    `/${action?.payload?.countryId}`
+  )
+  if (
+    data.isSucceded &&
+    data?.responseData &&
+    data?.responseData?.status &&
+    data.responseData.status === 'success' &&
+    data?.responseData?.data
+  ) {
+    yield put(
+      saveStatesDataByCountryId({
+        message: data.responseData.message,
+        succeeded: true,
+        isCompleted: true,
+        data: data.responseData.data
+      })
+    )
+  } else {
+    yield put(
+      saveStatesDataByCountryId({
+        message: data.responseData.message,
+        succeeded: false,
+        isCompleted: true,
+        data: null
+      })
+    )
+  }
+  yield put(UIReducer.showLoader(false))
 }
 
-export function* watchUpdateCity(): any {
-  yield takeLatest('UPDATE_COUNTRY', updateCity)
+export function* fetchStateByStateId(action: any): any {
+  yield put(UIReducer.showLoader(true))
+  const data = yield call(
+    ApiService.callApiService,
+    ApiCallTypes.GET_STATE_BY_STATE_ID_TYPE,
+    null,
+    `/${action?.payload?.stateId}`
+  )
+  if (
+    data.isSucceded &&
+    data?.responseData &&
+    data?.responseData?.status &&
+    data.responseData.status === 'success' &&
+    data?.responseData?.data
+  ) {
+    yield put(
+      saveStateDataByStateId({
+        message: data.responseData.message,
+        succeeded: true,
+        isCompleted: true,
+        data: data.responseData.data
+      })
+    )
+  } else {
+    yield put(
+      saveStateDataByStateId({
+        message: data.responseData.message,
+        succeeded: false,
+        isCompleted: true,
+        data: null
+      })
+    )
+  }
+  yield put(UIReducer.showLoader(false))
 }
 
-export function* watchFetchCitiesByStateId(): any {
-  yield takeLatest('FETCH_CITIES_BY_STATE_ID', fetchCitiesByStateId)
+export function* watchFetchAllStates(): any {
+  yield takeLatest('FETCH_ALL_STATES', fetchAllStates)
+}
+
+export function* watchDeleteState(): any {
+  yield takeLatest('DELETE_STATE', deleteState)
+}
+
+export function* watchAddState(): any {
+  yield takeLatest('ADD_STATE', addState)
+}
+
+export function* watchUpdateState(): any {
+  yield takeLatest('UPDATE_STATE', updateState)
+}
+
+export function* watchFetchStatesByCountryId(): any {
+  yield takeLatest('FETCH_STATES_BY_COUNTRY_ID', fetchStatesByCountryId)
+}
+
+export function* watchFetchStateByStateId(): any {
+  yield takeLatest('FETCH_STATE_BY_STATE_ID', fetchStateByStateId)
 }

@@ -12,18 +12,22 @@ import Button, { ButtonProps } from '@mui/material/Button'
 // ** Icons Imports
 import Alert from '@mui/material/Alert'
 import { AlertValuesModel } from 'src/models/AlertValuesModel'
-import { CountriesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { CountriesReducer, StatesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 import Divider from '@mui/material/Divider'
 import Chip from '@mui/material/Chip'
 import { grey } from '@mui/material/colors'
 import CustomisedAccordion from 'src/@core/components/customised-accordion/CustomisedAccordion'
 import { CustomisedAccordionsObjectProps } from 'src/models/CustomisedAccordionModel'
-import { AddCountryRequestModel } from 'src/models/CountriesModel'
 import Radio from '@mui/material/Radio'
 import FormLabel from '@mui/material/FormLabel'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import { AddStateRequestModel } from 'src/models/StatesModel'
+import { CountriesModel } from 'src/models/CountriesModel'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import InputLabel from '@mui/material/InputLabel'
 
 const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -51,7 +55,7 @@ const Root = styled('div')(({ theme }) => ({
   }
 }))
 
-const TabAddCountry = () => {
+const TabAddState = () => {
   const dispatch = useAppDispatch()
 
   const defaultAlertValues: AlertValuesModel = {
@@ -61,22 +65,28 @@ const TabAddCountry = () => {
     accordionName: null
   }
 
-  const defaultValues: AddCountryRequestModel = {
+  const defaultValues: AddStateRequestModel = {
     title: '',
-    code: '',
+    countryID: '',
     isDeleteable: false,
     isAdminDeleteable: true
   }
 
   // @ts-ignore
-  const addedCountryResponse = useAppSelector(CountriesReducer.selectAddedCountryResponse)
+  const addedStateResponse = useAppSelector(StatesReducer.selectAddedStateResponse)
+  // @ts-ignore
+  const allCountriesDataResult = useAppSelector(CountriesReducer.selectAllCountriesDataResult)
 
   // ** State
-  const [values, setValues] = useState<AddCountryRequestModel>(defaultValues)
+  const [values, setValues] = useState<AddStateRequestModel>(defaultValues)
   const [alertVaues, setAlertValues] = useState<AlertValuesModel>(defaultAlertValues)
-  const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [selectedCountry, setSelectedCountry] = useState<CountriesModel | null>(null)
 
-  const handleTextFieldChange = (prop: keyof AddCountryRequestModel) => (event: ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    dispatch({ type: 'FETCH_ALL_COUNTRIES' })
+  }, [])
+
+  const handleTextFieldChange = (prop: keyof AddStateRequestModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
@@ -91,45 +101,51 @@ const TabAddCountry = () => {
   const resetForm = () => {
     setValues(defaultValues)
     setAlertValues(defaultAlertValues)
+    setSelectedCountry(null)
   }
 
   const onResetClick = () => {
     resetForm()
   }
 
-  const onAddNewCountryClick = async () => {
+  const onAddNewStateClick = async () => {
     if (!values?.title || values.title === '') {
       setAlertValues({
         severity: 'error',
-        message: 'Please enter country title.',
+        message: 'Please enter state title.',
         isVisible: true,
-        accordionName: 'country details'
+        accordionName: 'state details'
       })
       return
     }
-    if (!values?.code || values.code === '') {
+    if (!selectedCountry?.id || selectedCountry.id === '') {
       setAlertValues({
         severity: 'error',
-        message: 'Please enter country code.',
+        message: 'Please select country.',
         isVisible: true,
-        accordionName: 'country details'
+        accordionName: 'state details'
       })
       return
     }
 
-    dispatch({ type: 'ADD_COUNTRY', payload: values })
+    const newValues: AddStateRequestModel = {
+      ...values,
+      countryID: selectedCountry?.id
+    }
+
+    dispatch({ type: 'ADD_STATE', payload: newValues })
   }
 
   useEffect(() => {
-    if (addedCountryResponse?.isCompleted) {
-      if (addedCountryResponse?.succeeded) {
+    if (addedStateResponse?.isCompleted) {
+      if (addedStateResponse?.succeeded) {
         resetForm()
-        dispatch(CountriesReducer.resetAddedCountryResponse())
+        dispatch(StatesReducer.resetAddedStateResponse())
       } else {
-        dispatch(CountriesReducer.resetAddedCountryResponse())
+        dispatch(StatesReducer.resetAddedStateResponse())
       }
     }
-  }, [addedCountryResponse])
+  }, [addedStateResponse])
 
   const renderAlert = (renderInAccordion?: string | null) => {
     if (alertVaues?.isVisible && renderInAccordion && renderInAccordion === alertVaues?.accordionName) {
@@ -166,27 +182,42 @@ const TabAddCountry = () => {
     )
   }
 
-  const countryDetailsChildren = () => {
+  const stateDetailsChildren = () => {
     return (
       <Grid container spacing={7} style={{ padding: 30 }}>
-        {renderAlert('country details')}
+        {renderAlert('state details')}
         <Grid item xs={6} sm={6}>
-          <TextField
-            fullWidth
-            label='Country title'
-            placeholder='Country title'
-            value={values.title}
-            onChange={handleTextFieldChange('title')}
-            required
-          />
+          <FormControl fullWidth>
+            <InputLabel>Select country</InputLabel>
+            <Select
+              label='Select country'
+              value={selectedCountry?.title ?? ''}
+              defaultValue={selectedCountry?.title ?? ''}
+            >
+              {allCountriesDataResult?.dataArray?.map(country => {
+                return (
+                  <MenuItem
+                    value={country?.title ?? ''}
+                    key={`${country.id}`}
+                    onClick={() => {
+                      setSelectedCountry(country)
+                    }}
+                    selected={country?.id === selectedCountry?.id}
+                  >
+                    {country.title}
+                  </MenuItem>
+                )
+              })}
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={6} sm={6}>
           <TextField
             fullWidth
-            label='Country code'
-            placeholder='Country code'
-            value={values.code}
-            onChange={handleTextFieldChange('code')}
+            label='State title'
+            placeholder='State title'
+            value={values.title}
+            onChange={handleTextFieldChange('title')}
             required
           />
         </Grid>
@@ -251,9 +282,9 @@ const TabAddCountry = () => {
     const dataArr: CustomisedAccordionsObjectProps[] = [
       {
         id: '1',
-        accordionSummary: 'Country details',
-        accordionName: 'country details',
-        accordionDetailsChildren: () => countryDetailsChildren()
+        accordionSummary: 'State details',
+        accordionName: 'state details',
+        accordionDetailsChildren: () => stateDetailsChildren()
       },
       {
         id: '2',
@@ -290,8 +321,8 @@ const TabAddCountry = () => {
           {renderDivider(false)}
           <Grid item xs={12} sx={{ marginTop: 10, marginBottom: 3 }}>
             <Box>
-              <ButtonStyled component='label' variant='contained' onClick={onAddNewCountryClick}>
-                Add new country
+              <ButtonStyled component='label' variant='contained' onClick={onAddNewStateClick}>
+                Add new state
               </ButtonStyled>
               <ResetButtonStyled color='error' variant='outlined' onClick={onResetClick}>
                 Reset
@@ -304,4 +335,4 @@ const TabAddCountry = () => {
   )
 }
 
-export default TabAddCountry
+export default TabAddState

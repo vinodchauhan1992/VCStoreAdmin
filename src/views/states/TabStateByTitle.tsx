@@ -8,26 +8,36 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Grid from '@mui/material/Grid'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
-import { CountriesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
-import { CountriesModel } from 'src/models/CountriesModel'
+import { CountriesReducer, StatesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 import Radio from '@mui/material/Radio'
 import FormLabel from '@mui/material/FormLabel'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { convertDateIntoReadableFormat } from 'src/utils/CommonUtils'
+import { StatesModel } from 'src/models/StatesModel'
 
-const TabCountryByTitle = () => {
+const TabStateByTitle = () => {
   const dispatch = useAppDispatch()
 
   // ** States
-  const [selectedCountryData, setSelectedCountryData] = useState<CountriesModel | null>(null)
+  const [selectedStateData, setSelectedStateData] = useState<StatesModel | null>(null)
 
   // @ts-ignore
-  const allCountriesDataResult = useAppSelector(CountriesReducer.selectAllCountriesDataResult)
+  const allStatesDataResult = useAppSelector(StatesReducer.selectAllStatesDataResult)
+  // @ts-ignore
+  const countryDataByCountryId = useAppSelector(CountriesReducer.selectCountryDataByCountryId)
 
   useEffect(() => {
-    dispatch({ type: 'FETCH_ALL_COUNTRIES' })
+    dispatch({ type: 'FETCH_ALL_STATES' })
   }, [])
+
+  useEffect(() => {
+    if (selectedStateData) {
+      dispatch({ type: 'FETCH_COUNTRY_BY_COUNTRY_ID', payload: { countryId: selectedStateData?.countryID } })
+    } else {
+      dispatch(CountriesReducer.resetCountryDataByCountryId())
+    }
+  }, [selectedStateData])
 
   const renderDetailsFields = () => {
     return (
@@ -36,9 +46,18 @@ const TabCountryByTitle = () => {
           <TextField
             disabled
             fullWidth
+            label='State ID'
+            placeholder='State ID'
+            value={selectedStateData?.id ?? 'N/A'}
+          />
+        </Grid>
+        <Grid item xs={6} sm={6}>
+          <TextField
+            disabled
+            fullWidth
             label='Country ID'
             placeholder='Country ID'
-            value={selectedCountryData?.id ?? 'N/A'}
+            value={selectedStateData?.countryID ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={6} sm={6}>
@@ -47,16 +66,25 @@ const TabCountryByTitle = () => {
             fullWidth
             label='Country title'
             placeholder='Country title'
-            value={selectedCountryData?.title ?? 'N/A'}
+            value={countryDataByCountryId?.data?.title ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={6} sm={6}>
           <TextField
             disabled
             fullWidth
-            label='Country code'
-            placeholder='Country code'
-            value={selectedCountryData?.code ?? 'N/A'}
+            label='State title'
+            placeholder='State title'
+            value={selectedStateData?.title ?? 'N/A'}
+          />
+        </Grid>
+        <Grid item xs={6} sm={6}>
+          <TextField
+            disabled
+            fullWidth
+            label='State code'
+            placeholder='State code'
+            value={selectedStateData?.code ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={6} sm={6}>
@@ -66,10 +94,10 @@ const TabCountryByTitle = () => {
             </FormLabel>
             <RadioGroup
               row
-              defaultValue={selectedCountryData?.isDeleteable ? 'yes' : 'no'}
+              defaultValue={selectedStateData?.isDeleteable ? 'yes' : 'no'}
               aria-label='Can be deleted?'
               name='account-settings-info-radio'
-              value={selectedCountryData?.isDeleteable ? 'yes' : 'no'}
+              value={selectedStateData?.isDeleteable ? 'yes' : 'no'}
             >
               <FormControlLabel value='no' label='No' control={<Radio disabled />} />
               <FormControlLabel value='yes' label='Yes' control={<Radio disabled />} />
@@ -83,10 +111,10 @@ const TabCountryByTitle = () => {
             </FormLabel>
             <RadioGroup
               row
-              defaultValue={selectedCountryData?.isAdminDeleteable ? 'yes' : 'no'}
+              defaultValue={selectedStateData?.isAdminDeleteable ? 'yes' : 'no'}
               aria-label='Can be deleted by admin?'
               name='account-settings-info-radio'
-              value={selectedCountryData?.isAdminDeleteable ? 'yes' : 'no'}
+              value={selectedStateData?.isAdminDeleteable ? 'yes' : 'no'}
             >
               <FormControlLabel value='yes' label='Yes' control={<Radio disabled />} />
               <FormControlLabel value='no' label='No' control={<Radio disabled />} />
@@ -97,23 +125,19 @@ const TabCountryByTitle = () => {
           <TextField
             disabled
             fullWidth
-            label='Country added on'
-            placeholder='Country added on'
-            value={
-              selectedCountryData?.dateAdded ? convertDateIntoReadableFormat(selectedCountryData.dateAdded) : 'N/A'
-            }
+            label='State added on'
+            placeholder='State added on'
+            value={selectedStateData?.dateAdded ? convertDateIntoReadableFormat(selectedStateData.dateAdded) : 'N/A'}
           />
         </Grid>
         <Grid item xs={6} sm={6}>
           <TextField
             disabled
             fullWidth
-            label='Country updated on'
-            placeholder='Country updated on'
+            label='State updated on'
+            placeholder='State updated on'
             value={
-              selectedCountryData?.dateModified
-                ? convertDateIntoReadableFormat(selectedCountryData?.dateModified)
-                : 'N/A'
+              selectedStateData?.dateModified ? convertDateIntoReadableFormat(selectedStateData?.dateModified) : 'N/A'
             }
           />
         </Grid>
@@ -124,9 +148,9 @@ const TabCountryByTitle = () => {
   const renderEmpty = () => {
     return (
       <CustomisedErrorEmpty
-        title='Select country!'
+        title='Select state!'
         type='empty'
-        message='Please select a country from above drop down.'
+        message='Please select a state from above drop down.'
       ></CustomisedErrorEmpty>
     )
   }
@@ -136,16 +160,16 @@ const TabCountryByTitle = () => {
       <CustomisedErrorEmpty
         title='Error!'
         type='empty'
-        message={allCountriesDataResult?.message ?? ''}
+        message={allStatesDataResult?.message ?? ''}
       ></CustomisedErrorEmpty>
     )
   }
 
   const renderData = () => {
-    if (allCountriesDataResult?.isCompleted && !allCountriesDataResult?.succeeded) {
+    if (allStatesDataResult?.isCompleted && !allStatesDataResult?.succeeded) {
       return renderError()
     }
-    if (!selectedCountryData) {
+    if (!selectedStateData) {
       return renderEmpty()
     }
 
@@ -157,20 +181,24 @@ const TabCountryByTitle = () => {
       <CardContent>
         <form>
           <Grid container spacing={7}>
-            <Grid item xs={12} sm={selectedCountryData ? 6 : 12}>
+            <Grid item xs={12} sm={selectedStateData ? 6 : 12}>
               <FormControl fullWidth>
-                <InputLabel>Country</InputLabel>
-                <Select label='Country'>
-                  {allCountriesDataResult?.dataArray?.map(country => {
+                <InputLabel>State</InputLabel>
+                <Select
+                  label='State'
+                  value={selectedStateData?.title ?? ''}
+                  defaultValue={selectedStateData?.title ?? ''}
+                >
+                  {allStatesDataResult?.dataArray?.map(state => {
                     return (
                       <MenuItem
-                        value={country?.title ?? ''}
-                        key={`${country.id}`}
+                        value={state?.title ?? ''}
+                        key={`${state.id}`}
                         onClick={() => {
-                          setSelectedCountryData(country)
+                          setSelectedStateData(state)
                         }}
                       >
-                        {country.title}
+                        {state.title}
                       </MenuItem>
                     )
                   })}
@@ -185,4 +213,4 @@ const TabCountryByTitle = () => {
     </div>
   )
 }
-export default TabCountryByTitle
+export default TabStateByTitle

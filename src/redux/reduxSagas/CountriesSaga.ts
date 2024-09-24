@@ -4,7 +4,8 @@ import {
   saveAllCountriesData,
   saveDeletedCountryResponse,
   saveAddCountryResponse,
-  saveUpdateCountryResponse
+  saveUpdateCountryResponse,
+  saveCountryDataByCountryId
 } from '../reducers/CountriesReducer'
 import { UIReducer } from '../reducers'
 
@@ -145,6 +146,42 @@ export function* updateCountry(action: any): any {
   yield put(UIReducer.showLoader(false))
 }
 
+export function* fetchCountryByCountryId(action: any): any {
+  yield put(UIReducer.showLoader(true))
+  const data = yield call(
+    ApiService.callApiService,
+    ApiCallTypes.GET_COUNTRY_BY_COUNTRY_ID_TYPE,
+    null,
+    `/${action?.payload?.countryId}`
+  )
+  if (
+    data.isSucceded &&
+    data?.responseData &&
+    data?.responseData?.status &&
+    data.responseData.status === 'success' &&
+    data?.responseData?.data
+  ) {
+    yield put(
+      saveCountryDataByCountryId({
+        message: data.responseData.message,
+        succeeded: true,
+        isCompleted: true,
+        data: data.responseData.data
+      })
+    )
+  } else {
+    yield put(
+      saveCountryDataByCountryId({
+        message: data.responseData.message,
+        succeeded: false,
+        isCompleted: true,
+        data: data?.responseData?.data ?? null
+      })
+    )
+  }
+  yield put(UIReducer.showLoader(false))
+}
+
 export function* watchFetchAllCountries(): any {
   yield takeLatest('FETCH_ALL_COUNTRIES', fetchAllCountries)
 }
@@ -159,4 +196,8 @@ export function* watchAddCountry(): any {
 
 export function* watchUpdateCountry(): any {
   yield takeLatest('UPDATE_COUNTRY', updateCountry)
+}
+
+export function* watchFetchCountryByCountryId(): any {
+  yield takeLatest('FETCH_COUNTRY_BY_COUNTRY_ID', fetchCountryByCountryId)
 }

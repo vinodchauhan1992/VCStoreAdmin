@@ -25,21 +25,29 @@ import {
 } from './AdminMenuStatusesSaga'
 import { watchAddProduct, watchDeleteProduct, watchFetchAllProducts } from './ProductsSaga'
 import { watchAddBrand, watchDeleteBrand, watchFetchAllBrands, watchUpdateBrand } from './BrandsSaga'
-import { watchAddCountry, watchDeleteCountry, watchFetchAllCountries, watchUpdateCountry } from './CountriesSaga'
+import {
+  watchAddCountry,
+  watchDeleteCountry,
+  watchFetchAllCountries,
+  watchFetchCountryByCountryId,
+  watchUpdateCountry
+} from './CountriesSaga'
 import {
   watchAddState,
   watchDeleteState,
   watchFetchAllStates,
   watchFetchStatesByCountryId,
-  watchUpdateState
-} from './StatesSaga'
+  watchUpdateState,
+  watchFetchStateByStateId
+} from './StatesSagas'
 import {
   watchAddCity,
   watchDeleteCity,
   watchFetchAllCities,
   watchFetchCitiesByStateId,
-  watchUpdateCity
-} from './CitiesSaga'
+  watchUpdateCity,
+  watchFetchCityByCityId
+} from './CitiesSagas'
 
 export default function* rootSaga(): any {
   return yield all([
@@ -93,6 +101,9 @@ export default function* rootSaga(): any {
     fork(watchAddCity),
     fork(watchDeleteCity),
     fork(watchUpdateCity),
-    fork(watchFetchCitiesByStateId)
+    fork(watchFetchCitiesByStateId),
+    fork(watchFetchCountryByCountryId),
+    fork(watchFetchStateByStateId),
+    fork(watchFetchCityByCityId)
   ])
 }

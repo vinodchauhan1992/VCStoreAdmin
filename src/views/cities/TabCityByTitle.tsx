@@ -8,37 +8,78 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Grid from '@mui/material/Grid'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
-import { CountriesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
-import { CountriesModel } from 'src/models/CountriesModel'
+import { CitiesReducer, CountriesReducer, StatesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { CitiesModel } from 'src/models/CitiesModel'
 import Radio from '@mui/material/Radio'
 import FormLabel from '@mui/material/FormLabel'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { convertDateIntoReadableFormat } from 'src/utils/CommonUtils'
 
-const TabCountryByTitle = () => {
+const TabCityByTitle = () => {
   const dispatch = useAppDispatch()
 
   // ** States
-  const [selectedCountryData, setSelectedCountryData] = useState<CountriesModel | null>(null)
+  const [selectedCityData, setSelectedCityData] = useState<CitiesModel | null>(null)
 
   // @ts-ignore
-  const allCountriesDataResult = useAppSelector(CountriesReducer.selectAllCountriesDataResult)
+  const allCitiesDataResult = useAppSelector(CitiesReducer.selectAllCitiesDataResult)
+  // @ts-ignore
+  const countryDataByCountryId = useAppSelector(CountriesReducer.selectCountryDataByCountryId)
+  // @ts-ignore
+  const stateDataByStateIdResult = useAppSelector(StatesReducer.selectStateDataByStateIdResult)
 
   useEffect(() => {
-    dispatch({ type: 'FETCH_ALL_COUNTRIES' })
+    dispatch({ type: 'FETCH_ALL_CITIES' })
   }, [])
+
+  useEffect(() => {
+    if (selectedCityData) {
+      dispatch({ type: 'FETCH_COUNTRY_BY_COUNTRY_ID', payload: { countryId: selectedCityData?.countryID } })
+    } else {
+      dispatch(CountriesReducer.resetCountryDataByCountryId())
+    }
+  }, [selectedCityData])
+
+  useEffect(() => {
+    if (selectedCityData) {
+      dispatch({ type: 'FETCH_STATE_BY_STATE_ID', payload: { stateId: selectedCityData?.stateID } })
+    } else {
+      dispatch(StatesReducer.resetStateDataByStateId())
+    }
+  }, [countryDataByCountryId?.data])
 
   const renderDetailsFields = () => {
     return (
       <>
+        <Grid item xs={6} sm={6}>
+          <TextField disabled fullWidth label='City ID' placeholder='City ID' value={selectedCityData?.id ?? 'N/A'} />
+        </Grid>
+        <Grid item xs={6} sm={6}>
+          <TextField
+            disabled
+            fullWidth
+            label='City title'
+            placeholder='City title'
+            value={selectedCityData?.title ?? 'N/A'}
+          />
+        </Grid>
+        <Grid item xs={6} sm={6}>
+          <TextField
+            disabled
+            fullWidth
+            label='City code'
+            placeholder='City code'
+            value={selectedCityData?.code ?? 'N/A'}
+          />
+        </Grid>
         <Grid item xs={6} sm={6}>
           <TextField
             disabled
             fullWidth
             label='Country ID'
             placeholder='Country ID'
-            value={selectedCountryData?.id ?? 'N/A'}
+            value={selectedCityData?.countryID ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={6} sm={6}>
@@ -47,16 +88,25 @@ const TabCountryByTitle = () => {
             fullWidth
             label='Country title'
             placeholder='Country title'
-            value={selectedCountryData?.title ?? 'N/A'}
+            value={countryDataByCountryId?.data?.title ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={6} sm={6}>
           <TextField
             disabled
             fullWidth
-            label='Country code'
-            placeholder='Country code'
-            value={selectedCountryData?.code ?? 'N/A'}
+            label='State ID'
+            placeholder='State ID'
+            value={selectedCityData?.stateID ?? 'N/A'}
+          />
+        </Grid>
+        <Grid item xs={6} sm={6}>
+          <TextField
+            disabled
+            fullWidth
+            label='State title'
+            placeholder='State title'
+            value={stateDataByStateIdResult?.data?.title ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={6} sm={6}>
@@ -66,10 +116,10 @@ const TabCountryByTitle = () => {
             </FormLabel>
             <RadioGroup
               row
-              defaultValue={selectedCountryData?.isDeleteable ? 'yes' : 'no'}
+              defaultValue={selectedCityData?.isDeleteable ? 'yes' : 'no'}
               aria-label='Can be deleted?'
               name='account-settings-info-radio'
-              value={selectedCountryData?.isDeleteable ? 'yes' : 'no'}
+              value={selectedCityData?.isDeleteable ? 'yes' : 'no'}
             >
               <FormControlLabel value='no' label='No' control={<Radio disabled />} />
               <FormControlLabel value='yes' label='Yes' control={<Radio disabled />} />
@@ -83,10 +133,10 @@ const TabCountryByTitle = () => {
             </FormLabel>
             <RadioGroup
               row
-              defaultValue={selectedCountryData?.isAdminDeleteable ? 'yes' : 'no'}
+              defaultValue={selectedCityData?.isAdminDeleteable ? 'yes' : 'no'}
               aria-label='Can be deleted by admin?'
               name='account-settings-info-radio'
-              value={selectedCountryData?.isAdminDeleteable ? 'yes' : 'no'}
+              value={selectedCityData?.isAdminDeleteable ? 'yes' : 'no'}
             >
               <FormControlLabel value='yes' label='Yes' control={<Radio disabled />} />
               <FormControlLabel value='no' label='No' control={<Radio disabled />} />
@@ -97,23 +147,19 @@ const TabCountryByTitle = () => {
           <TextField
             disabled
             fullWidth
-            label='Country added on'
-            placeholder='Country added on'
-            value={
-              selectedCountryData?.dateAdded ? convertDateIntoReadableFormat(selectedCountryData.dateAdded) : 'N/A'
-            }
+            label='City added on'
+            placeholder='City added on'
+            value={selectedCityData?.dateAdded ? convertDateIntoReadableFormat(selectedCityData.dateAdded) : 'N/A'}
           />
         </Grid>
         <Grid item xs={6} sm={6}>
           <TextField
             disabled
             fullWidth
-            label='Country updated on'
-            placeholder='Country updated on'
+            label='City updated on'
+            placeholder='City updated on'
             value={
-              selectedCountryData?.dateModified
-                ? convertDateIntoReadableFormat(selectedCountryData?.dateModified)
-                : 'N/A'
+              selectedCityData?.dateModified ? convertDateIntoReadableFormat(selectedCityData?.dateModified) : 'N/A'
             }
           />
         </Grid>
@@ -124,9 +170,9 @@ const TabCountryByTitle = () => {
   const renderEmpty = () => {
     return (
       <CustomisedErrorEmpty
-        title='Select country!'
+        title='Select city!'
         type='empty'
-        message='Please select a country from above drop down.'
+        message='Please select a city from above drop down.'
       ></CustomisedErrorEmpty>
     )
   }
@@ -136,16 +182,16 @@ const TabCountryByTitle = () => {
       <CustomisedErrorEmpty
         title='Error!'
         type='empty'
-        message={allCountriesDataResult?.message ?? ''}
+        message={allCitiesDataResult?.message ?? ''}
       ></CustomisedErrorEmpty>
     )
   }
 
   const renderData = () => {
-    if (allCountriesDataResult?.isCompleted && !allCountriesDataResult?.succeeded) {
+    if (allCitiesDataResult?.isCompleted && !allCitiesDataResult?.succeeded) {
       return renderError()
     }
-    if (!selectedCountryData) {
+    if (!selectedCityData) {
       return renderEmpty()
     }
 
@@ -157,20 +203,20 @@ const TabCountryByTitle = () => {
       <CardContent>
         <form>
           <Grid container spacing={7}>
-            <Grid item xs={12} sm={selectedCountryData ? 6 : 12}>
+            <Grid item xs={12} sm={selectedCityData ? 6 : 12}>
               <FormControl fullWidth>
-                <InputLabel>Country</InputLabel>
-                <Select label='Country'>
-                  {allCountriesDataResult?.dataArray?.map(country => {
+                <InputLabel>Select city</InputLabel>
+                <Select label='Select city'>
+                  {allCitiesDataResult?.dataArray?.map(city => {
                     return (
                       <MenuItem
-                        value={country?.title ?? ''}
-                        key={`${country.id}`}
+                        value={city?.title ?? ''}
+                        key={`${city.id}`}
                         onClick={() => {
-                          setSelectedCountryData(country)
+                          setSelectedCityData(city)
                         }}
                       >
-                        {country.title}
+                        {city.title}
                       </MenuItem>
                     )
                   })}
@@ -185,4 +231,4 @@ const TabCountryByTitle = () => {
     </div>
   )
 }
-export default TabCountryByTitle
+export default TabCityByTitle

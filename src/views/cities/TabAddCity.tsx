@@ -12,18 +12,23 @@ import Button, { ButtonProps } from '@mui/material/Button'
 // ** Icons Imports
 import Alert from '@mui/material/Alert'
 import { AlertValuesModel } from 'src/models/AlertValuesModel'
-import { CountriesReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { CountriesReducer, CitiesReducer, useAppDispatch, useAppSelector, StatesReducer } from 'src/redux/reducers'
 import Divider from '@mui/material/Divider'
 import Chip from '@mui/material/Chip'
 import { grey } from '@mui/material/colors'
 import CustomisedAccordion from 'src/@core/components/customised-accordion/CustomisedAccordion'
 import { CustomisedAccordionsObjectProps } from 'src/models/CustomisedAccordionModel'
-import { AddCountryRequestModel } from 'src/models/CountriesModel'
 import Radio from '@mui/material/Radio'
 import FormLabel from '@mui/material/FormLabel'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import { CountriesModel } from 'src/models/CountriesModel'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import InputLabel from '@mui/material/InputLabel'
+import { AddCityRequestModel } from 'src/models/CitiesModel'
+import { StatesModel } from 'src/models/StatesModel'
 
 const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
@@ -51,7 +56,7 @@ const Root = styled('div')(({ theme }) => ({
   }
 }))
 
-const TabAddCountry = () => {
+const TabAddCity = () => {
   const dispatch = useAppDispatch()
 
   const defaultAlertValues: AlertValuesModel = {
@@ -61,22 +66,48 @@ const TabAddCountry = () => {
     accordionName: null
   }
 
-  const defaultValues: AddCountryRequestModel = {
+  const defaultValues: AddCityRequestModel = {
     title: '',
-    code: '',
+    stateID: '',
+    countryID: '',
     isDeleteable: false,
     isAdminDeleteable: true
   }
 
   // @ts-ignore
-  const addedCountryResponse = useAppSelector(CountriesReducer.selectAddedCountryResponse)
+  const addedCityResponse = useAppSelector(CitiesReducer.selectAddedCityResponse)
+  // @ts-ignore
+  const allCountriesDataResult = useAppSelector(CountriesReducer.selectAllCountriesDataResult)
+  // @ts-ignore
+  const statesDataByCountryIdResult = useAppSelector(StatesReducer.selectStatesDataByCountryIdResult)
 
   // ** State
-  const [values, setValues] = useState<AddCountryRequestModel>(defaultValues)
+  const [values, setValues] = useState<AddCityRequestModel>(defaultValues)
   const [alertVaues, setAlertValues] = useState<AlertValuesModel>(defaultAlertValues)
-  const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [selectedCountry, setSelectedCountry] = useState<CountriesModel | null>(null)
+  const [selectedState, setSelectedState] = useState<StatesModel | null>(null)
 
-  const handleTextFieldChange = (prop: keyof AddCountryRequestModel) => (event: ChangeEvent<HTMLInputElement>) => {
+  const callAllCountriesApi = () => {
+    dispatch({ type: 'FETCH_ALL_COUNTRIES' })
+  }
+
+  useEffect(() => {
+    callAllCountriesApi()
+  }, [])
+
+  const callStatesByCountryIdApi = () => {
+    dispatch({ type: 'FETCH_STATES_BY_COUNTRY_ID', payload: { countryId: selectedCountry?.id } })
+  }
+
+  useEffect(() => {
+    if (selectedCountry?.id) {
+      callStatesByCountryIdApi()
+    } else {
+      dispatch(StatesReducer.resetAllStatesDataByCountryIdResult())
+    }
+  }, [selectedCountry])
+
+  const handleTextFieldChange = (prop: keyof AddCityRequestModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
@@ -91,45 +122,62 @@ const TabAddCountry = () => {
   const resetForm = () => {
     setValues(defaultValues)
     setAlertValues(defaultAlertValues)
+    setSelectedCountry(null)
+    setSelectedState(null)
   }
 
   const onResetClick = () => {
     resetForm()
   }
 
-  const onAddNewCountryClick = async () => {
+  const onAddNewCityClick = async () => {
     if (!values?.title || values.title === '') {
       setAlertValues({
         severity: 'error',
-        message: 'Please enter country title.',
+        message: 'Please enter city title.',
         isVisible: true,
-        accordionName: 'country details'
+        accordionName: 'city details'
       })
       return
     }
-    if (!values?.code || values.code === '') {
+    if (!selectedCountry?.id || selectedCountry.id === '') {
       setAlertValues({
         severity: 'error',
-        message: 'Please enter country code.',
+        message: 'Please select country.',
         isVisible: true,
-        accordionName: 'country details'
+        accordionName: 'city details'
+      })
+      return
+    }
+    if (!selectedState?.id || selectedState.id === '') {
+      setAlertValues({
+        severity: 'error',
+        message: 'Please select state.',
+        isVisible: true,
+        accordionName: 'city details'
       })
       return
     }
 
-    dispatch({ type: 'ADD_COUNTRY', payload: values })
+    const newValues: AddCityRequestModel = {
+      ...values,
+      countryID: selectedCountry?.id,
+      stateID: selectedState?.id
+    }
+
+    dispatch({ type: 'ADD_CITY', payload: newValues })
   }
 
   useEffect(() => {
-    if (addedCountryResponse?.isCompleted) {
-      if (addedCountryResponse?.succeeded) {
+    if (addedCityResponse?.isCompleted) {
+      if (addedCityResponse?.succeeded) {
         resetForm()
-        dispatch(CountriesReducer.resetAddedCountryResponse())
+        dispatch(CitiesReducer.resetAddedCityResponse())
       } else {
-        dispatch(CountriesReducer.resetAddedCountryResponse())
+        dispatch(CitiesReducer.resetAddedCityResponse())
       }
     }
-  }, [addedCountryResponse])
+  }, [addedCityResponse])
 
   const renderAlert = (renderInAccordion?: string | null) => {
     if (alertVaues?.isVisible && renderInAccordion && renderInAccordion === alertVaues?.accordionName) {
@@ -166,27 +214,71 @@ const TabAddCountry = () => {
     )
   }
 
-  const countryDetailsChildren = () => {
+  const cityDetailsChildren = () => {
     return (
       <Grid container spacing={7} style={{ padding: 30 }}>
-        {renderAlert('country details')}
+        {renderAlert('city details')}
         <Grid item xs={6} sm={6}>
-          <TextField
-            fullWidth
-            label='Country title'
-            placeholder='Country title'
-            value={values.title}
-            onChange={handleTextFieldChange('title')}
-            required
-          />
+          <FormControl fullWidth>
+            <InputLabel>Select country</InputLabel>
+            <Select
+              label='Select country'
+              value={selectedCountry?.title ?? ''}
+              defaultValue={selectedCountry?.title ?? ''}
+            >
+              {allCountriesDataResult?.dataArray?.map(country => {
+                return (
+                  <MenuItem
+                    value={country?.title ?? ''}
+                    key={`${country.id}`}
+                    onClick={() => {
+                      if (selectedCountry?.id !== country?.id) {
+                        setSelectedState(null)
+                        setSelectedCountry(country)
+                      }
+                    }}
+                    selected={country?.id === selectedCountry?.id}
+                  >
+                    {country.title}
+                  </MenuItem>
+                )
+              })}
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={6} sm={6}>
+          <FormControl fullWidth>
+            <InputLabel>Select state</InputLabel>
+            <Select
+              label='Select state'
+              value={selectedState?.title ?? ''}
+              defaultValue={selectedState?.title ?? ''}
+              disabled={selectedCountry?.id ? false : true}
+            >
+              {statesDataByCountryIdResult?.data?.map(state => {
+                return (
+                  <MenuItem
+                    value={state?.title ?? ''}
+                    key={`${state.id}`}
+                    onClick={() => {
+                      setSelectedState(state)
+                    }}
+                    selected={state?.id === selectedState?.id}
+                  >
+                    {state.title}
+                  </MenuItem>
+                )
+              })}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={12}>
           <TextField
             fullWidth
-            label='Country code'
-            placeholder='Country code'
-            value={values.code}
-            onChange={handleTextFieldChange('code')}
+            label='City title'
+            placeholder='City title'
+            value={values.title}
+            onChange={handleTextFieldChange('title')}
             required
           />
         </Grid>
@@ -251,9 +343,9 @@ const TabAddCountry = () => {
     const dataArr: CustomisedAccordionsObjectProps[] = [
       {
         id: '1',
-        accordionSummary: 'Country details',
-        accordionName: 'country details',
-        accordionDetailsChildren: () => countryDetailsChildren()
+        accordionSummary: 'City details',
+        accordionName: 'city details',
+        accordionDetailsChildren: () => cityDetailsChildren()
       },
       {
         id: '2',
@@ -290,8 +382,8 @@ const TabAddCountry = () => {
           {renderDivider(false)}
           <Grid item xs={12} sx={{ marginTop: 10, marginBottom: 3 }}>
             <Box>
-              <ButtonStyled component='label' variant='contained' onClick={onAddNewCountryClick}>
-                Add new country
+              <ButtonStyled component='label' variant='contained' onClick={onAddNewCityClick}>
+                Add new city
               </ButtonStyled>
               <ResetButtonStyled color='error' variant='outlined' onClick={onResetClick}>
                 Reset
@@ -304,4 +396,4 @@ const TabAddCountry = () => {
   )
 }
 
-export default TabAddCountry
+export default TabAddCity

@@ -8,7 +8,8 @@ import {
   CommonReducerDataArrayModel,
   CommonReducerByIdDataArrayModel,
   DeleteDataCommonReducerModel,
-  UpdateDataCommonReducerModel
+  UpdateDataCommonReducerModel,
+  CommonReducerByIdDataObjectModel
 } from './CommonModel'
 import { FileFoldersModel } from './FileFoldersModel'
 import { LoggedInUserModel } from './LoggedInUserModel'
@@ -102,6 +103,7 @@ export interface CountriesStateModel {
   deletedCountryResponse?: DeleteDataCommonReducerModel<null>
   addCountryResponse?: AddDataCommonReducerModel<CountriesModel>
   updateCountryResponse?: UpdateDataCommonReducerModel<CountriesModel>
+  countryDataByCountryId?: CommonReducerByIdDataObjectModel<CountriesModel>
 }
 
 export interface StatesStateModel {
@@ -109,7 +111,8 @@ export interface StatesStateModel {
   deletedStateResponse?: DeleteDataCommonReducerModel<null>
   addStateResponse?: AddDataCommonReducerModel<StatesModel>
   updateStateResponse?: UpdateDataCommonReducerModel<StatesModel>
-  statesDataByCountryId?: CommonReducerDataArrayModel<StatesModel[]>
+  statesDataByCountryId?: CommonReducerByIdDataArrayModel<StatesModel[]>
+  stateDataByStateId?: CommonReducerByIdDataObjectModel<StatesModel>
 }
 
 export interface CitiesStateModel {
@@ -117,7 +120,8 @@ export interface CitiesStateModel {
   deletedCityResponse?: DeleteDataCommonReducerModel<null>
   addCityResponse?: AddDataCommonReducerModel<CitiesModel>
   updateCityResponse?: UpdateDataCommonReducerModel<CitiesModel>
-  citiesDataByStateId?: CommonReducerDataArrayModel<CitiesModel[]>
+  citiesDataByStateId?: CommonReducerByIdDataArrayModel<CitiesModel[]>
+  cityDataByCityId?: CommonReducerByIdDataObjectModel<CitiesModel>
 }
 
 export interface ReduxStateModel {

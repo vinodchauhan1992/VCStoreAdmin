@@ -46,7 +46,12 @@ const saveAllAdminSubmenusDataInfo = (
   state: AdminSubmenusStateModel,
   action: PayloadAction<CommonReducerDataArrayModel<AdminSubmenusModel[]>>
 ): any => {
-  state.adminSubmenusData = action?.payload ?? []
+  state.adminSubmenusData = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
 const saveDeletedAdminSubmenuResponseInfo = (

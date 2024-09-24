@@ -32,3 +32,10 @@ export interface CommonReducerByIdDataArrayModel<T = []> {
   isCompleted: boolean
   data: T | []
 }
+
+export interface CommonReducerByIdDataObjectModel<T = null> {
+  message?: string | null
+  succeeded: boolean
+  isCompleted: boolean
+  data: T | null
+}

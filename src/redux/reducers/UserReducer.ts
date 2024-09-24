@@ -36,7 +36,12 @@ const saveAllUsersDataInfo = (
   state: UserStateModel,
   action: PayloadAction<CommonReducerDataArrayModel<UserModel[]>>
 ): any => {
-  state.usersData = action?.payload ?? []
+  state.usersData = action?.payload ?? {
+    message: null,
+    succeeded: false,
+    isCompleted: false,
+    dataArray: []
+  }
 }
 
 const saveDeletedUserResponseInfo = (
