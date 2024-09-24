@@ -29,6 +29,7 @@ import Skeleton from '@mui/material/Skeleton'
 import Rating from '@mui/material/Rating'
 import { UserModel } from 'src/models/UserModel'
 import { getUserStaticMenuOptionData } from '../../staticData/staticMenuOptions'
+import { Theme, useTheme } from '@emotion/react'
 
 const productImageLoadedBlockSize = '220px'
 const productImageLoadedInlineSize = '100%'
@@ -81,6 +82,8 @@ interface Props {
 }
 
 const UserSmartCard = (props: Props) => {
+  const theme: any = useTheme()
+
   const {
     dataIndex = 0,
     userData,
@@ -275,7 +278,7 @@ const UserSmartCard = (props: Props) => {
         {isButton1Visible ? (
           <Tooltip title={button1Text} arrow>
             <IconButton aria-label={button1Text} size='large' onClick={() => onButton1Click?.(dataIndex, userData)}>
-              <DeleteForeverSharpIcon color='error' />
+              <DeleteForeverSharpIcon />
             </IconButton>
           </Tooltip>
         ) : null}
@@ -327,7 +330,13 @@ const UserSmartCard = (props: Props) => {
             </Typography>
           </div>
           <Divider variant='middle' sx={{ backgroundColor: amber[100], marginTop: 8, marginBottom: 8 }} />
-          <div style={{ backgroundColor: amber[300], borderRadius: 10, padding: 15 }}>
+          <div
+            style={{
+              backgroundColor: theme?.palette?.mode === 'light' ? amber[300] : amber[900],
+              borderRadius: 10,
+              padding: 15
+            }}
+          >
             <Typography variant='body2' sx={{ color: 'text.secondary' }}>
               {`Image name: ${userData?.imageData?.name ?? 'N/A'}`}
             </Typography>
@@ -341,22 +350,20 @@ const UserSmartCard = (props: Props) => {
               {`Full path: ${userData?.imageData?.fullPath ?? 'N/A'}`}
             </Typography>
           </div>
-          {/* <Divider variant='middle' sx={{ backgroundColor: amber[100], marginTop: 8, marginBottom: 8 }} />
-          <div style={{ backgroundColor: 'InfoBackground', borderRadius: 10, padding: 15 }}>
-            <Typography variant='h6' sx={{ color: 'text.secondary' }}>
-              Description:
-            </Typography>
-            <Typography variant='body2' sx={{ color: cyan[800] }}>
-              {`${userData?.description ?? 'N/A'}`}
-            </Typography>
-          </div> */}
         </CardContent>
       </Collapse>
     )
   }
 
+  const getCardColor = () => {
+    if (isUserActive) {
+      return theme?.palette?.mode === 'light' ? green[50] : green[900]
+    }
+    return theme?.palette?.mode === 'light' ? red[50] : red[900]
+  }
+
   return (
-    <Card sx={{ maxWidth: 345, backgroundColor: isUserActive ? green[50] : red[50], ...cardSx }}>
+    <Card sx={{ maxWidth: 345, backgroundColor: getCardColor(), ...cardSx }}>
       {renderCardHeader()}
       {renderCardMedia()}
       {renderVisibleCardContent()}

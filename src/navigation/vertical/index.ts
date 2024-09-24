@@ -15,8 +15,8 @@ const Navigation = (): VerticalNavItemsType => {
 
   const beforeLoginMenuArr: AdminMenusModel[] = [
     {
-      menuTitle: 'Login',
-      menuPath: '/login',
+      menuTitle: 'Dashboard',
+      menuPath: '/',
       adminMenuStatus: 'Active',
       adminMenuStatusID: '1',
       isDeleteable: false,
@@ -24,8 +24,8 @@ const Navigation = (): VerticalNavItemsType => {
       priority: 1
     },
     {
-      menuTitle: 'Dashboard',
-      menuPath: '/',
+      menuTitle: 'Login',
+      menuPath: '/login',
       adminMenuStatus: 'Active',
       adminMenuStatusID: '2',
       isDeleteable: false,

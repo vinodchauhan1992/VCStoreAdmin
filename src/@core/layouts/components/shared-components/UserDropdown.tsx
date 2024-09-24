@@ -24,6 +24,8 @@ import MessageOutline from 'mdi-material-ui/MessageOutline'
 import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline'
 import { LoginReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 
+const defaultAvatarUrl = '/images/avatars/1.png'
+
 // ** Styled Components
 const BadgeContentSpan = styled('span')(({ theme }) => ({
   width: 8,
@@ -70,7 +72,7 @@ const UserDropdown = () => {
   }
 
   const getUserInfo = () => {
-    let userInfo = { fullName: 'Not logged in', avatarUrl: '/images/avatars/1.png', userRole: 'None' }
+    let userInfo = { fullName: 'Not logged in', avatarUrl: defaultAvatarUrl, userRole: 'None' }
     const userData = loggedInUser?.data?.user ?? null
     if (loggedInUser?.data?.jwtToken && userData) {
       let fullName = 'Not logged in'
@@ -86,7 +88,7 @@ const UserDropdown = () => {
       }
       userInfo = {
         fullName: fullName,
-        avatarUrl: userData?.imageData?.imageUrl ?? '/images/avatars/1.png',
+        avatarUrl: userData?.imageData?.imageUrl ?? defaultAvatarUrl,
         userRole: userRole
       }
     }
@@ -94,12 +96,12 @@ const UserDropdown = () => {
   }
 
   const handleDropdownClose = () => {
-    router.push('/login')
     setAnchorEl(null)
   }
 
   const onLogoutPress = () => {
     dispatch(LoginReducer.wipeoutLoggedInUser())
+    router.push('/login')
     handleDropdownClose()
   }
 

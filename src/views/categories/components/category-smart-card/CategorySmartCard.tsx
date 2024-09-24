@@ -26,6 +26,7 @@ import { getCategoryStaticMenuOptionData } from 'src/views/categories/staticData
 import { CustomisedMenuItemOptionProps } from 'src/models/CustomisedMenuModel'
 import Skeleton from '@mui/material/Skeleton'
 import { CategoryModel } from 'src/models/CategoryModel'
+import { useTheme } from '@emotion/react'
 
 const productImageLoadedBlockSize = '220px'
 const productImageLoadedInlineSize = '100%'
@@ -78,6 +79,8 @@ interface Props {
 }
 
 const CategorySmartCard = (props: Props) => {
+  const theme: any = useTheme()
+
   const {
     dataIndex = 0,
     categoryData,
@@ -267,7 +270,7 @@ const CategorySmartCard = (props: Props) => {
         {isButton1Visible ? (
           <Tooltip title={button1Text} arrow>
             <IconButton aria-label={button1Text} size='large' onClick={() => onButton1Click?.(dataIndex, categoryData)}>
-              <DeleteForeverSharpIcon color='error' />
+              <DeleteForeverSharpIcon />
             </IconButton>
           </Tooltip>
         ) : null}
@@ -299,7 +302,13 @@ const CategorySmartCard = (props: Props) => {
       <Collapse in={expanded} timeout='auto' unmountOnExit>
         <Divider variant='fullWidth' sx={{ backgroundColor: amber[300] }} />
         <CardContent>
-          <div style={{ backgroundColor: amber[300], borderRadius: 10, padding: 15 }}>
+          <div
+            style={{
+              backgroundColor: theme?.palette?.mode === 'light' ? amber[300] : amber[900],
+              borderRadius: 10,
+              padding: 15
+            }}
+          >
             <Typography variant='body2' sx={{ color: 'text.secondary' }}>
               {`Image name: ${categoryData?.imageData?.name ?? 'N/A'}`}
             </Typography>
@@ -315,7 +324,7 @@ const CategorySmartCard = (props: Props) => {
           </div>
           <Divider variant='middle' sx={{ backgroundColor: amber[100], marginTop: 8, marginBottom: 8 }} />
           <div style={{ backgroundColor: 'InfoBackground', borderRadius: 10, padding: 15 }}>
-            <Typography variant='h6' sx={{ color: 'text.secondary' }}>
+            <Typography variant='h6' sx={{ color: cyan[900] }}>
               Description:
             </Typography>
             <Typography variant='body2' sx={{ color: cyan[800] }}>
@@ -327,8 +336,15 @@ const CategorySmartCard = (props: Props) => {
     )
   }
 
+  const getCardColor = () => {
+    if (isCategoryActive) {
+      return theme?.palette?.mode === 'light' ? green[50] : green[900]
+    }
+    return theme?.palette?.mode === 'light' ? red[50] : red[900]
+  }
+
   return (
-    <Card sx={{ maxWidth: 345, backgroundColor: isCategoryActive ? green[50] : red[50], ...cardSx }}>
+    <Card sx={{ maxWidth: 345, backgroundColor: getCardColor(), ...cardSx }}>
       {renderCardHeader()}
       {renderCardMedia()}
       {renderVisibleCardContent()}

@@ -24,7 +24,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           ? {
               bgcolor: theme => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity)
             }
-          : { bgcolor: purple[50] })
+          : { bgcolor: 'transparent' })
       }}
     >
       {numSelected > 0 ? (
