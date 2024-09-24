@@ -39,7 +39,7 @@ import {
   watchFetchStatesByCountryId,
   watchUpdateState,
   watchFetchStateByStateId
-} from './StatesSagas'
+} from './StatesSaga'
 import {
   watchAddCity,
   watchDeleteCity,
@@ -47,7 +47,7 @@ import {
   watchFetchCitiesByStateId,
   watchUpdateCity,
   watchFetchCityByCityId
-} from './CitiesSagas'
+} from './CitiesSaga'
 
 export default function* rootSaga(): any {
   return yield all([
