@@ -9,7 +9,8 @@ import {
   CommonReducerByIdDataArrayModel,
   DeleteDataCommonReducerModel,
   UpdateDataCommonReducerModel,
-  CommonReducerByIdDataObjectModel
+  CommonReducerByIdDataObjectModel,
+  CommonReducerDataObjectModel
 } from './CommonModel'
 import { FileFoldersModel } from './FileFoldersModel'
 import { LoggedInUserModel } from './LoggedInUserModel'
@@ -24,7 +25,7 @@ import { StatesModel } from './StatesModel'
 import { CitiesModel } from './CitiesModel'
 
 export interface LoggedInUserStateModel {
-  loggedInUserData?: LoggedInUserModel | null
+  loggedInUserData?: CommonReducerDataObjectModel<LoggedInUserModel | null>
 }
 
 export interface UIStateModel {

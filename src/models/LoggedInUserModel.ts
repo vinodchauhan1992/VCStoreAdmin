@@ -27,3 +27,9 @@ export interface LoggedInUserModel {
   }
   jwtToken: string
 }
+
+export interface LoginModel {
+  username: string
+  password: string
+  showPassword: boolean
+}

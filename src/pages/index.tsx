@@ -13,9 +13,13 @@ import {
   AdminMenuStatusesReducer,
   AdminMenusReducer,
   AdminSubmenusReducer,
+  BrandsReducer,
   CategoriesReducer,
+  CitiesReducer,
+  CountriesReducer,
   FileFoldersReducer,
   ProductsReducer,
+  StatesReducer,
   UserReducer,
   UserRolesReducer,
   UserStatusesReducer,
@@ -54,6 +58,14 @@ const Dashboard = () => {
   const allAdminMenuStatusesDataResult = useAppSelector(AdminMenuStatusesReducer.selectAllAdminMenuStatusesDataResult)
   // @ts-ignore
   const allProductsDataResult = useAppSelector(ProductsReducer.selectAllProductsDataResult)
+  // @ts-ignore
+  const allBrandsDataResult = useAppSelector(BrandsReducer.selectAllBrandsDataResult)
+  // @ts-ignore
+  const allCountriesDataResult = useAppSelector(CountriesReducer.selectAllCountriesDataResult)
+  // @ts-ignore
+  const allStatesDataResult = useAppSelector(StatesReducer.selectAllStatesDataResult)
+  // @ts-ignore
+  const allCitiesDataResult = useAppSelector(CitiesReducer.selectAllCitiesDataResult)
 
   const [userRelatedStatsData, setUserRelatedStatsData] = useState(getDashboardUserStatsData([]))
   const [totalGrowthOnUsers, setTotalGrowthOnUsers] = useState({ growthPercent: 0, type: 'reduction' })
@@ -100,6 +112,22 @@ const Dashboard = () => {
   }, [allAdminMenuStatusesDataResult?.dataArray])
 
   useEffect(() => {
+    dispatch({ type: 'FETCH_ALL_BRANDS' })
+  }, [allProductsDataResult?.dataArray])
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_ALL_COUNTRIES' })
+  }, [allBrandsDataResult?.dataArray])
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_ALL_STATES' })
+  }, [allCountriesDataResult?.dataArray])
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_ALL_CITIES' })
+  }, [allStatesDataResult?.dataArray])
+
+  useEffect(() => {
     const data = getVerticalCardStatisticData({
       allCategoriesDataArray: allCategoriesDataResult?.dataArray,
       allUserRolesDataArray: allUserRolesDataResult?.dataArray,
@@ -108,7 +136,11 @@ const Dashboard = () => {
       allAdminMenusDataArray: allAdminMenusDataResult?.dataArray,
       allAdminSubmenusDataArray: allAdminSubmenusDataResult?.dataArray,
       allAdminMenuStatusesDataArray: allAdminMenuStatusesDataResult?.dataArray,
-      allProductsDataArray: allProductsDataResult?.dataArray
+      allProductsDataArray: allProductsDataResult?.dataArray,
+      allBrandsDataResultDataArray: allBrandsDataResult?.dataArray,
+      allCountriesDataResultDataArray: allCountriesDataResult?.dataArray,
+      allStatesDataResultDataArray: allStatesDataResult?.dataArray,
+      allCitiesDataResultDataArray: allCitiesDataResult?.dataArray
     })
     setCardStatisticsVerticalComponentsData(data)
   }, [
@@ -119,14 +151,18 @@ const Dashboard = () => {
     allAdminMenusDataResult?.dataArray,
     allAdminSubmenusDataResult?.dataArray,
     allAdminMenuStatusesDataResult?.dataArray,
-    allProductsDataResult?.dataArray
+    allProductsDataResult?.dataArray,
+    allBrandsDataResult?.dataArray,
+    allCountriesDataResult?.dataArray,
+    allStatesDataResult?.dataArray,
+    allCitiesDataResult?.dataArray
   ])
 
   const renderPerStatCardForVerticalComponent = (dataDimension1: VerticalCardStatisticDataReturnProps) => {
     return dataDimension1?.patchData?.map(
       (dataDimension2: VerticalCardPatchStatisticDataReturnProps, index: number) => {
         return (
-          <Grid key={`${index.toString()}`} item xs={6}>
+          <Grid key={`${index.toString()}`} item xs={3}>
             <CardStatisticsVerticalComponent
               stats={dataDimension2?.stats ?? ''}
               icon={dataDimension2?.icon ?? ''}
@@ -134,6 +170,7 @@ const Dashboard = () => {
               trendNumber={dataDimension2?.trendNumber ?? ''}
               title={dataDimension2?.title ?? ''}
               subtitle={dataDimension2?.subtitle ?? ''}
+              menuPath={dataDimension2?.menuPath}
             />
           </Grid>
         )
@@ -145,7 +182,7 @@ const Dashboard = () => {
     return cardStatisticsVerticalComponentsData?.map(
       (dataDimension1: VerticalCardStatisticDataReturnProps, index: number) => {
         return (
-          <Grid key={`${index.toString()}`} item xs={6} md={6} lg={6}>
+          <Grid key={`${index.toString()}`} item xs={12} md={12} lg={12}>
             <Grid container spacing={6}>
               {renderPerStatCardForVerticalComponent(dataDimension1)}
             </Grid>
@@ -162,7 +199,7 @@ const Dashboard = () => {
           <Grid container spacing={6}>
             <Grid item xs={12}>
               {/* @ts-ignore */}
-              <StatisticsCard statsDataArray={userRelatedStatsData} growthData={totalGrowthOnUsers} />
+              <StatisticsCard menuPath='/users' statsDataArray={userRelatedStatsData} growthData={totalGrowthOnUsers} />
             </Grid>
             {/* <Grid item xs={6}>
               <StatisticsCard />

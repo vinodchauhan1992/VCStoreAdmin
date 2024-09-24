@@ -7,7 +7,7 @@ export interface AdminMenusModel {
   adminMenuStatus: string
   isDeleteable: boolean
   isAdminDeleteable: boolean
-  description: string
+  description?: string
   dateAdded?: Date
   dateModified?: Date
 }

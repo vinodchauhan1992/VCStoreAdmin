@@ -1,13 +1,19 @@
 import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit'
 import { LoggedInUserModel } from '../../models/LoggedInUserModel'
 import { ReduxStateModel, LoggedInUserStateModel } from 'src/models/ReduxStateModel'
+import { CommonReducerDataObjectModel } from 'src/models/CommonModel'
 
 /* Signout Action */
 const signOutAction = createAction('signout')
 
 /* Initial State */
 const initialState: LoggedInUserStateModel = {
-  loggedInUserData: null
+  loggedInUserData: {
+    message: null,
+    isCompleted: false,
+    succeeded: false,
+    data: null
+  }
 }
 
 /**
@@ -15,12 +21,34 @@ const initialState: LoggedInUserStateModel = {
  * @param {Object} state - redux state
  * @param {Object} action - type and payload
  */
-const saveLoggedInUserInfo = (state: LoggedInUserStateModel, action: PayloadAction<LoggedInUserModel>): any => {
-  state.loggedInUserData = action?.payload
+const saveLoggedInUserInfo = (
+  state: LoggedInUserStateModel,
+  action: PayloadAction<CommonReducerDataObjectModel<LoggedInUserModel>>
+): any => {
+  state.loggedInUserData = action?.payload ?? {
+    message: null,
+    isCompleted: false,
+    succeeded: false,
+    data: null
+  }
 }
 
 const wipeoutLoggedInUserInfo = (state: LoggedInUserStateModel): any => {
-  state.loggedInUserData = null
+  state.loggedInUserData = {
+    message: null,
+    isCompleted: false,
+    succeeded: false,
+    data: null
+  }
+}
+
+const resetLoggedInUserResponseInfo = (state: LoggedInUserStateModel): any => {
+  state.loggedInUserData = {
+    message: null,
+    isCompleted: false,
+    succeeded: false,
+    data: state?.loggedInUserData?.data ?? null
+  }
 }
 
 /* Loggedin user slice*/
@@ -32,19 +60,23 @@ const loggedInUserSlice: any = createSlice({
       return { ...state }
     })
   },
-  reducers: { saveLoggedInUser: saveLoggedInUserInfo, wipeoutLoggedInUser: wipeoutLoggedInUserInfo }
+  reducers: {
+    saveLoggedInUser: saveLoggedInUserInfo,
+    wipeoutLoggedInUser: wipeoutLoggedInUserInfo,
+    resetLoggedInUserResponse: resetLoggedInUserResponseInfo
+  }
 })
 
 // ACTIONS
-const { saveLoggedInUser, wipeoutLoggedInUser } = loggedInUserSlice.actions
+const { saveLoggedInUser, wipeoutLoggedInUser, resetLoggedInUserResponse } = loggedInUserSlice.actions
 
 // SELECTOR
 const selectIsUserLoggedIn = (state: ReduxStateModel) => {
   if (
-    state?.loggedInUser?.loggedInUserData?.user?.id &&
-    state.loggedInUser.loggedInUserData.user.id !== '' &&
-    state?.loggedInUser?.loggedInUserData?.jwtToken &&
-    state.loggedInUser.loggedInUserData.jwtToken !== ''
+    state?.loggedInUser?.loggedInUserData?.data?.user?.id &&
+    state.loggedInUser.loggedInUserData.data.user.id !== '' &&
+    state?.loggedInUser?.loggedInUserData?.data?.jwtToken &&
+    state.loggedInUser.loggedInUserData.data.jwtToken !== ''
   ) {
     return true
   }
@@ -53,13 +85,13 @@ const selectIsUserLoggedIn = (state: ReduxStateModel) => {
 }
 const selectLoggedInUser = (state: ReduxStateModel) => state?.loggedInUser?.loggedInUserData ?? null
 const selectLoggedInUserId = (state: ReduxStateModel) => {
-  return state?.loggedInUser?.loggedInUserData?.user?.id ?? null
+  return state?.loggedInUser?.loggedInUserData?.data?.user?.id ?? null
 }
 const selectLoggedInUserJwtToken = (state: ReduxStateModel) => {
-  return state?.loggedInUser?.loggedInUserData?.jwtToken ?? null
+  return state?.loggedInUser?.loggedInUserData?.data?.jwtToken ?? null
 }
 const selectLoggedInUserRole = (state: ReduxStateModel) => {
-  return state?.loggedInUser?.loggedInUserData?.user?.userRole ?? null
+  return state?.loggedInUser?.loggedInUserData?.data?.user?.userRole ?? null
 }
 
 const loggedInUserSliceReducer = loggedInUserSlice.reducer
@@ -73,5 +105,6 @@ export {
   selectLoggedInUserJwtToken,
   selectLoggedInUserRole,
   signOutAction,
-  wipeoutLoggedInUser
+  wipeoutLoggedInUser,
+  resetLoggedInUserResponse
 }

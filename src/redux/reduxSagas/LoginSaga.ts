@@ -19,9 +19,23 @@ export function* loginUser(action: any): any {
     data.responseData.status === 'success' &&
     data?.responseData?.data
   ) {
-    yield put(saveLoggedInUser(data.responseData.data))
+    yield put(
+      saveLoggedInUser({
+        message: data.responseData?.message ?? 'You are logged in successfully.',
+        succeeded: true,
+        isCompleted: true,
+        data: data.responseData.data
+      })
+    )
   } else {
-    yield put(saveLoggedInUser(null))
+    yield put(
+      saveLoggedInUser({
+        message: data.responseData?.message ?? 'Login failed due to incorrect credentials.',
+        succeeded: true,
+        isCompleted: true,
+        data: null
+      })
+    )
   }
   yield put(UIReducer.showLoader(false))
 }

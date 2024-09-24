@@ -12,14 +12,12 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 
 // ** Icons Imports
-import TrendingUp from 'mdi-material-ui/TrendingUp'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-import DotsVertical from 'mdi-material-ui/DotsVertical'
-import CellphoneLink from 'mdi-material-ui/CellphoneLink'
-import AccountOutline from 'mdi-material-ui/AccountOutline'
+import ArrowRight from 'mdi-material-ui/ArrowRight'
 
 // ** Types
 import { ThemeColor } from 'src/@core/layouts/types'
+import { useRouter } from 'next/router'
+import { LoginReducer, useAppSelector } from 'src/redux/reducers'
 
 export interface StatsDataTypeProps {
   id: number
@@ -63,10 +61,16 @@ const renderStats = (dataArray: StatsDataTypeProps[]) => {
 export interface StatisticsCardProps {
   statsDataArray: StatsDataTypeProps[]
   growthData: GrowthDataTypeProps
+  menuPath?: string | null
 }
 
 const StatisticsCard = (props: StatisticsCardProps) => {
-  const { statsDataArray, growthData } = props
+  const { statsDataArray, growthData, menuPath } = props
+
+  const router = useRouter()
+
+  // @ts-ignore
+  const isUserLoggedIn = useAppSelector(LoginReducer.selectIsUserLoggedIn)
 
   const getGrowthShowText = () => {
     let signToShow = ''
@@ -85,9 +89,21 @@ const StatisticsCard = (props: StatisticsCardProps) => {
       <CardHeader
         title='Statistics Card'
         action={
-          <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.secondary' }}>
-            <DotsVertical />
-          </IconButton>
+          isUserLoggedIn ? (
+            <IconButton
+              onClick={() => {
+                if (menuPath && menuPath !== '' && isUserLoggedIn) {
+                  router.push(menuPath)
+                }
+              }}
+              size='small'
+              aria-label='settings'
+              className='card-more-options'
+              sx={{ color: 'text.secondary' }}
+            >
+              <ArrowRight />
+            </IconButton>
+          ) : null
         }
         subheader={
           <Typography variant='body2'>

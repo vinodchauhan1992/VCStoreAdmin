@@ -28,12 +28,10 @@ import themeConfig from 'src/configs/themeConfig'
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/auth/FooterIllustration'
 import { LoginReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
-
-interface State {
-  username: string
-  password: string
-  showPassword: boolean
-}
+import { LoginModel } from 'src/models/LoggedInUserModel'
+import { AlertValuesModel } from 'src/models/AlertValuesModel'
+import Grid from '@mui/material/Grid'
+import Alert from '@mui/material/Alert'
 
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
@@ -41,31 +39,51 @@ const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
 }))
 
 const LoginPage = () => {
-  // ** State
-  const [values, setValues] = useState<State>({
+  const defaultAlertValues: AlertValuesModel = {
+    severity: 'info',
+    message: '',
+    isVisible: false
+  }
+
+  const defaultValues: LoginModel = {
     username: '',
     password: '',
     showPassword: false
-  })
+  }
+
+  // ** State
+  const [values, setValues] = useState<LoginModel>(defaultValues)
+  const [alertVaues, setAlertValues] = useState<AlertValuesModel>(defaultAlertValues)
 
   // ** Hook
   const theme = useTheme()
   const router = useRouter()
   const dispatch = useAppDispatch()
+
   // @ts-ignore
-  const isUserLoggedIn = useAppSelector(LoginReducer.selectIsUserLoggedIn)
+  const loggedInUser = useAppSelector(LoginReducer.selectLoggedInUser)
+
+  const loginUserResponse = () => {
+    if (loggedInUser?.isCompleted) {
+      if (loggedInUser?.succeeded) {
+        dispatch(LoginReducer.resetLoggedInUserResponse())
+        router.push('/')
+        return
+      } else {
+        dispatch(LoginReducer.resetLoggedInUserResponse())
+      }
+    }
+  }
 
   useEffect(() => {
-    if (isUserLoggedIn) {
-      router.push('/')
-    }
-  }, [isUserLoggedIn])
+    loginUserResponse()
+  }, [loggedInUser])
 
-  const handleUsernameChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleUsernameChange = (prop: keyof LoginModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
-  const handlePasswordChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handlePasswordChange = (prop: keyof LoginModel) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
 
@@ -79,14 +97,38 @@ const LoginPage = () => {
 
   const onLoginPress = () => {
     if (!values?.username || values.username === '') {
-      console.log('Please enter username.')
+      setAlertValues({
+        severity: 'error',
+        message: 'Please enter username.',
+        isVisible: true
+      })
       return
     }
     if (!values?.password || values.password === '') {
-      console.log('Please enter password.')
+      setAlertValues({
+        severity: 'error',
+        message: 'Please enter password.',
+        isVisible: true
+      })
       return
     }
     dispatch({ type: 'LOGIN_USER', payload: { username: values.username, password: values.password } })
+  }
+
+  const renderAlert = () => {
+    if (alertVaues?.isVisible) {
+      return (
+        <Grid container spacing={7}>
+          <Grid item xs={12} sm={12} sx={{ marginBottom: 4.8 }}>
+            <Alert severity={alertVaues.severity} onClose={() => setAlertValues(defaultAlertValues)}>
+              {alertVaues.message}
+            </Alert>
+          </Grid>
+        </Grid>
+      )
+    }
+
+    return null
   }
 
   return (
@@ -173,6 +215,7 @@ const LoginPage = () => {
             <Typography variant='body2'>Please sign-in to your account and start the adventure</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
+            {renderAlert()}
             <TextField
               autoFocus
               fullWidth

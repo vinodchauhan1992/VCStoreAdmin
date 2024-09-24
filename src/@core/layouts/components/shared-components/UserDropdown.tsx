@@ -71,8 +71,8 @@ const UserDropdown = () => {
 
   const getUserInfo = () => {
     let userInfo = { fullName: 'Not logged in', avatarUrl: '/images/avatars/1.png', userRole: 'None' }
-    const userData = loggedInUser?.user ?? null
-    if (loggedInUser?.jwtToken && userData) {
+    const userData = loggedInUser?.data?.user ?? null
+    if (loggedInUser?.data?.jwtToken && userData) {
       let fullName = 'Not logged in'
       if (userData?.name?.firstname) {
         fullName = userData.name.firstname
@@ -104,7 +104,7 @@ const UserDropdown = () => {
   }
 
   const renderUserDropdownMenu = () => {
-    if (loggedInUser?.jwtToken) {
+    if (loggedInUser?.data?.jwtToken) {
       return (
         <Menu
           anchorEl={anchorEl}
@@ -185,7 +185,7 @@ const UserDropdown = () => {
   }
 
   const renderUserDropdown = () => {
-    if (loggedInUser?.jwtToken) {
+    if (loggedInUser?.data?.jwtToken) {
       return (
         <>
           <Badge

@@ -155,13 +155,15 @@ const UserSmartCard = (props: Props) => {
       <CardHeader
         avatar={getAvatarComponent()}
         action={
-          <CustomisedMenu
-            cardData={userData}
-            menuOptions={getUserStaticMenuOptionData({ forPage })}
-            onMenuItemClick={({ cardData, selectedMenuOption, isClickedOutside }) =>
-              onMenuItemClick(isClickedOutside, cardData, selectedMenuOption)
-            }
-          />
+          forPage !== 'userByTitle' ? (
+            <CustomisedMenu
+              cardData={userData}
+              menuOptions={getUserStaticMenuOptionData({ forPage })}
+              onMenuItemClick={({ cardData, selectedMenuOption, isClickedOutside }) =>
+                onMenuItemClick(isClickedOutside, cardData, selectedMenuOption)
+              }
+            />
+          ) : null
         }
         title={`${userData?.name?.firstname} ${userData?.name?.lastname}`}
         subheader={

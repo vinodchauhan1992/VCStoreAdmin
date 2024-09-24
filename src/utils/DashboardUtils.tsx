@@ -3,7 +3,10 @@ import AccountGroup from 'mdi-material-ui/AccountGroup'
 import Security from 'mdi-material-ui/Security'
 import AccountMultiple from 'mdi-material-ui/AccountMultiple'
 import { UserModel } from 'src/models/UserModel'
-import { VerticalCardStatisticParamsDataProps } from 'src/models/DashboardUtilsModel'
+import {
+  VerticalCardPatchStatisticDataReturnProps,
+  VerticalCardStatisticParamsDataProps
+} from 'src/models/DashboardUtilsModel'
 import ListStatus from 'mdi-material-ui/ListStatus'
 import LightningBoltCircle from 'mdi-material-ui/LightningBoltCircle'
 import FolderInformation from 'mdi-material-ui/FolderInformation'
@@ -12,6 +15,10 @@ import MenuOpen from 'mdi-material-ui/MenuOpen'
 import Menu from 'mdi-material-ui/Menu'
 import ShapeCirclePlus from 'mdi-material-ui/ShapeCirclePlus'
 import ChartPpf from 'mdi-material-ui/ChartPpf'
+import FlagIcon from 'mdi-material-ui/Flag'
+import CityIcon from 'mdi-material-ui/City'
+import DomainIcon from 'mdi-material-ui/Domain'
+import BookmarkIcon from 'mdi-material-ui/Bookmark'
 
 export interface UserDatesProps {
   month: number | null
@@ -85,7 +92,11 @@ export const getUsersDataByTypes = (allUsersDataArray: UserModel[]) => {
       customersCount = customersCount + 1
     }
 
-    if (userData?.userRoleID && userData.userRoleID !== '' && userData.userRoleID === 'administrator1708115407374') {
+    if (
+      userData?.userRoleID &&
+      userData.userRoleID !== '' &&
+      userData.userRoleID === '78b80208-5c88-4293-ae19-97b53829815b'
+    ) {
       adminsArray.push(userData)
       adminsCount = adminsCount + 1
     }
@@ -137,14 +148,15 @@ export const getDashboardUserStatsData = (allUsersDataArray: UserModel[]) => {
 }
 
 export const getVerticalCardPatch1StatisticData = (props: VerticalCardStatisticParamsDataProps) => {
-  return [
+  const data: VerticalCardPatchStatisticDataReturnProps[] = [
     {
       stats: `${props?.allUserRolesDataArray ? props.allUserRolesDataArray.length : 0}`,
       icon: <LightningBoltCircle />,
       color: 'success',
       trendNumber: '+42%',
       title: 'User Roles',
-      subtitle: 'User Roles'
+      subtitle: 'User Roles',
+      menuPath: '/userRoles'
     },
     {
       stats: `${props?.allUserStatusesDataArray ? props.allUserStatusesDataArray.length : 0}`,
@@ -153,7 +165,8 @@ export const getVerticalCardPatch1StatisticData = (props: VerticalCardStatisticP
       color: 'secondary',
       trendNumber: '-15%',
       subtitle: 'User Statuses',
-      icon: <ListStatus />
+      icon: <ListStatus />,
+      menuPath: '/userStatuses'
     },
     {
       stats: `${props?.allFileFoldersDataArray ? props.allFileFoldersDataArray.length : 0}`,
@@ -161,7 +174,8 @@ export const getVerticalCardPatch1StatisticData = (props: VerticalCardStatisticP
       trendNumber: '-18%',
       title: 'Total Folders',
       subtitle: 'Total Folders',
-      icon: <FolderInformation />
+      icon: <FolderInformation />,
+      menuPath: '/fileFolders'
     },
     {
       stats: `${props?.allAdminMenuStatusesDataArray ? props.allAdminMenuStatusesDataArray.length : 0}`,
@@ -170,20 +184,23 @@ export const getVerticalCardPatch1StatisticData = (props: VerticalCardStatisticP
       trendNumber: '-18%',
       subtitle: 'Admin Menu Statuses',
       title: 'Admin Menu Statuses',
-      icon: <CheckNetwork />
+      icon: <CheckNetwork />,
+      menuPath: '/adminMenuStatuses'
     }
   ]
+  return data
 }
 
 export const getVerticalCardPatch2StatisticData = (props: VerticalCardStatisticParamsDataProps) => {
-  return [
+  const data: VerticalCardPatchStatisticDataReturnProps[] = [
     {
       stats: `${props?.allAdminMenusDataArray ? props.allAdminMenusDataArray.length : 0}`,
       icon: <Menu />,
       color: 'success',
       trendNumber: '+42%',
       title: 'Admin Menus',
-      subtitle: 'Admin Menus'
+      subtitle: 'Admin Menus',
+      menuPath: '/adminMenus'
     },
     {
       stats: `${props?.allAdminSubmenusDataArray ? props.allAdminSubmenusDataArray.length : 0}`,
@@ -192,7 +209,8 @@ export const getVerticalCardPatch2StatisticData = (props: VerticalCardStatisticP
       color: 'secondary',
       trendNumber: '-15%',
       subtitle: 'Admin Submenus',
-      icon: <MenuOpen />
+      icon: <MenuOpen />,
+      menuPath: '/adminSubmenus'
     },
     {
       stats: `${props?.allCategoriesDataArray ? props.allCategoriesDataArray.length : 0}`,
@@ -200,7 +218,8 @@ export const getVerticalCardPatch2StatisticData = (props: VerticalCardStatisticP
       trendNumber: '-18%',
       title: 'Total Categories',
       subtitle: 'Total Categories',
-      icon: <ShapeCirclePlus />
+      icon: <ShapeCirclePlus />,
+      menuPath: '/categories'
     },
     {
       stats: `${props?.allProductsDataArray ? props.allProductsDataArray.length : 0}`,
@@ -209,9 +228,55 @@ export const getVerticalCardPatch2StatisticData = (props: VerticalCardStatisticP
       trendNumber: '-18%',
       subtitle: 'Total Products',
       title: 'Total Products',
-      icon: <ChartPpf />
+      icon: <ChartPpf />,
+      menuPath: '/products'
     }
   ]
+  return data
+}
+
+export const getVerticalCardPatch3StatisticData = (props: VerticalCardStatisticParamsDataProps) => {
+  const data: VerticalCardPatchStatisticDataReturnProps[] = [
+    {
+      stats: `${props?.allBrandsDataResultDataArray ? props.allBrandsDataResultDataArray.length : 0}`,
+      icon: <BookmarkIcon />,
+      color: 'success',
+      trendNumber: '+42%',
+      title: 'Total Brands',
+      subtitle: 'Total Brands',
+      menuPath: '/brands'
+    },
+    {
+      stats: `${props?.allCountriesDataResultDataArray ? props.allCountriesDataResultDataArray.length : 0}`,
+      title: 'Total Countries',
+      trend: 'negative',
+      color: 'secondary',
+      trendNumber: '-15%',
+      subtitle: 'Total Countries',
+      icon: <FlagIcon />,
+      menuPath: '/countries'
+    },
+    {
+      stats: `${props?.allStatesDataResultDataArray ? props.allStatesDataResultDataArray.length : 0}`,
+      trend: 'negative',
+      trendNumber: '-18%',
+      title: 'Total States',
+      subtitle: 'Total States',
+      icon: <DomainIcon />,
+      menuPath: '/states'
+    },
+    {
+      stats: `${props?.allCitiesDataResultDataArray ? props.allCitiesDataResultDataArray.length : 0}`,
+      color: 'warning',
+      trend: 'negative',
+      trendNumber: '-18%',
+      subtitle: 'Total Cities',
+      title: 'Total Cities',
+      icon: <CityIcon />,
+      menuPath: '/cities'
+    }
+  ]
+  return data
 }
 
 export const getVerticalCardStatisticData = (props: VerticalCardStatisticParamsDataProps) => {
@@ -221,6 +286,9 @@ export const getVerticalCardStatisticData = (props: VerticalCardStatisticParamsD
     },
     {
       patchData: getVerticalCardPatch2StatisticData(props)
+    },
+    {
+      patchData: getVerticalCardPatch3StatisticData(props)
     }
   ]
 

@@ -9,11 +9,9 @@ import Grid from '@mui/material/Grid'
 import CustomisedErrorEmpty from 'src/@core/components/customised-error-empty/CustomisedErrorEmpty'
 import { UserReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
 import UserSmartCard from 'src/views/users/components/user-smart-card/UserSmartCard'
-import { useRouter } from 'next/router'
 import { UserModel } from 'src/models/UserModel'
 
 const TabUserByTitle = () => {
-  const router = useRouter()
   const dispatch = useAppDispatch()
 
   // @ts-ignore
