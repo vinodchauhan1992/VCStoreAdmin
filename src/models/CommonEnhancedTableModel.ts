@@ -4,6 +4,7 @@ import { AdminSubmenusModel } from './AdminSubmenusModel'
 import { CountriesModel } from './CountriesModel'
 import { FileFoldersModel } from './FileFoldersModel'
 import { StatesModel } from './StatesModel'
+import { UDMSModel } from './UserDropdownMenusModel'
 import { UserRoleModel } from './UserRoleModel'
 import { UserStatusModel } from './UserStatusModel'
 
@@ -18,6 +19,7 @@ export type KeysOfProps =
   | keyof FileFoldersModel
   | keyof CountriesModel
   | keyof StatesModel
+  | keyof UDMSModel
 
 export type DataArrayProps =
   | AdminMenusModel[]
@@ -28,6 +30,7 @@ export type DataArrayProps =
   | FileFoldersModel[]
   | CountriesModel[]
   | StatesModel[]
+  | UDMSModel[]
 
 export type CommonEnhancedTableDataObjectModel =
   | AdminMenusModel
@@ -38,6 +41,7 @@ export type CommonEnhancedTableDataObjectModel =
   | FileFoldersModel
   | CountriesModel
   | StatesModel
+  | UDMSModel
 
 export interface HeadCellModel {
   disablePadding: boolean

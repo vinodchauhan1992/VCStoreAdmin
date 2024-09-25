@@ -52,7 +52,7 @@ export function* deleteUDM(action: any): any {
     ApiService.callApiService,
     ApiCallTypes.DELETE_USER_DROPDOWN_MENU_TYPE,
     null,
-    `/${action?.payload?.userDropdownMenuId}`
+    `/${action?.payload?.udmId}`
   )
   if (
     data.isSucceded &&
@@ -144,7 +144,7 @@ export function* fetchUDMByUDMId(action: any): any {
     ApiService.callApiService,
     ApiCallTypes.GET_USER_DROPDOWN_MENU_BY_ID_TYPE,
     null,
-    `/${action?.payload?.userDropdownMenuId}`
+    `/${action?.payload?.udmId}`
   )
   if (
     data.isSucceded &&
@@ -180,7 +180,7 @@ export function* fetchUDMByPriority(action: any): any {
     ApiService.callApiService,
     ApiCallTypes.GET_USER_DROPDOWN_MENU_BY_PRIORITY_TYPE,
     null,
-    `/${action?.payload?.userDropdownPriority}`
+    `/${action?.payload?.udmPriority}`
   )
   if (
     data.isSucceded &&
@@ -251,7 +251,7 @@ export function* updateUDM(action: any): any {
     ApiService.callApiService,
     ApiCallTypes.UPDATE_USER_DROPDOWN_MENU_TYPE,
     action?.payload?.jsonData,
-    `/${action?.payload?.userDropdownMenuId}`
+    `/${action?.payload?.udmId}`
   )
   if (
     data.isSucceded &&

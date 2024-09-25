@@ -16,6 +16,7 @@ import FlagIcon from 'mdi-material-ui/Flag'
 import CityIcon from 'mdi-material-ui/City'
 import DomainIcon from 'mdi-material-ui/Domain'
 import BookmarkIcon from 'mdi-material-ui/Bookmark'
+import ArrowDownCircleIcon from 'mdi-material-ui/ArrowDownCircle'
 
 export const getVerticalNavMenuIcon = (menuData?: AdminMenusModel | null) => {
   if (menuData) {
@@ -65,6 +66,9 @@ export const getVerticalNavMenuIcon = (menuData?: AdminMenusModel | null) => {
 
       case 'cities':
         return CityIcon
+
+      case 'user dropdown menu':
+        return ArrowDownCircleIcon
 
       default:
         return ErrorIcon

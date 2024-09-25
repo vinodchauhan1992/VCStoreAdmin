@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, SyntheticEvent, Fragment } from 'react'
+import { useState, SyntheticEvent, Fragment, useEffect } from 'react'
 
 // ** Next Import
 import { useRouter } from 'next/router'
@@ -19,10 +19,11 @@ import CogOutline from 'mdi-material-ui/CogOutline'
 import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
 import EmailOutline from 'mdi-material-ui/EmailOutline'
 import LogoutVariant from 'mdi-material-ui/LogoutVariant'
-import AccountOutline from 'mdi-material-ui/AccountOutline'
 import MessageOutline from 'mdi-material-ui/MessageOutline'
 import HelpCircleOutline from 'mdi-material-ui/HelpCircleOutline'
-import { LoginReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { LoginReducer, UserDropdownMenusReducer, useAppDispatch, useAppSelector } from 'src/redux/reducers'
+import { UDMSModel } from 'src/models/UserDropdownMenusModel'
+import { getIconForUserDropdownMenu } from 'src/utils/AppBarUtils'
 
 const defaultAvatarUrl = '/images/avatars/1.png'
 
@@ -40,22 +41,26 @@ const UserDropdown = () => {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null)
 
   const dispatch = useAppDispatch()
+
   // @ts-ignore
   const loggedInUser = useAppSelector(LoginReducer.selectLoggedInUser)
+  // @ts-ignore
+  const allUDMSDataResult = useAppSelector(UserDropdownMenusReducer.selectAllUDMSDataResult)
 
   // ** Hooks
   const router = useRouter()
 
+  const callAllUdmsApi = () => {
+    dispatch({ type: 'FETCH_ALL_UDMS' })
+  }
+
+  useEffect(() => {
+    callAllUdmsApi()
+  }, [])
+
   const handleDropdownOpen = (event: SyntheticEvent) => {
     setAnchorEl(event.currentTarget)
   }
-
-  // const handleDropdownClose = (url?: string) => {
-  // if (url) {
-  //   router.push(url)
-  // }
-  //   setAnchorEl(null)
-  // }
 
   const styles = {
     py: 2,
@@ -95,14 +100,39 @@ const UserDropdown = () => {
     return userInfo
   }
 
-  const handleDropdownClose = () => {
-    setAnchorEl(null)
-  }
-
   const onLogoutPress = () => {
     dispatch(LoginReducer.wipeoutLoggedInUser())
     router.push('/login')
-    handleDropdownClose()
+  }
+
+  const handleDropdownClose = (udmsData?: UDMSModel | null) => {
+    setAnchorEl(null)
+    if (udmsData?.menuPath && udmsData.menuPath !== '') {
+      router.push(udmsData.menuPath)
+    } else {
+      if (udmsData?.menuPath?.toLowerCase() === 'n/a') {
+        if (udmsData?.title?.toLowerCase() === 'logout') {
+          onLogoutPress()
+        }
+      }
+    }
+  }
+
+  const renderMenuItem = () => {
+    return allUDMSDataResult?.dataArray?.map((udmsData, index) => {
+      const IconForUserDropdownMenu = getIconForUserDropdownMenu({ udmsData })
+      return (
+        <>
+          {index % 3 === 0 && index !== 0 ? <Divider /> : null}
+          <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose(udmsData)}>
+            <Box sx={styles}>
+              <IconForUserDropdownMenu sx={{ marginRight: 2 }}></IconForUserDropdownMenu>
+              {udmsData?.title}
+            </Box>
+          </MenuItem>
+        </>
+      )
+    })
   }
 
   const renderUserDropdownMenu = () => {
@@ -138,7 +168,8 @@ const UserDropdown = () => {
             </Box>
           </Box>
           <Divider sx={{ mt: 0, mb: 1 }} />
-          <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+          {renderMenuItem()}
+          {/* <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
             <Box sx={styles}>
               <AccountOutline sx={{ marginRight: 2 }} />
               Profile
@@ -179,7 +210,7 @@ const UserDropdown = () => {
           <MenuItem sx={{ py: 2 }} onClick={() => onLogoutPress()}>
             <LogoutVariant sx={{ marginRight: 2, fontSize: '1.375rem', color: 'text.secondary' }} />
             Logout
-          </MenuItem>
+          </MenuItem> */}
         </Menu>
       )
     }
